@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="JeuDeCartes" company="" webLink="http://" view-date="2024-02-19" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3300" locale="fr_FR">
+    <description/>
+    <view zooming-state="default:5" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="200" order="0"/>
+        <field id="tpd4" name="Date de début" width="75" order="1"/>
+        <field id="tpd5" name="Date de fin" width="75" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nom" width="210" order="0"/>
+        <field id="1" name="Rôle par défaut" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="ec1ac3ec180e4569bc37f2b775ffcfc0" name="Mise en place GIT" meeting="false" start="2024-02-20" duration="1" complete="0" thirdDate="2024-02-20" thirdDate-constraint="0" expand="true"/>
+        <task id="1" uid="d3d09788803449ed93f79e58033c7248" name="Conception UML" meeting="false" start="2024-02-20" duration="1" complete="0" thirdDate="2024-02-20" thirdDate-constraint="0" expand="true">
+            <depend id="2" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="2" uid="8014fbf871164bbabc0fa863b72062d7" name="Implémentation classes (Modèle)" meeting="false" start="2024-02-21" duration="14" complete="0" thirdDate="2024-02-20" thirdDate-constraint="0" expand="true">
+            <depend id="3" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="3" uid="ba519c9e9cf74d5983f27bd67446b7ca" name="Création interface graphique (Vue)" meeting="false" start="2024-03-12" duration="7" complete="0" thirdDate="2024-02-19" thirdDate-constraint="0" expand="true">
+            <depend id="4" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="4" uid="eaa98da1800d4ed193eb985c6649f57f" name="Implémentation actions (Contrôleur)" meeting="false" start="2024-03-21" duration="21" complete="0" thirdDate="2024-02-19" thirdDate-constraint="0" expand="true">
+            <depend id="5" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="5" uid="4a85773eddf043728e160c5e8d6f03d8" name="Intégration et Tests" meeting="false" start="2024-04-19" duration="14" complete="0" thirdDate="2024-03-18" thirdDate-constraint="0" expand="true">
+            <depend id="6" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="6" uid="505380d1bee144369285f881ae096190" name="Préparation soutenance" meeting="false" start="2024-05-09" duration="9" complete="0" thirdDate="2024-04-15" thirdDate-constraint="0" expand="true"/>
+    </tasks>
+    <resources>
+        <resource id="0" name="Aymerick" function="Default:0" contacts="" phone=""/>
+        <resource id="1" name="Quentin" function="Default:0" contacts="" phone=""/>
+        <resource id="3" name="Sabine" function="Default:0" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="0" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
