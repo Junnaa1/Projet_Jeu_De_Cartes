@@ -1,4 +1,4 @@
-package controleur;
+package modele;
 
 public enum NomCarte {
     DEUX(2),
