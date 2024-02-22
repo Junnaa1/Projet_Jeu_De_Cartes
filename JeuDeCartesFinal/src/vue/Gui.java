@@ -43,6 +43,12 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelPrincipal.add(bgLabel);
 
+		// Image en plus test
+		ImageIcon overlayIcon = new ImageIcon("src\\Background2.png");
+		JLabel overlayLabel = new JLabel(overlayIcon);
+		overlayLabel.setBounds(0, 0, 960, 540);
+		bgLabel.add(overlayLabel);
+
 		// Création du panel pour les boutons avec une transparence
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
