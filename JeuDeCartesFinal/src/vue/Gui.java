@@ -30,13 +30,26 @@ public class Gui extends JFrame {
 		setLocationRelativeTo(null); // Centre la fenêtre
 		setIconImage(new ImageIcon("src\\Logo.png").getImage());
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
+		setContentPane(MainPage()); // Utilisation du panel principal comme content pane
+		setVisible(true); // Rendre la fenêtre visible
+	}
 
-		// Création des boutons
+	public JPanel MainPage() {
+		JPanel panelPrincipal = new JPanel();
+		panelPrincipal.setLayout(new BorderLayout());
+
+		// Arrière-plan
+		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		JLabel bgLabel = new JLabel(bgIcon);
+		panelPrincipal.add(bgLabel, BorderLayout.CENTER);
+
+		// Création du panel pour les boutons avec une transparence
+		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		panelBoutons.setOpaque(false); // Rend le panel transparent
+
 		boutonSolitaire = new JButton("Solitaire");
 		boutonQuitter = new JButton("Quitter");
 
-		// Création du panel pour les boutons
-		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
 
@@ -45,11 +58,10 @@ public class Gui extends JFrame {
 		labelTitre.setFont(new Font("Serif", Font.BOLD, 18));
 		labelTitre.setForeground(Color.BLACK);
 
-		// Ajout des composants à la fenêtre
-		add(labelTitre, BorderLayout.PAGE_START);
-		add(panelBoutons, BorderLayout.CENTER);
+		// Ajout du label et des boutons au panel principal
+		panelPrincipal.add(labelTitre, BorderLayout.PAGE_START);
+		panelPrincipal.add(panelBoutons, BorderLayout.PAGE_END); // Place les boutons en bas
 
-		// Rendre la fenêtre visible
-		setVisible(true);
+		return panelPrincipal;
 	}
 }
