@@ -1,6 +1,5 @@
 package vue;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,31 +35,44 @@ public class Gui extends JFrame {
 
 	public JPanel MainPage() {
 		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setLayout(new BorderLayout());
+		panelPrincipal.setLayout(null);
 
 		// Arrière-plan
 		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
 		JLabel bgLabel = new JLabel(bgIcon);
-		panelPrincipal.add(bgLabel, BorderLayout.CENTER);
+		bgLabel.setBounds(0, 0, 960, 540);
+		panelPrincipal.add(bgLabel);
 
 		// Création du panel pour les boutons avec une transparence
-		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		panelBoutons.setOpaque(false); // Rend le panel transparent
 
 		boutonSolitaire = new JButton("Solitaire");
+		boutonSolitaire.setBackground(new Color(91, 4, 75));
+		boutonSolitaire.setForeground(Color.WHITE);
+		boutonSolitaire.setFocusPainted(false);
+		boutonSolitaire.setFont(new Font("Gotham Black", Font.BOLD, 26));
+
 		boutonQuitter = new JButton("Quitter");
+		boutonQuitter.setBackground(new Color(91, 4, 75));
+		boutonQuitter.setForeground(Color.WHITE);
+		boutonQuitter.setFocusPainted(false);
+		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
 
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
 
 		// Création du label de titre
 		JLabel labelTitre = new JLabel("Bienvenue au choix de jeu de cartes", SwingConstants.CENTER);
-		labelTitre.setFont(new Font("Serif", Font.BOLD, 18));
-		labelTitre.setForeground(Color.BLACK);
+		labelTitre.setFont(new Font("Gotham Black", Font.BOLD, 26));
+		labelTitre.setForeground(Color.WHITE);
+		labelTitre.setBounds(0, 20, 960, 30);
 
 		// Ajout du label et des boutons au panel principal
-		panelPrincipal.add(labelTitre, BorderLayout.PAGE_START);
-		panelPrincipal.add(panelBoutons, BorderLayout.PAGE_END); // Place les boutons en bas
+		panelBoutons.setBounds(270, 420, 420, 60);
+		bgLabel.add(panelBoutons);
+		bgLabel.add(labelTitre);
 
 		return panelPrincipal;
 	}
