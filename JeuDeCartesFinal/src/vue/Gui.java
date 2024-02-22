@@ -2,8 +2,8 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,7 +36,7 @@ public class Gui extends JFrame {
 		boutonQuitter = new JButton("Quitter");
 
 		// Création du panel pour les boutons
-		JPanel panelBoutons = new JPanel(new GridLayout(3, 1, 10, 10));
+		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
 
