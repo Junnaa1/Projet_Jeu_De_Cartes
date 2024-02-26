@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,6 +35,14 @@ public class Gui extends JFrame {
 	}
 
 	public JPanel MainPage() {
+
+		// Icones chargées
+
+		Icon Leave = new ImageIcon("src\\Leave.png");
+		Icon PlaySolitaire = new ImageIcon("src\\Solitaire.png");
+
+		//
+
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setLayout(null);
 
@@ -51,16 +60,16 @@ public class Gui extends JFrame {
 
 		// Création du panel pour les boutons avec une transparence
 		JPanel panelBoutons = new JPanel();
-		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		panelBoutons.setOpaque(false); // Rend le panel transparent
 
-		boutonSolitaire = new JButton("Solitaire");
+		boutonSolitaire = new JButton("Solitaire", PlaySolitaire);
 		boutonSolitaire.setBackground(new Color(91, 4, 75));
 		boutonSolitaire.setForeground(Color.WHITE);
 		boutonSolitaire.setFocusPainted(false);
 		boutonSolitaire.setFont(new Font("Gotham Black", Font.BOLD, 26));
 
-		boutonQuitter = new JButton("Quitter");
+		boutonQuitter = new JButton("Quitter", Leave);
 		boutonQuitter.setBackground(new Color(91, 4, 75));
 		boutonQuitter.setForeground(Color.WHITE);
 		boutonQuitter.setFocusPainted(false);
