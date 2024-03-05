@@ -144,16 +144,40 @@ public class SolitaireController {
 		        return false;
 		    }
 		}
-
 		// Exemple de règle simple : vous pouvez déplacer une carte si la valeur de la
 		// carte à déplacer est inférieure d'une unité à la carte du dessus de la
 		// colonne destination
-		if (destination.isEmpty()
-				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
-			destination.add(carteADeplacer);
-			source.remove(source.size() - 1);
-			return true;
+		if (destination.isEmpty() || carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
+		    destination.add(carteADeplacer);
+		    source.remove(source.size() - 1);
+		    Random random = new Random();
+			NomCarte nomCarte;
+			CouleurCarte couleurCarte;
+		    if (source.size() >= 1 && source.get(source.size() - 1) == null) {
+		    	boolean cartePresente;
+		    	do {
+		        // Remplacer le dernier "X" par la carte qui se trouve au-dessus de ce "X"
+		    	nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length)];
+                couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
+                cartePresente = false;
+                Carte nouvelleCarte = new Carte(nomCarte, couleurCarte);
+                for (List<Carte> col : colonnes) {
+					for (Carte c : col) {
+						if (c != null && c.equals(nouvelleCarte)) {
+							cartePresente = true;
+							break;
+						}
+					}
+				}
+                source.set(source.size() - 1, nouvelleCarte);
+		    	}while(cartePresente);
+		    	
+		    }
+		    return true;
 		}
+
+
+		
 
 		return false;
 	}
