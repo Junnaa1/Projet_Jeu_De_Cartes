@@ -43,7 +43,7 @@ public class SolitaireController {
 					boolean carteDejaPresente;
 					do {
 						nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length)];
-						couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
+                        couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
 						Carte carte = new Carte(nomCarte, couleurCarte);
 						carteDejaPresente = false;
 						for (List<Carte> col : colonnes) {
@@ -72,6 +72,12 @@ public class SolitaireController {
 
 	public static void testDeplacement(List<List<Carte>> colonnes) {
 		deplacerCarte(colonnes, 0, 8); // Déplace une carte de la colonne 0 à la colonne 8
+		deplacerCarte(colonnes, 1, 8);
+		deplacerCarte(colonnes, 2, 8);
+		deplacerCarte(colonnes, 3, 8);
+		deplacerCarte(colonnes, 4, 8);
+		deplacerCarte(colonnes, 5, 8);
+		deplacerCarte(colonnes, 6, 8);
 	}
 
 	// Fonction pour afficher les colonnes du solitaire (pour le test)
@@ -126,18 +132,24 @@ public class SolitaireController {
 		}
 
 
-		Carte carteADeplacer = source.get(source.size() - 1); // La carte à déplacer est la carte la plus haute dans la
-																// colonne source
-		
-		if (destination.isEmpty() && carteADeplacer.getNom().toString() == "AS"){
+		Carte carteADeplacer = source.get(source.size() - 1); // La carte à déplacer est la carte la plus haute dans la colonne source
+
+		if (destination.isEmpty() && carteADeplacer.getNom().toString() != "AS"){
 			return false;
+		}
+		
+		if (!destination.isEmpty()) {
+		    Carte derniereCarte = destination.get(destination.size() - 1);
+		    if (carteADeplacer.getValeur() != derniereCarte.getValeur() + 1 || carteADeplacer.getCouleur() != derniereCarte.getCouleur()) {
+		        return false;
+		    }
 		}
 
 		// Exemple de règle simple : vous pouvez déplacer une carte si la valeur de la
 		// carte à déplacer est inférieure d'une unité à la carte du dessus de la
 		// colonne destination
 		if (destination.isEmpty()
-				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() - 1) {
+				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
 			destination.add(carteADeplacer);
 			source.remove(source.size() - 1);
 			return true;
