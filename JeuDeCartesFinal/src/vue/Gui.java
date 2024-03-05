@@ -86,7 +86,7 @@ public class Gui extends JFrame {
 		// Création du label de titre
 		JLabel labelTitre = new JLabel("Bienvenue au choix de jeu de cartes", SwingConstants.CENTER);
 		labelTitre.setFont(new Font("Gotham Black", Font.BOLD, 26));
-		labelTitre.setForeground(Color.WHITE);
+		labelTitre.setForeground(Color.WHITE); // Couleur du texte
 		labelTitre.setBounds(0, 20, 960, 30);
 
 		// Ajout du label et des boutons au panel principal
