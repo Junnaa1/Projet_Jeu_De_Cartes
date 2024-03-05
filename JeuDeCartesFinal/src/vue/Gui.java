@@ -78,6 +78,7 @@ public class Gui extends JFrame {
 		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
 
 		new Souris(boutonQuitter);
+		new Souris(boutonSolitaire);
 
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
