@@ -99,7 +99,7 @@ public class SolitaireController {
 	}
 
 	public static void main(String[] args) {
-		new SolitaireController().demarrerJeu(); // Modifiez cette ligne
+		new SolitaireController().demarrerJeu();
 	}
 
 	/**
