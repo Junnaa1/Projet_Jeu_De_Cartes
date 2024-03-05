@@ -1,6 +1,7 @@
 package modele;
 
 public enum NomCarte {
+	AS(1),
     DEUX(2),
     TROIS(3),
     QUATRE(4),
@@ -12,9 +13,7 @@ public enum NomCarte {
     DIX(10),
     VALET(11),
     DAME(12),
-    ROI(13),
-    AS(14);
-
+    ROI(13);
     private final int points;
 
     NomCarte(int points) {
