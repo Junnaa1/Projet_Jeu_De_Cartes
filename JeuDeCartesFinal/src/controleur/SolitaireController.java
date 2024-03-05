@@ -114,6 +114,7 @@ public class SolitaireController {
 				|| colonneDestination >= colonnes.size()) {
 			// Vérification des index de colonne valides
 			return false;
+		
 		}
 
 		List<Carte> source = colonnes.get(colonneSource);
@@ -124,8 +125,13 @@ public class SolitaireController {
 			return false;
 		}
 
+
 		Carte carteADeplacer = source.get(source.size() - 1); // La carte à déplacer est la carte la plus haute dans la
 																// colonne source
+		
+		if (destination.isEmpty() && carteADeplacer.getNom().toString() == "AS"){
+			return false;
+		}
 
 		// Exemple de règle simple : vous pouvez déplacer une carte si la valeur de la
 		// carte à déplacer est inférieure d'une unité à la carte du dessus de la
