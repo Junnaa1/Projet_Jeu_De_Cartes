@@ -77,8 +77,7 @@ public class Gui extends JFrame {
 		boutonQuitter.setFocusPainted(false);
 		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
 
-		new Souris(boutonQuitter);
-		new Souris(boutonSolitaire);
+		Souris souris = new Souris(this, boutonQuitter, boutonSolitaire);
 
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
@@ -96,4 +95,18 @@ public class Gui extends JFrame {
 
 		return panelPrincipal;
 	}
+
+	public JPanel PanelSolitaire() {
+		JPanel panelSolitaire = new JPanel();
+		panelSolitaire.setLayout(null);
+
+		// Arrière-plan
+		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		JLabel bgLabel = new JLabel(bgIcon);
+		bgLabel.setBounds(0, 0, 960, 540);
+		panelSolitaire.add(bgLabel);
+
+		return panelSolitaire;
+	}
+
 }

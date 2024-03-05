@@ -7,46 +7,53 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import vue.Gui;
 
 public class Souris implements ActionListener, MouseListener {
+	private JButton boutonQuitter;
+	private JButton boutonSolitaire;
+	private Gui gui; // Gardez une référence à l'interface GUI pour accéder à ses méthodes
 
-	public JButton boutonQuitter;
-	public JButton boutonSolitaire;
-	private SolitaireController solitaireController = new SolitaireController();
+	// Modifiez le constructeur pour accepter directement les boutons et l'interface
+	// GUI
+	public Souris(Gui gui, JButton boutonQuitter, JButton boutonSolitaire) {
+		this.gui = gui;
+		this.boutonQuitter = boutonQuitter;
+		this.boutonSolitaire = boutonSolitaire;
 
-	public Souris(JButton... boutons) {
-		for (JButton bouton : boutons) {
-			bouton.addActionListener(this);
-			bouton.addMouseListener(this);
-		}
+		boutonQuitter.addActionListener(this);
+		boutonSolitaire.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
-		if (source.getActionCommand().equals("Quitter")) {
+		if (source == boutonQuitter) {
 			System.exit(0);
-		} else if (source.getActionCommand().equals("Solitaire")) {
-			solitaireController.demarrerJeu(); // Démarrez le jeu ici
+		} else if (source == boutonSolitaire) {
+			JFrame fenetrePrincipale = (JFrame) SwingUtilities.getWindowAncestor(source);
+			JPanel panelSolitaire = gui.PanelSolitaire(); // Utilisez directement la méthode de gui
+			fenetrePrincipale.setContentPane(panelSolitaire);
+			fenetrePrincipale.revalidate();
+			fenetrePrincipale.repaint();
 		}
 	}
 
+	// Implémentez les autres méthodes de MouseListener selon vos besoins
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -60,5 +67,4 @@ public class Souris implements ActionListener, MouseListener {
 		JButton source = (JButton) e.getSource();
 		source.setBackground(new Color(91, 4, 75));
 	}
-
 }
