@@ -48,20 +48,4 @@ public class Carte implements Comparable<Carte> {
     public String toString() {
         return "Carte " + nom.name() + " de " + couleur.name() + " (valeur : " + getValeur() + ")";
     }
-    
-
-
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
