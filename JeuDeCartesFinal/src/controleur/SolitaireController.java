@@ -66,6 +66,13 @@ public class SolitaireController {
 		for (int i = 0; i < 4; i++) {
 			colonnes.add(new ArrayList<>());
 		}
+		// Ajout d'une colonne pour la pioche et remplissage avec 24 cartes cachées
+		List<Carte> pioche = new ArrayList<>();
+		for (int i = 0; i < 24; i++) {
+		    pioche.add(null); // Ajout de 24 "X" représentant des cartes cachées
+		}
+		colonnes.add(pioche);
+
 
 		return colonnes;
 	}
