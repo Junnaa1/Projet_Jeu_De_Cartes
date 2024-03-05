@@ -106,6 +106,21 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
 
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		panelBoutons.setOpaque(false); // Rend le panel transparent
+
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 26));
+
+		panelBoutons.add(boutonRetour);
+
+		panelBoutons.setBounds(660, 450, 420, 60);
+		bgLabel.add(panelBoutons);
+
 		return panelSolitaire;
 	}
 
