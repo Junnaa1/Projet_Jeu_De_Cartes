@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import controleur.Souris;
+
 public class Gui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -74,6 +76,8 @@ public class Gui extends JFrame {
 		boutonQuitter.setForeground(Color.WHITE);
 		boutonQuitter.setFocusPainted(false);
 		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
+
+		new Souris(boutonQuitter);
 
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
