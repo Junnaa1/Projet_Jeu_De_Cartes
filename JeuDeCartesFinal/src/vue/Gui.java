@@ -116,7 +116,7 @@ public class Gui extends JFrame {
 		panelSolitaire.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);

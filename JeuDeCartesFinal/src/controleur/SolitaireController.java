@@ -43,7 +43,7 @@ public class SolitaireController {
 					boolean carteDejaPresente;
 					do {
 						nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length)];
-                        couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
+						couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
 						Carte carte = new Carte(nomCarte, couleurCarte);
 						carteDejaPresente = false;
 						for (List<Carte> col : colonnes) {
@@ -69,10 +69,9 @@ public class SolitaireController {
 		// Ajout d'une colonne pour la pioche et remplissage avec 24 cartes cachées
 		List<Carte> pioche = new ArrayList<>();
 		for (int i = 0; i < 24; i++) {
-		    pioche.add(null); // Ajout de 24 "X" représentant des cartes cachées
+			pioche.add(null); // Ajout de 24 "X" représentant des cartes cachées
 		}
 		colonnes.add(pioche);
-
 
 		return colonnes;
 	}
@@ -127,7 +126,7 @@ public class SolitaireController {
 				|| colonneDestination >= colonnes.size()) {
 			// Vérification des index de colonne valides
 			return false;
-		
+
 		}
 
 		List<Carte> source = colonnes.get(colonneSource);
@@ -138,53 +137,52 @@ public class SolitaireController {
 			return false;
 		}
 
+		Carte carteADeplacer = source.get(source.size() - 1); // La carte à déplacer est la carte la plus haute dans la
+																// colonne source
 
-		Carte carteADeplacer = source.get(source.size() - 1); // La carte à déplacer est la carte la plus haute dans la colonne source
-
-		if (destination.isEmpty() && carteADeplacer.getNom().toString() != "AS"){
+		if (destination.isEmpty() && carteADeplacer.getNom().toString() != "AS") {
 			return false;
 		}
-		
+
 		if (!destination.isEmpty()) {
-		    Carte derniereCarte = destination.get(destination.size() - 1);
-		    if (carteADeplacer.getValeur() != derniereCarte.getValeur() + 1 || carteADeplacer.getCouleur() != derniereCarte.getCouleur()) {
-		        return false;
-		    }
+			Carte derniereCarte = destination.get(destination.size() - 1);
+			if (carteADeplacer.getValeur() != derniereCarte.getValeur() + 1
+					|| carteADeplacer.getCouleur() != derniereCarte.getCouleur()) {
+				return false;
+			}
 		}
 		// Exemple de règle simple : vous pouvez déplacer une carte si la valeur de la
 		// carte à déplacer est inférieure d'une unité à la carte du dessus de la
 		// colonne destination
-		if (destination.isEmpty() || carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
-		    destination.add(carteADeplacer);
-		    source.remove(source.size() - 1);
-		    Random random = new Random();
+		if (destination.isEmpty()
+				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
+			destination.add(carteADeplacer);
+			source.remove(source.size() - 1);
+			Random random = new Random();
 			NomCarte nomCarte;
 			CouleurCarte couleurCarte;
-		    if (source.size() >= 1 && source.get(source.size() - 1) == null) {
-		    	boolean cartePresente;
-		    	do {
-		        // Remplacer le dernier "X" par la carte qui se trouve au-dessus de ce "X"
-		    	nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length)];
-                couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
-                cartePresente = false;
-                Carte nouvelleCarte = new Carte(nomCarte, couleurCarte);
-                for (List<Carte> col : colonnes) {
-					for (Carte c : col) {
-						if (c != null && c.equals(nouvelleCarte)) {
-							cartePresente = true;
-							break;
+			if (source.size() >= 1 && source.get(source.size() - 1) == null) {
+				boolean cartePresente;
+				do {
+					// Remplacer le dernier "X" par la carte qui se trouve au-dessus de ce "X"
+					nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length)];
+					couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length)];
+					cartePresente = false;
+					Carte nouvelleCarte = new Carte(nomCarte, couleurCarte);
+					for (List<Carte> col : colonnes) {
+						for (Carte c : col) {
+							if (c != null && c.equals(nouvelleCarte)) {
+								cartePresente = true;
+								break;
+							}
 						}
 					}
-				}
-                source.set(source.size() - 1, nouvelleCarte);
-		    	}while(cartePresente);
-		    	
-		    }
-		    return true;
+					source.set(source.size() - 1, nouvelleCarte);
+				} while (cartePresente);
+
+			}
+			return true;
 		}
-
-
-		
 
 		return false;
 	}
