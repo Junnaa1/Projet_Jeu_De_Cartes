@@ -20,8 +20,10 @@ public class Gui extends JFrame {
 
 	private JButton boutonSolitaire;
 	private JButton boutonQuitter;
+	private Souris souris;
 
 	public Gui() {
+		this.souris = new Souris(this);
 		initGUI();
 	}
 
@@ -34,6 +36,12 @@ public class Gui extends JFrame {
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
 		setContentPane(MainPage()); // Utilisation du panel principal comme content pane
 		setVisible(true); // Rendre la fenêtre visible
+	}
+
+	public void setPanel(JPanel panel) {
+		setContentPane(panel);
+		revalidate();
+		repaint();
 	}
 
 	public JPanel MainPage() {
@@ -54,7 +62,7 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelPrincipal.add(bgLabel);
 
-		// Image en plus test
+		// Image en plus
 		ImageIcon overlayIcon = new ImageIcon("src\\Background2.png");
 		JLabel overlayLabel = new JLabel(overlayIcon);
 		overlayLabel.setBounds(0, 0, 960, 540);
@@ -77,10 +85,17 @@ public class Gui extends JFrame {
 		boutonQuitter.setFocusPainted(false);
 		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
 
-		Souris souris = new Souris(this, boutonQuitter, boutonSolitaire);
-
 		panelBoutons.add(boutonSolitaire);
 		panelBoutons.add(boutonQuitter);
+
+		boutonSolitaire.addActionListener(souris);
+		boutonQuitter.addActionListener(souris);
+
+		boutonSolitaire.setActionCommand("Solitaire");
+		boutonQuitter.setActionCommand("Quitter");
+
+		boutonSolitaire.addMouseListener(souris);
+		boutonQuitter.addMouseListener(souris);
 
 		// Création du label de titre
 		JLabel labelTitre = new JLabel("Bienvenue au choix de jeu de cartes", SwingConstants.CENTER);
@@ -108,7 +123,7 @@ public class Gui extends JFrame {
 
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		panelBoutons.setOpaque(false); // Rend le panel transparent
+		panelBoutons.setOpaque(false);
 
 		JButton boutonRetour = new JButton("Retour");
 		boutonRetour.setBackground(new Color(91, 4, 75));
@@ -118,10 +133,22 @@ public class Gui extends JFrame {
 
 		panelBoutons.add(boutonRetour);
 
+		boutonRetour.addActionListener(souris);
+		boutonRetour.setActionCommand("Retour");
+		boutonRetour.addMouseListener(souris);
+
 		panelBoutons.setBounds(660, 450, 420, 60);
 		bgLabel.add(panelBoutons);
 
 		return panelSolitaire;
+	}
+
+	public JPanel getMainPage() {
+		return MainPage();
+	}
+
+	public JPanel getPanelSolitaire() {
+		return PanelSolitaire();
 	}
 
 }

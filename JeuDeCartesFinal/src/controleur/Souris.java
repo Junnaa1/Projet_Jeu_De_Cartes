@@ -7,62 +7,42 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import vue.Gui;
 
 public class Souris implements ActionListener, MouseListener {
-	private JButton boutonQuitter;
-	private JButton boutonSolitaire;
-	private Gui gui; // Gardez une référence à l'interface GUI pour accéder à ses méthodes
+	private Gui gui;
 
-	// Modifiez le constructeur pour accepter directement les boutons et l'interface
-	// GUI
-	public Souris(Gui gui, JButton boutonQuitter, JButton boutonSolitaire) {
+	public Souris(Gui gui) {
 		this.gui = gui;
-		this.boutonQuitter = boutonQuitter;
-		this.boutonSolitaire = boutonSolitaire;
-
-		boutonQuitter.addActionListener(this);
-		boutonSolitaire.addActionListener(this);
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton source = (JButton) e.getSource();
-		if (source == boutonQuitter) {
+		String command = e.getActionCommand();
+
+		if ("Quitter".equals(command)) {
 			System.exit(0);
-		} else if (source == boutonSolitaire) {
-			JFrame fenetrePrincipale = (JFrame) SwingUtilities.getWindowAncestor(source);
-			JPanel panelSolitaire = gui.PanelSolitaire(); // Utilisez directement la méthode de gui
-			fenetrePrincipale.setContentPane(panelSolitaire);
-			fenetrePrincipale.revalidate();
-			fenetrePrincipale.repaint();
+		} else if ("Solitaire".equals(command)) {
+			gui.setPanel(gui.getPanelSolitaire());
+		} else if ("Retour".equals(command)) {
+			gui.setPanel(gui.getMainPage());
 		}
 	}
 
-	// Implémentez les autres méthodes de MouseListener selon vos besoins
-	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {
 		JButton source = (JButton) e.getSource();
 		source.setBackground(new Color(52, 14, 40));
 	}
 
-	@Override
 	public void mouseExited(MouseEvent e) {
 		JButton source = (JButton) e.getSource();
 		source.setBackground(new Color(91, 4, 75));
