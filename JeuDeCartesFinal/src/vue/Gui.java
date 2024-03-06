@@ -116,10 +116,25 @@ public class Gui extends JFrame {
 		panelSolitaire.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
+		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
+
+		// Ajout des colonnes de jeu
+		ImageIcon cardBackIcon = new ImageIcon("src\\back_of_card.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
+		int xStart = 100; // Position de départ pour la première carte
+		int y = 180; // Centrer verticalement
+		int xSpacing = 20; // Espace entre les cartes
+
+		for (int i = 0; i < 7; i++) {
+			JLabel cardLabel = new JLabel(cardBackIcon);
+			int x = xStart + (cardWidth + xSpacing) * i; // Calculer la position x pour chaque carte
+			cardLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(cardLabel);
+		}
 
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
