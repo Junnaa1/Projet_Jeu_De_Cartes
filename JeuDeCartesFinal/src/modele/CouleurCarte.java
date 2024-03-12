@@ -4,7 +4,8 @@ public enum CouleurCarte {
     TREFLE(1),
     PIQUE(2),
     CARREAU(3),
-    COEUR(4);
+    COEUR(4),
+    CACHEE(0);
 
     private final int points;
 

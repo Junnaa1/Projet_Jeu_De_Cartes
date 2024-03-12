@@ -13,7 +13,8 @@ public enum NomCarte {
     DIX(10),
     VALET(11),
     DAME(12),
-    ROI(13);
+    ROI(13), 
+    CACHEE(0);
     private final int points;
 
     NomCarte(int points) {
