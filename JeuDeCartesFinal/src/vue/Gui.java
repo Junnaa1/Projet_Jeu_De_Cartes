@@ -3,6 +3,10 @@ package vue;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -111,7 +115,26 @@ public class Gui extends JFrame {
 		return panelPrincipal;
 	}
 
+	// Les images ont une grande taille, on les redéfinit donc par rapport à la
+	// taille de l'écran
+	// de jeu
+	private ImageIcon resizeCardImage(String imagePath, int width, int height) {
+		ImageIcon originalIcon = new ImageIcon(imagePath);
+		Image image = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		return new ImageIcon(image);
+	}
+
+	// Récupérer une carte aléatoire ET la supprime du deck afin d'éviter les
+	// doublons
+	private ImageIcon getRandomCard(Random random, List<ImageIcon> deck) {
+		int index = random.nextInt(deck.size());
+		return deck.remove(index); // Supprime et retourne la carte choisie
+	}
+
 	public JPanel PanelSolitaire() {
+
+		Random random = new Random();
+
 		JPanel panelSolitaire = new JPanel();
 		panelSolitaire.setLayout(null);
 
@@ -121,20 +144,73 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
 
-		// Ajout des colonnes de jeu
-		ImageIcon cardBackIcon = new ImageIcon("src\\back_of_card.png");
+		// Création et placement des cartes retournées pour les colonnes de départ
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\back_of_card.png");
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
-		int xStart = 100; // Position de départ pour la première carte
-		int y = 180; // Centrer verticalement
-		int xSpacing = 20; // Espace entre les cartes
 
-		for (int i = 0; i < 7; i++) {
-			JLabel cardLabel = new JLabel(cardBackIcon);
-			int x = xStart + (cardWidth + xSpacing) * i; // Calculer la position x pour chaque carte
-			cardLabel.setBounds(x, y, cardWidth, cardHeight);
-			bgLabel.add(cardLabel);
+		int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
+		int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
+		int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
+		int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
+
+		List<ImageIcon> deck = new ArrayList<>(); // Liste vide du deck
+
+		// Initialisation des cartes pour les reconnaitre
+		String[] suits = { "hearts", "diamonds", "clubs", "spades" };
+		String[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace" };
+
+		// Ajoute les cartes au deck
+		for (String suit : suits) {
+			for (String value : values) {
+				String cardPath = "src\\cartes\\" + value + "_of_" + suit + ".png";
+				deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
+			}
 		}
+
+		// Placement des cartes en colonnes avec décalage vertical pour effet empilé
+		for (int col = 0; col < 7; col++) {
+			for (int cardIndex = 0; cardIndex <= col; cardIndex++) {
+				JLabel cardLabel;
+				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
+				int y = gamecolumnsyStart + gamecolumnsySpacing * cardIndex;
+
+				if (cardIndex == col) {
+					cardLabel = new JLabel(getRandomCard(random, deck)); // Carte aléatoire sans doublon
+				} else {
+					cardLabel = new JLabel(cardBackIcon);
+				}
+				cardLabel.setBounds(x, y, cardWidth, cardHeight);
+				bgLabel.add(cardLabel);
+				bgLabel.setComponentZOrder(cardLabel, col - cardIndex);
+			}
+		}
+
+		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
+		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
+		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
+
+		// Création des quatre colonnes finales
+		for (int i = 0; i < 4; i++) {
+			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+			JLabel pileVideLabel = new JLabel(pileVideIcon);
+			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
+			int y = piocheYStart;
+			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(pileVideLabel);
+		}
+
+		// Colonnes de la pioche
+		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+		JLabel pileVideLabel = new JLabel(pileVideIcon);
+		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
+		bgLabel.add(pileVideLabel);
+
+		JLabel piocheLabel = new JLabel(cardBackIcon);
+		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
+		bgLabel.add(piocheLabel);
+
+		// Boutons pour revenir à l'accueil
 
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -152,7 +228,7 @@ public class Gui extends JFrame {
 		boutonRetour.setActionCommand("Retour");
 		boutonRetour.addMouseListener(souris);
 
-		panelBoutons.setBounds(660, 450, 420, 60);
+		panelBoutons.setBounds(-130, 450, 420, 60);
 		bgLabel.add(panelBoutons);
 
 		return panelSolitaire;
