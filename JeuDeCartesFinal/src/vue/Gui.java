@@ -16,8 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import controleur.SolitaireController;
 import controleur.Souris;
 import modele.Carte;
+import modele.NomCarte;
+import modele.CouleurCarte;
 
 public class Gui extends JFrame {
 
@@ -26,7 +29,15 @@ public class Gui extends JFrame {
 	private JButton boutonSolitaire;
 	private JButton boutonQuitter;
 	private Souris souris;
+    JPanel panelSolitaire = new JPanel();
+    List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
 
+    int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
+    int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
+    int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
+    int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
+
+    // Parcourir les colonnes d
 	public Gui() {
 		this.souris = new Souris(this);
 		initGUI();
@@ -170,23 +181,29 @@ public class Gui extends JFrame {
 		}
 
 		// Placement des cartes en colonnes avec décalage vertical pour effet empilé
-		for (int col = 0; col < 7; col++) {
-			for (int cardIndex = 0; cardIndex <= col; cardIndex++) {
+		for (int col = 0; col < colonnesDeDepart.size(); col++) {
+			List<Carte> colonne = colonnesDeDepart.get(col);
+			for (int cardIndex = 0; cardIndex < colonne.size(); cardIndex++) {
 				JLabel cardLabel;
 				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
 				int y = gamecolumnsyStart + gamecolumnsySpacing * cardIndex;
 
-				if (cardIndex == col) {
-					cardLabel = new JLabel(getRandomCard(random, deck)); // Carte aléatoire sans doublon
+				Carte carte = colonne.get(cardIndex);
+				if (carte != null) {
+					// Créer un JLabel pour afficher la carte
+					String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString() + ".png";
+					ImageIcon carteImage = resizeCardImage(cardPath, cardWidth, cardHeight);
+					cardLabel = new JLabel(carteImage);
 				} else {
+					// Si la carte est nulle, afficher le dos de la carte
 					cardLabel = new JLabel(cardBackIcon);
 				}
+
 				cardLabel.setBounds(x, y, cardWidth, cardHeight);
 				bgLabel.add(cardLabel);
-				bgLabel.setComponentZOrder(cardLabel, col - cardIndex);
+				bgLabel.setComponentZOrder(cardLabel, colonne.size() - cardIndex - 1);
 			}
 		}
-
 		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
 		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
 		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
