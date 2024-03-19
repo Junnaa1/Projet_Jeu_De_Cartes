@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -19,8 +20,6 @@ import javax.swing.SwingConstants;
 import controleur.SolitaireController;
 import controleur.Souris;
 import modele.Carte;
-import modele.NomCarte;
-import modele.CouleurCarte;
 
 public class Gui extends JFrame {
 
@@ -29,15 +28,15 @@ public class Gui extends JFrame {
 	private JButton boutonSolitaire;
 	private JButton boutonQuitter;
 	private Souris souris;
-    JPanel panelSolitaire = new JPanel();
-    List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
+	JPanel panelSolitaire = new JPanel();
+	List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
 
-    int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
-    int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
-    int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
-    int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
+	int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
+	int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
+	int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
+	int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
 
-    // Parcourir les colonnes d
+	// Parcourir les colonnes d
 	public Gui() {
 		this.souris = new Souris(this);
 		initGUI();
@@ -136,16 +135,7 @@ public class Gui extends JFrame {
 		return new ImageIcon(image);
 	}
 
-	// Récupérer une carte aléatoire ET la supprime du deck afin d'éviter les
-	// doublons
-	private ImageIcon getRandomCard(Random random, List<ImageIcon> deck) {
-		int index = random.nextInt(deck.size());
-		return deck.remove(index); // Supprime et retourne la carte choisie
-	}
-
 	public JPanel PanelSolitaire() {
-
-		Random random = new Random();
 
 		JPanel panelSolitaire = new JPanel();
 		panelSolitaire.setLayout(null);
@@ -170,7 +160,8 @@ public class Gui extends JFrame {
 
 		// Initialisation des cartes pour les reconnaitre
 		String[] suits = { "COEUR", "CARREAU", "TREFLE", "PIQUE" };
-		String[] values = { "DEUX", "TROIS", "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE", "ROI", "ace" };
+		String[] values = { "DEUX", "TROIS", "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE",
+				"ROI", "ace" };
 
 		// Ajoute les cartes au deck
 		for (String suit : suits) {
@@ -191,7 +182,8 @@ public class Gui extends JFrame {
 				Carte carte = colonne.get(cardIndex);
 				if (carte != null) {
 					// Créer un JLabel pour afficher la carte
-					String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString() + ".png";
+					String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString()
+							+ ".png";
 					ImageIcon carteImage = resizeCardImage(cardPath, cardWidth, cardHeight);
 					cardLabel = new JLabel(carteImage);
 				} else {
@@ -200,9 +192,18 @@ public class Gui extends JFrame {
 				}
 
 				cardLabel.setBounds(x, y, cardWidth, cardHeight);
+				final int finalCol = col;
+				// Ajout d'un MouseListener à chaque JLabel de carte
+				cardLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("Colonne cliquée : " + ((finalCol) + 1));
+					}
+				});
 				bgLabel.add(cardLabel);
 				bgLabel.setComponentZOrder(cardLabel, colonne.size() - cardIndex - 1);
 			}
+
 		}
 		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
 		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y

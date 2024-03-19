@@ -112,14 +112,14 @@ public class SolitaireController {
 	// Fonction principale (pour tester la création des colonnes)
 
 	public void demarrerJeu() {
-	    List<List<Carte>> colonnesDeDepart = creerColonnesDeDepart();
-	    afficherColonnes(colonnesDeDepart);
+		List<List<Carte>> colonnesDeDepart = creerColonnesDeDepart();
+		afficherColonnes(colonnesDeDepart);
 
-	    if (aGagner(colonnesDeDepart)) {
-	        System.out.println("Félicitations ! Vous avez gagné !");
-	    } else {
-	        System.out.println("Le jeu continue...");
-	    }
+		if (aGagner(colonnesDeDepart)) {
+			System.out.println("Félicitations ! Vous avez gagné !");
+		} else {
+			System.out.println("Le jeu continue...");
+		}
 	}
 
 	public static void main(String[] args) {
@@ -204,16 +204,24 @@ public class SolitaireController {
 
 		return false;
 	}
+
 	public boolean aGagner(List<List<Carte>> colonnes) {
-	    // Vérifier si toutes les colonnes de destination contiennent 13 cartes
-	    for (int i = 7; i < 11; i++) {
-	        if (colonnes.get(i).size() != 13) {
-	            return false;
-	        }
-	    }
-	    return true;
+		// Vérifier si toutes les colonnes de destination contiennent 13 cartes
+		for (int i = 7; i < 11; i++) {
+			if (colonnes.get(i).size() != 13) {
+				return false;
+			}
+		}
+		return true;
 	}
 
+	public void carteCliquee(Carte carte, int colonneIndex) {
+		// Ici, vous pouvez définir ce qui se passe lorsqu'une carte est cliquée
+		if (carte.estVisible()) {
+			System.out.println("Carte cliquée: " + carte + " dans la colonne " + colonneIndex);
+			// Ajoutez la logique de jeu en réponse au clic de la carte ici.
+		}
+	}
 
 	public static boolean deplacerColonne(List<List<Carte>> colonnes, int colonneSource, int colonneDestination,
 			int indexCarte) {
