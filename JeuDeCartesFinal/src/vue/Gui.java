@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import controleur.Souris;
+import modele.Carte;
 
 public class Gui extends JFrame {
 
@@ -145,7 +146,7 @@ public class Gui extends JFrame {
 		panelSolitaire.add(bgLabel);
 
 		// Création et placement des cartes retournées pour les colonnes de départ
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\back_of_card.png");
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
@@ -157,13 +158,13 @@ public class Gui extends JFrame {
 		List<ImageIcon> deck = new ArrayList<>(); // Liste vide du deck
 
 		// Initialisation des cartes pour les reconnaitre
-		String[] suits = { "hearts", "diamonds", "clubs", "spades" };
-		String[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace" };
+		String[] suits = { "COEUR", "CARREAU", "TREFLE", "PIQUE" };
+		String[] values = { "DEUX", "TROIS", "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE", "ROI", "ace" };
 
 		// Ajoute les cartes au deck
 		for (String suit : suits) {
 			for (String value : values) {
-				String cardPath = "src\\cartes\\" + value + "_of_" + suit + ".png";
+				String cardPath = "src\\cartes\\" + suit + "_" + suit + ".png";
 				deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
 			}
 		}
