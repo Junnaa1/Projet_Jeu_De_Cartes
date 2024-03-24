@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import controleur.SolitaireController;
 import controleur.Souris;
@@ -36,6 +37,10 @@ public class Gui extends JFrame {
 	int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
 	int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
 
+	private Carte carteSelectionnee = null;
+	private int colonneSourceSelectionnee = -1;
+	private int positionCarteDansColonne;
+
 	// Parcourir les colonnes d
 	public Gui() {
 		this.souris = new Souris(this);
@@ -54,7 +59,10 @@ public class Gui extends JFrame {
 	}
 
 	public void setPanel(JPanel panel) {
-		setContentPane(panel);
+		setContentPane(panel); // Définit le panel spécifié comme le content pane
+		if (panel instanceof JPanel) {
+			panelSolitaire = panel; // Assurez-vous que panelSolitaire référence le panel actuel si nécessaire
+		}
 		revalidate();
 		repaint();
 	}
@@ -166,7 +174,7 @@ public class Gui extends JFrame {
 		// Ajoute les cartes au deck
 		for (String suit : suits) {
 			for (String value : values) {
-				String cardPath = "src\\cartes\\" + suit + "_" + suit + ".png";
+				String cardPath = "src\\cartes\\" + value + "_" + suit + ".png";
 				deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
 			}
 		}
@@ -176,6 +184,8 @@ public class Gui extends JFrame {
 			List<Carte> colonne = colonnesDeDepart.get(col);
 			for (int cardIndex = 0; cardIndex < colonne.size(); cardIndex++) {
 				JLabel cardLabel;
+				final int finalCardIndex = cardIndex;
+				final int finalCol = col;
 				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
 				int y = gamecolumnsyStart + gamecolumnsySpacing * cardIndex;
 
@@ -192,12 +202,44 @@ public class Gui extends JFrame {
 				}
 
 				cardLabel.setBounds(x, y, cardWidth, cardHeight);
-				final int finalCol = col;
-				// Ajout d'un MouseListener à chaque JLabel de carte
+
 				cardLabel.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						System.out.println("Colonne cliquée : " + ((finalCol) + 1));
+						if (colonneSourceSelectionnee == -1) {
+							colonneSourceSelectionnee = finalCol;
+							positionCarteDansColonne = finalCardIndex; // cardIndex est l'index de la carte dans la
+																		// boucle
+							cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
+																					// bordure verte
+							System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: "
+									+ finalCardIndex);
+						} else {
+							// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
+							if (finalCol != colonneSourceSelectionnee) {
+								boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
+										colonneSourceSelectionnee, finalCol);
+								if (reussi) {
+									System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee
+											+ " vers la colonne " + finalCol);
+									rafraichirAffichage();
+									// Cette méthode doit être implémentée pour mettre à jour le
+									// GUI
+
+								} else {
+									System.out.println("Déplacement échoué");
+								}
+								colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
+								positionCarteDansColonne = -1;
+							} else if (finalCol == colonneSourceSelectionnee
+									&& finalCardIndex == positionCarteDansColonne) {
+								// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
+								cardLabel.setBorder(null);
+								colonneSourceSelectionnee = -1;
+								positionCarteDansColonne = -1;
+								System.out.println("Annulation de la sélection de la carte");
+							}
+						}
 					}
 				});
 				bgLabel.add(cardLabel);
@@ -251,6 +293,24 @@ public class Gui extends JFrame {
 		bgLabel.add(panelBoutons);
 
 		return panelSolitaire;
+	}
+
+	private void rafraichirAffichage() {
+		// Supprime tous les éléments du panelSolitaire et rafraîchit l'affichage
+		panelSolitaire.removeAll();
+
+		// Redessine l'arrière-plan
+		dessinerArrierePlan();
+
+		panelSolitaire.revalidate();
+		panelSolitaire.repaint();
+	}
+
+	private void dessinerArrierePlan() {
+		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		JLabel bgLabel = new JLabel(bgIcon);
+		bgLabel.setBounds(0, 0, 960, 540);
+		panelSolitaire.add(bgLabel);
 	}
 
 	public JPanel getMainPage() {

@@ -205,6 +205,16 @@ public class SolitaireController {
 		return false;
 	}
 
+	public static boolean deplacerCarteSimplifie(List<List<Carte>> colonnes, int colonneSource,
+			int colonneDestination) {
+		if (!colonnes.get(colonneSource).isEmpty()) {
+			Carte carteADeplacer = colonnes.get(colonneSource).remove(colonnes.get(colonneSource).size() - 1);
+			colonnes.get(colonneDestination).add(carteADeplacer);
+			return true;
+		}
+		return false;
+	}
+
 	public boolean aGagner(List<List<Carte>> colonnes) {
 		// Vérifier si toutes les colonnes de destination contiennent 13 cartes
 		for (int i = 7; i < 11; i++) {
