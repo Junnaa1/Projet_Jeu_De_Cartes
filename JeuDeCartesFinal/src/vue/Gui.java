@@ -45,6 +45,7 @@ public class Gui extends JFrame {
 	public Gui() {
 		this.souris = new Souris(this);
 		initGUI();
+		rendreDernieresCartesVisibles();
 	}
 
 	private void initGUI() {
@@ -206,38 +207,38 @@ public class Gui extends JFrame {
 				cardLabel.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						if (colonneSourceSelectionnee == -1) {
-							colonneSourceSelectionnee = finalCol;
-							positionCarteDansColonne = finalCardIndex; // cardIndex est l'index de la carte dans la
-																		// boucle
-							cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
-																					// bordure verte
-							System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: "
-									+ finalCardIndex);
-						} else {
-							// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
-							if (finalCol != colonneSourceSelectionnee) {
-								boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
-										colonneSourceSelectionnee, finalCol);
-								if (reussi) {
-									System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee
-											+ " vers la colonne " + finalCol);
-									rafraichirAffichage();
-									// Cette méthode doit être implémentée pour mettre à jour le
-									// GUI
-
-								} else {
-									System.out.println("Déplacement échoué");
+						if (carte.estVisible()) {
+							if (colonneSourceSelectionnee == -1) {
+								colonneSourceSelectionnee = finalCol;
+								positionCarteDansColonne = finalCardIndex;
+								carteSelectionnee = carte;
+								System.out.println("Carte sélectionnée : " + carte);
+								cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
+																						// bordure verte
+								System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: "
+										+ finalCardIndex);
+							} else {
+								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
+								if (finalCol != colonneSourceSelectionnee) {
+									boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
+											colonneSourceSelectionnee, finalCol);
+									if (reussi) {
+										System.out.println("Déplacement réussi de la colonne "
+												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
+										reconstruireAffichageColonnes();
+									} else {
+										System.out.println("Déplacement échoué");
+									}
+									colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
+									positionCarteDansColonne = -1;
+								} else if (finalCol == colonneSourceSelectionnee
+										&& finalCardIndex == positionCarteDansColonne) {
+									// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
+									cardLabel.setBorder(null);
+									colonneSourceSelectionnee = -1;
+									positionCarteDansColonne = -1;
+									System.out.println("Annulation de la sélection de la carte");
 								}
-								colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
-								positionCarteDansColonne = -1;
-							} else if (finalCol == colonneSourceSelectionnee
-									&& finalCardIndex == positionCarteDansColonne) {
-								// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
-								cardLabel.setBorder(null);
-								colonneSourceSelectionnee = -1;
-								positionCarteDansColonne = -1;
-								System.out.println("Annulation de la sélection de la carte");
 							}
 						}
 					}
@@ -296,11 +297,24 @@ public class Gui extends JFrame {
 	}
 
 	private void rafraichirAffichage() {
-		// Supprime tous les éléments du panelSolitaire et rafraîchit l'affichage
 		panelSolitaire.removeAll();
-
-		// Redessine l'arrière-plan
 		dessinerArrierePlan();
+		reconstruireAffichageColonnes(); // Appel à la méthode pour reconstruire l'affichage
+		panelSolitaire.revalidate();
+		panelSolitaire.repaint();
+	}
+
+	private void reconstruireAffichageColonnes() {
+		// Suppression des composants actuels et redessin de l'arrière-plan
+		panelSolitaire.removeAll();
+		dessinerArrierePlan();
+
+		if (carteSelectionnee != null) {
+			System.out.println("Carte actuellement sélectionnée : " + carteSelectionnee.getNom() + " de couleur "
+					+ carteSelectionnee.getCouleur());
+		} else {
+			System.out.println("Aucune carte n'est actuellement sélectionnée.");
+		}
 
 		panelSolitaire.revalidate();
 		panelSolitaire.repaint();
@@ -311,6 +325,15 @@ public class Gui extends JFrame {
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
+	}
+
+	private void rendreDernieresCartesVisibles() {
+		for (List<Carte> colonne : colonnesDeDepart) {
+			if (!colonne.isEmpty()) {
+				Carte derniereCarte = colonne.get(colonne.size() - 1);
+				derniereCarte.setVisible(true);
+			}
+		}
 	}
 
 	public JPanel getMainPage() {
