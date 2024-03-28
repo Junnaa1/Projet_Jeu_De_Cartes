@@ -37,9 +37,11 @@ public class Gui extends JFrame {
 	int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
 	int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
 
-	private Carte carteSelectionnee = null;
+	public Carte carteSelectionnee = null;
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
+
+	public List<ImageIcon> deck = new ArrayList<>();
 
 	// Parcourir les colonnes d
 	public Gui() {
@@ -165,8 +167,6 @@ public class Gui extends JFrame {
 		int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
 		int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
 
-		List<ImageIcon> deck = new ArrayList<>(); // Liste vide du deck
-
 		// Initialisation des cartes pour les reconnaitre
 		String[] suits = { "COEUR", "CARREAU", "TREFLE", "PIQUE" };
 		String[] values = { "DEUX", "TROIS", "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE",
@@ -175,8 +175,10 @@ public class Gui extends JFrame {
 		// Ajoute les cartes au deck
 		for (String suit : suits) {
 			for (String value : values) {
-				String cardPath = "src\\cartes\\" + value + "_" + suit + ".png";
-				deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
+				if (!suit.equals("CACHEE") && !value.equals("CACHEE")) {
+					String cardPath = "src\\cartes\\" + value + "_" + suit + ".png";
+					deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
+				}
 			}
 		}
 
@@ -192,59 +194,63 @@ public class Gui extends JFrame {
 
 				Carte carte = colonne.get(cardIndex);
 				if (carte != null) {
-					// Créer un JLabel pour afficher la carte
-					String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString()
-							+ ".png";
-					ImageIcon carteImage = resizeCardImage(cardPath, cardWidth, cardHeight);
+					ImageIcon carteImage;
+					// Vérifie si la carte doit être affichée comme visible ou cachée
+					if (carte.estVisible()) {
+						String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_"
+								+ carte.getCouleur().toString() + ".png";
+						carteImage = resizeCardImage(cardPath, cardWidth, cardHeight);
+					} else {
+						// Utiliser l'image de dos de carte si la carte n'est pas supposée être visible
+						carteImage = cardBackIcon;
+					}
 					cardLabel = new JLabel(carteImage);
-				} else {
-					// Si la carte est nulle, afficher le dos de la carte
-					cardLabel = new JLabel(cardBackIcon);
-				}
 
-				cardLabel.setBounds(x, y, cardWidth, cardHeight);
-
-				cardLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						if (carte.estVisible()) {
-							if (colonneSourceSelectionnee == -1) {
-								colonneSourceSelectionnee = finalCol;
-								positionCarteDansColonne = finalCardIndex;
-								carteSelectionnee = carte;
-								System.out.println("Carte sélectionnée : " + carte);
-								cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
-																						// bordure verte
-								System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: "
-										+ finalCardIndex);
-							} else {
-								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
-								if (finalCol != colonneSourceSelectionnee) {
-									boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
-											colonneSourceSelectionnee, finalCol);
-									if (reussi) {
-										System.out.println("Déplacement réussi de la colonne "
-												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
-										reconstruireAffichageColonnes();
-									} else {
-										System.out.println("Déplacement échoué");
+					cardLabel.setBounds(x, y, cardWidth, cardHeight);
+					cardLabel.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							if (carte.estVisible()) {
+								if (colonneSourceSelectionnee == -1) {
+									colonneSourceSelectionnee = finalCol;
+									positionCarteDansColonne = finalCardIndex;
+									carteSelectionnee = carte;
+									System.out.println("Carte sélectionnée : " + carte);
+									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
+																							// une
+																							// bordure verte
+									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
+											+ ", position: " + finalCardIndex);
+								} else {
+									// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
+									if (finalCol != colonneSourceSelectionnee) {
+										boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
+												colonneSourceSelectionnee, finalCol);
+										if (reussi) {
+											System.out.println("Déplacement réussi de la colonne "
+													+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
+											reconstruireAffichageColonnes();
+										} else {
+											System.out.println("Déplacement échoué");
+										}
+										colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un
+																		// déplacement
+										positionCarteDansColonne = -1;
+									} else if (finalCol == colonneSourceSelectionnee
+											&& finalCardIndex == positionCarteDansColonne) {
+										// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
+										cardLabel.setBorder(null);
+										colonneSourceSelectionnee = -1;
+										positionCarteDansColonne = -1;
+										System.out.println("Annulation de la sélection de la carte");
 									}
-									colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
-									positionCarteDansColonne = -1;
-								} else if (finalCol == colonneSourceSelectionnee
-										&& finalCardIndex == positionCarteDansColonne) {
-									// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
-									cardLabel.setBorder(null);
-									colonneSourceSelectionnee = -1;
-									positionCarteDansColonne = -1;
-									System.out.println("Annulation de la sélection de la carte");
 								}
 							}
 						}
-					}
-				});
-				bgLabel.add(cardLabel);
-				bgLabel.setComponentZOrder(cardLabel, colonne.size() - cardIndex - 1);
+					});
+					bgLabel.add(cardLabel);
+					bgLabel.setComponentZOrder(cardLabel, colonne.size() - cardIndex - 1);
+				}
 			}
 
 		}
@@ -296,35 +302,160 @@ public class Gui extends JFrame {
 		return panelSolitaire;
 	}
 
-	private void rafraichirAffichage() {
-		panelSolitaire.removeAll();
-		dessinerArrierePlan();
-		reconstruireAffichageColonnes(); // Appel à la méthode pour reconstruire l'affichage
-		panelSolitaire.revalidate();
-		panelSolitaire.repaint();
-	}
-
 	private void reconstruireAffichageColonnes() {
-		// Suppression des composants actuels et redessin de l'arrière-plan
+		// Supprime tous les composants du panelSolitaire pour recommencer.
 		panelSolitaire.removeAll();
-		dessinerArrierePlan();
+		panelSolitaire.setLayout(null); // Assurez-vous que le layout est correctement défini pour le positionnement
+										// manuel.
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
 
-		if (carteSelectionnee != null) {
-			System.out.println("Carte actuellement sélectionnée : " + carteSelectionnee.getNom() + " de couleur "
-					+ carteSelectionnee.getCouleur());
-		} else {
-			System.out.println("Aucune carte n'est actuellement sélectionnée.");
-		}
-
-		panelSolitaire.revalidate();
-		panelSolitaire.repaint();
-	}
-
-	private void dessinerArrierePlan() {
+		// Redessine l'arrière-plan sur le panelSolitaire.
 		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
+
+		// Itère à travers chaque colonne de départ pour reconstruire l'affichage des
+		// cartes.
+		for (int col = 0; col < colonnesDeDepart.size(); col++) {
+			List<Carte> colonne = colonnesDeDepart.get(col);
+
+			for (int cardIndex = 0; cardIndex < colonne.size(); cardIndex++) {
+				Carte carte = colonne.get(cardIndex);
+				JLabel cardLabel;
+				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
+				int y = gamecolumnsyStart + gamecolumnsySpacing * cardIndex;
+				final int finalCardIndex = cardIndex;
+				final int finalCol = col;
+				// Si nous sommes à la dernière carte de la colonne source, utilisez une carte
+				// aléatoire du deck
+				if (col == colonneSourceSelectionnee && cardIndex == colonne.size() - 1) {
+					ImageIcon carteAleatoireIcon = obtenirCarteAleatoireDuDeck();
+					cardLabel = new JLabel(carteAleatoireIcon);
+
+				} else {
+					// Utilise l'image de dos de la carte ou l'image de la carte en fonction de
+					// estVisible
+					String imagePath = carte.estVisible()
+							? "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString() + ".png"
+							: "src\\cartes\\CACHEE_CACHEE.png";
+					ImageIcon carteImage = resizeCardImage(imagePath, cardWidth, cardHeight);
+					cardLabel = new JLabel(carteImage);
+				}
+
+				cardLabel.setBounds(x, y, cardWidth, cardHeight);
+				bgLabel.add(cardLabel);
+
+				cardLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if (carte.estVisible()) {
+							if (colonneSourceSelectionnee == -1) {
+								colonneSourceSelectionnee = finalCol;
+								positionCarteDansColonne = finalCardIndex;
+								carteSelectionnee = carte;
+								System.out.println("Carte sélectionnée : " + carte);
+								cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
+																						// bordure verte
+								System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: "
+										+ finalCardIndex);
+							} else {
+								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
+								if (finalCol != colonneSourceSelectionnee) {
+									boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
+											colonneSourceSelectionnee, finalCol);
+									if (reussi) {
+										System.out.println("Déplacement réussi de la colonne "
+												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
+										reconstruireAffichageColonnes();
+									} else {
+										System.out.println("Déplacement échoué");
+									}
+									colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
+									positionCarteDansColonne = -1;
+								} else if (finalCol == colonneSourceSelectionnee
+										&& finalCardIndex == positionCarteDansColonne) {
+									// Si l'utilisateur clique à nouveau sur la même carte, annuler la sélection
+									cardLabel.setBorder(null);
+									colonneSourceSelectionnee = -1;
+									positionCarteDansColonne = -1;
+									System.out.println("Annulation de la sélection de la carte");
+								}
+							}
+						}
+					}
+				});
+
+				panelSolitaire.add(cardLabel);
+
+				// Ajustez l'ordre Z pour que les cartes soient empilées correctement.
+				panelSolitaire.setComponentZOrder(cardLabel, 0);
+			}
+		}
+
+		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
+		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
+		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
+
+		// Création des quatre colonnes finales
+		for (int i = 0; i < 4; i++) {
+			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+			JLabel pileVideLabel = new JLabel(pileVideIcon);
+			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
+			int y = piocheYStart;
+			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(pileVideLabel);
+		}
+
+		// Colonnes de la pioche
+		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+		JLabel pileVideLabel = new JLabel(pileVideIcon);
+		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
+		bgLabel.add(pileVideLabel);
+
+		JLabel piocheLabel = new JLabel(cardBackIcon);
+		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
+		bgLabel.add(piocheLabel);
+
+		// Boutons pour revenir à l'accueil
+
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		panelBoutons.setOpaque(false);
+
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 26));
+
+		panelBoutons.add(boutonRetour);
+
+		boutonRetour.addActionListener(souris);
+		boutonRetour.setActionCommand("Retour");
+		boutonRetour.addMouseListener(souris);
+
+		panelBoutons.setBounds(-130, 450, 420, 60);
+		bgLabel.add(panelBoutons);
+
+		// Ces appels assurent que le panelSolitaire est mis à jour pour afficher les
+		// nouvelles colonnes de cartes.
+
+		rendreDernieresCartesVisibles();
+
+		panelSolitaire.revalidate();
+		panelSolitaire.repaint();
+	}
+
+	private ImageIcon obtenirCarteAleatoireDuDeck() {
+		if (deck.isEmpty()) {
+			// Gérez le cas où le deck est vide, par exemple en le rechargeant
+			return null;
+		}
+		int index = (int) (Math.random() * deck.size());
+		return deck.remove(index); // Retourne et retire la carte du deck
 	}
 
 	private void rendreDernieresCartesVisibles() {

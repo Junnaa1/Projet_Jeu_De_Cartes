@@ -1,6 +1,7 @@
 package controleur;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -27,38 +28,39 @@ public class SolitaireController {
 		return listeCartes;
 	}
 
+	public static List<Carte> initDeck() {
+		List<Carte> deck = new ArrayList<>();
+		for (CouleurCarte couleur : CouleurCarte.values()) {
+			for (NomCarte nom : NomCarte.values()) {
+				// Skip la création de cartes avec la couleur ou le nom CACHEE
+				if (couleur != CouleurCarte.CACHEE && nom != NomCarte.CACHEE) {
+					deck.add(new Carte(nom, couleur));
+				}
+			}
+		}
+		Collections.shuffle(deck);
+		return deck;
+	}
+
 	public static List<List<Carte>> creerColonnesDeDepart() {
+		List<Carte> deck = initDeck(); // Assurez-vous que ce deck est mélangé si nécessaire.
 		List<List<Carte>> colonnes = new ArrayList<>();
 
-		// Création des colonnes avec des cartes
-		Random random = new Random();
+		// Générer les colonnes de départ
 		for (int i = 0; i < 7; i++) {
 			List<Carte> colonne = new ArrayList<>();
 			for (int j = 0; j <= i; j++) {
-				// La première carte est visible, les autres sont cachées
-				if (j == i) {
-					// Génération d'une carte aléatoire pour la première carte visible
-					NomCarte nomCarte;
-					CouleurCarte couleurCarte;
-					boolean carteDejaPresente;
-					do {
-						nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length - 1)];
-						couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length - 1)];
-						carteDejaPresente = false;
-						for (List<Carte> col : colonnes) {
-							for (Carte c : col) {
-								if (c != null && c.getNom() == nomCarte && c.getCouleur() == couleurCarte) {
-									carteDejaPresente = true;
-									break;
-								}
-							}
-						}
-					} while (carteDejaPresente);
-					colonne.add(new Carte(nomCarte, couleurCarte));
+				// Prendre la carte du dessus du deck
+				Carte carteTiree = deck.remove(0); // Retire la première carte du deck
+				colonne.add(carteTiree);
+				if (j < i) {
+					// Toutes les cartes, sauf la dernière de chaque colonne, sont cachées
+					carteTiree.setVisible(false);
 				} else {
-					// Ajoutez une carte spéciale pour représenter les cartes cachées
-					colonne.add(new Carte(NomCarte.CACHEE, CouleurCarte.CACHEE));
+					// La dernière carte de chaque colonne est visible
+					carteTiree.setVisible(true);
 				}
+
 			}
 			colonnes.add(colonne);
 		}
@@ -208,8 +210,19 @@ public class SolitaireController {
 	public static boolean deplacerCarteSimplifie(List<List<Carte>> colonnes, int colonneSource,
 			int colonneDestination) {
 		if (!colonnes.get(colonneSource).isEmpty()) {
+			// Supprime la carte de la colonne source
 			Carte carteADeplacer = colonnes.get(colonneSource).remove(colonnes.get(colonneSource).size() - 1);
+			// Assurez-vous que la carte est visible lorsque vous la déplacez
+			carteADeplacer.setVisible(true); // Cette ligne s'assure que la carte est visible
+			// Ajoute la carte à la colonne de destination
 			colonnes.get(colonneDestination).add(carteADeplacer);
+
+			// Si la colonne source n'est pas vide, rendez la nouvelle dernière carte
+			// visible
+			if (!colonnes.get(colonneSource).isEmpty()) {
+				Carte nouvelleDerniereCarte = colonnes.get(colonneSource).get(colonnes.get(colonneSource).size() - 1);
+				nouvelleDerniereCarte.setVisible(true);
+			}
 			return true;
 		}
 		return false;
