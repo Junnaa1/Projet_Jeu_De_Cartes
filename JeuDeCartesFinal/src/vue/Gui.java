@@ -216,8 +216,7 @@ public class Gui extends JFrame {
 									positionCarteDansColonne = finalCardIndex;
 									carteSelectionnee = carte;
 									System.out.println("Carte sélectionnée : " + carte);
-									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
-																							// une
+									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
 																							// bordure verte
 									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
 											+ ", position: " + finalCardIndex);
