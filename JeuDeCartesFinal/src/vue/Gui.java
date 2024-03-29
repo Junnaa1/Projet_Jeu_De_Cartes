@@ -258,14 +258,36 @@ public class Gui extends JFrame {
 		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
 
 		// Création des quatre colonnes finales
+
+		// Après la création des colonnes finales, ajoutez des actions de souris pour les colonnes vides.
 		for (int i = 0; i < 4; i++) {
+		    final int finalCol = i;
 			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-			JLabel pileVideLabel = new JLabel(pileVideIcon);
+		    JLabel pileVideLabel = new JLabel(pileVideIcon);
 			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
 			int y = piocheYStart;
-			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-			bgLabel.add(pileVideLabel);
+		    pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+		    bgLabel.add(pileVideLabel);
+		    
+		    pileVideLabel.addMouseListener(new MouseAdapter() {
+		        @Override
+		        public void mouseClicked(MouseEvent e) {
+		            if (colonneSourceSelectionnee != -1) {
+		                boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart, colonneSourceSelectionnee, finalCol);
+		                if (reussi) {
+		                    System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee + " vers la colonne " + finalCol);
+		                    reconstruireAffichageColonnes();
+		                } else {
+		                    System.out.println("Déplacement échoué");
+		                    
+		                }
+		                colonneSourceSelectionnee = -1;
+		                positionCarteDansColonne = -1;
+		            }
+		        }
+		    });
 		}
+
 
 		// Colonnes de la pioche
 		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
@@ -371,6 +393,7 @@ public class Gui extends JFrame {
 										reconstruireAffichageColonnes();
 									} else {
 										System.out.println("Déplacement échoué");
+										cardLabel.setBorder(null);
 									}
 									colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
 									positionCarteDansColonne = -1;

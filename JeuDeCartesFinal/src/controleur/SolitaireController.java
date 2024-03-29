@@ -166,8 +166,9 @@ public class SolitaireController {
 
 		if (!destination.isEmpty()) {
 			Carte derniereCarte = destination.get(destination.size() - 1);
-			if (carteADeplacer.getValeur() != derniereCarte.getValeur() + 1
-					|| carteADeplacer.getCouleur() != derniereCarte.getCouleur()) {
+			if (carteADeplacer.getValeur() != derniereCarte.getValeur() - 1 || 
+					carteADeplacer.getCouleur().getPoints() < 3 && derniereCarte.getCouleur().getPoints()<3 ||
+					carteADeplacer.getCouleur().getPoints() > 2 && derniereCarte.getCouleur().getPoints()>2) {
 				return false;
 			}
 		}
@@ -175,7 +176,7 @@ public class SolitaireController {
 		// carte à déplacer est inférieure d'une unité à la carte du dessus de la
 		// colonne destination
 		if (destination.isEmpty()
-				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() + 1) {
+				|| carteADeplacer.getValeur() == destination.get(destination.size() - 1).getValeur() - 1) {
 			destination.add(carteADeplacer);
 			source.remove(source.size() - 1);
 			Random random = new Random();
