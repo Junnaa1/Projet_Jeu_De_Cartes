@@ -216,8 +216,7 @@ public class Gui extends JFrame {
 									positionCarteDansColonne = finalCardIndex;
 									carteSelectionnee = carte;
 									System.out.println("Carte sélectionnée : " + carte);
-									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
-																							// une
+									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
 																							// bordure verte
 									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
 											+ ", position: " + finalCardIndex);
@@ -351,7 +350,7 @@ public class Gui extends JFrame {
 				cardLabel.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						if (carte.estVisible()) {
+						if (finalCardIndex == colonne.size() - 1) {
 							if (colonneSourceSelectionnee == -1) {
 								colonneSourceSelectionnee = finalCol;
 								positionCarteDansColonne = finalCardIndex;
@@ -364,7 +363,7 @@ public class Gui extends JFrame {
 							} else {
 								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 								if (finalCol != colonneSourceSelectionnee) {
-									boolean reussi = SolitaireController.deplacerCarteSimplifie(colonnesDeDepart,
+									boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart,
 											colonneSourceSelectionnee, finalCol);
 									if (reussi) {
 										System.out.println("Déplacement réussi de la colonne "

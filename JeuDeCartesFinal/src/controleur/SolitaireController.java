@@ -220,8 +220,30 @@ public class SolitaireController {
 			// Si la colonne source n'est pas vide, rendez la nouvelle dernière carte
 			// visible
 			if (!colonnes.get(colonneSource).isEmpty()) {
-				Carte nouvelleDerniereCarte = colonnes.get(colonneSource).get(colonnes.get(colonneSource).size() - 1);
-				nouvelleDerniereCarte.setVisible(true);
+				Random random = new Random();
+				NomCarte nomCarte;
+				CouleurCarte couleurCarte;
+				List<Carte> source = colonnes.get(colonneSource);
+				if (source.size() >= 1 && source.get(source.size() - 1).getNom() == NomCarte.CACHEE) {
+					boolean cartePresente;
+					do {
+						// Remplacer la dernière carte si elle a pour nom "CACHEE"
+						nomCarte = NomCarte.values()[random.nextInt(NomCarte.values().length) - 1];
+						couleurCarte = CouleurCarte.values()[random.nextInt(CouleurCarte.values().length) - 1];
+						cartePresente = false;
+						Carte nouvelleCarte = new Carte(nomCarte, couleurCarte);
+						for (List<Carte> col : colonnes) {
+							for (Carte c : col) {
+								if (c != null && c.equals(nouvelleCarte)) {
+									cartePresente = true;
+									break;
+								}
+							}
+						}
+						source.set(source.size() - 1, nouvelleCarte);
+					} while (cartePresente);
+
+				}
 			}
 			return true;
 		}
