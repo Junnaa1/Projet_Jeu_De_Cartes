@@ -16,7 +16,6 @@ public class SolitaireController {
 	private List<Carte> colR2 = new ArrayList<>();
 	private List<Carte> colR3 = new ArrayList<>();
 	private List<Carte> colR4 = new ArrayList<>();
-
 	private static final List<Carte> deck = new ArrayList<>();
 
 	// Creation d'un jeu de cartes de 52 cartes

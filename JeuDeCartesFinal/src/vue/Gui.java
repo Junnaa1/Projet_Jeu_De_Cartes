@@ -255,53 +255,8 @@ public class Gui extends JFrame {
 			}
 
 		}
-		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
-		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
-		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
 
-		// Création des quatre colonnes finales
-
-		// Après la création des colonnes finales, ajoutez des actions de souris pour
-		// les colonnes vides.
-		for (int i = 0; i < 4; i++) {
-			final int finalCol = i;
-			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-			JLabel pileVideLabel = new JLabel(pileVideIcon);
-			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
-			int y = piocheYStart;
-			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-			bgLabel.add(pileVideLabel);
-
-			pileVideLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (colonneSourceSelectionnee != -1) {
-						boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart, colonneSourceSelectionnee,
-								finalCol);
-						if (reussi) {
-							System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee
-									+ " vers la colonne " + finalCol);
-							reconstruireAffichageColonnes();
-						} else {
-							System.out.println("Déplacement échoué");
-
-						}
-						colonneSourceSelectionnee = -1;
-						positionCarteDansColonne = -1;
-					}
-				}
-			});
-		}
-
-		// Colonnes de la pioche
-		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-		JLabel pileVideLabel = new JLabel(pileVideIcon);
-		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
-		bgLabel.add(pileVideLabel);
-
-		JLabel piocheLabel = new JLabel(cardBackIcon);
-		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
-		bgLabel.add(piocheLabel);
+		creerPioche(bgLabel);
 
 		// Boutons pour revenir à l'accueil
 
@@ -434,15 +389,7 @@ public class Gui extends JFrame {
 			bgLabel.add(pileVideLabel);
 		}
 
-		// Colonnes de la pioche
-		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-		JLabel pileVideLabel = new JLabel(pileVideIcon);
-		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
-		bgLabel.add(pileVideLabel);
-
-		JLabel piocheLabel = new JLabel(cardBackIcon);
-		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
-		bgLabel.add(piocheLabel);
+		creerPioche(bgLabel);
 
 		// Boutons pour revenir à l'accueil
 
@@ -474,13 +421,39 @@ public class Gui extends JFrame {
 		panelSolitaire.repaint();
 	}
 
-	private ImageIcon obtenirCarteAleatoireDuDeck() {
-		if (deck.isEmpty()) {
-			// Gérez le cas où le deck est vide, par exemple en le rechargeant
-			return null;
-		}
-		int index = (int) (Math.random() * deck.size());
-		return deck.remove(index); // Retourne et retire la carte du deck
+	private void creerPioche(JLabel bgLabel) {
+		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
+
+		// Pioche vide initialement
+		JLabel pileVideLabel = new JLabel();
+		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
+		bgLabel.add(pileVideLabel);
+
+		JLabel piocheLabel = new JLabel(cardBackIcon);
+		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
+		bgLabel.add(piocheLabel);
+
+		// Ajout d'un MouseListener à piocheLabel pour gérer les clics
+		piocheLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (!deck.isEmpty()) {
+					// Prend la dernière carte du deck
+					ImageIcon carteTireeIcon = deck.remove(deck.size() - 1);
+
+					// Remplace l'icône de pileVideLabel par celle de la carte tirée
+					pileVideLabel.setIcon(carteTireeIcon);
+
+					// Force la mise à jour de l'affichage de bgLabel
+					bgLabel.repaint();
+				} else {
+					// Afficher un message ou effectuer une action lorsque le deck est vide
+					System.out.println("Le deck est vide.");
+				}
+			}
+		});
 	}
 
 	private ImageIcon obtenirImageCarte(Carte carte) {
