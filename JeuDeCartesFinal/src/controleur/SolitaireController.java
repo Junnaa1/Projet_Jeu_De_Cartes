@@ -17,6 +17,8 @@ public class SolitaireController {
 	private List<Carte> colR3 = new ArrayList<>();
 	private List<Carte> colR4 = new ArrayList<>();
 
+	private static final List<Carte> deck = new ArrayList<>();
+
 	// Creation d'un jeu de cartes de 52 cartes
 	public List<Carte> createJeu52Cartes() {
 		List<Carte> listeCartes = new ArrayList<>();
@@ -166,9 +168,9 @@ public class SolitaireController {
 
 		if (!destination.isEmpty()) {
 			Carte derniereCarte = destination.get(destination.size() - 1);
-			if (carteADeplacer.getValeur() != derniereCarte.getValeur() - 1 || 
-					carteADeplacer.getCouleur().getPoints() < 3 && derniereCarte.getCouleur().getPoints()<3 ||
-					carteADeplacer.getCouleur().getPoints() > 2 && derniereCarte.getCouleur().getPoints()>2) {
+			if (carteADeplacer.getValeur() != derniereCarte.getValeur() - 1
+					|| carteADeplacer.getCouleur().getPoints() < 3 && derniereCarte.getCouleur().getPoints() < 3
+					|| carteADeplacer.getCouleur().getPoints() > 2 && derniereCarte.getCouleur().getPoints() > 2) {
 				return false;
 			}
 		}
@@ -206,6 +208,27 @@ public class SolitaireController {
 		}
 
 		return false;
+	}
+
+	// Supposons que cette méthode est appelée pour révéler une carte dans la
+	// colonne source
+	public static Carte revelerCarte(List<Carte> source) {
+		Random random = new Random();
+		// Assurez-vous que la dernière carte est bien une carte cachée avant de la
+		// révéler
+		if (!source.isEmpty() && source.get(source.size() - 1).getNom() == NomCarte.CACHEE) {
+			// Remplacez ici la logique de sélection aléatoire par la révélation de la carte
+			// supérieure du deck
+			Carte carteRevelee = source.remove(source.size() - 1); // Retire la carte cachée
+			// Ici, vous devriez avoir une logique pour sélectionner la carte suivante à
+			// révéler
+			// par exemple, prenez la prochaine carte du deck (assurez-vous que le deck est
+			// bien mélangé au préalable)
+			Carte nouvelleCarte = deck.remove(0); // Simulez 'deck' comme étant votre deck de cartes mélangé
+			source.add(nouvelleCarte); // Ajoutez la carte révélée à la colonne
+			return nouvelleCarte; // Retournez la nouvelle carte pour mise à jour dans l'interface utilisateur
+		}
+		return null; // Aucune carte à révéler
 	}
 
 	public static boolean deplacerCarteSimplifie(List<List<Carte>> colonnes, int colonneSource,

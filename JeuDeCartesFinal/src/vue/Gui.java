@@ -41,7 +41,7 @@ public class Gui extends JFrame {
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
 
-	public List<ImageIcon> deck = new ArrayList<>();
+	public static List<ImageIcon> deck = new ArrayList<>();
 
 	// Parcourir les colonnes d
 	public Gui() {
@@ -216,7 +216,8 @@ public class Gui extends JFrame {
 									positionCarteDansColonne = finalCardIndex;
 									carteSelectionnee = carte;
 									System.out.println("Carte sélectionnée : " + carte);
-									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une
+									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
+																							// une
 																							// bordure verte
 									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
 											+ ", position: " + finalCardIndex);
@@ -259,35 +260,37 @@ public class Gui extends JFrame {
 
 		// Création des quatre colonnes finales
 
-		// Après la création des colonnes finales, ajoutez des actions de souris pour les colonnes vides.
+		// Après la création des colonnes finales, ajoutez des actions de souris pour
+		// les colonnes vides.
 		for (int i = 0; i < 4; i++) {
-		    final int finalCol = i;
+			final int finalCol = i;
 			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-		    JLabel pileVideLabel = new JLabel(pileVideIcon);
+			JLabel pileVideLabel = new JLabel(pileVideIcon);
 			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
 			int y = piocheYStart;
-		    pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-		    bgLabel.add(pileVideLabel);
-		    
-		    pileVideLabel.addMouseListener(new MouseAdapter() {
-		        @Override
-		        public void mouseClicked(MouseEvent e) {
-		            if (colonneSourceSelectionnee != -1) {
-		                boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart, colonneSourceSelectionnee, finalCol);
-		                if (reussi) {
-		                    System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee + " vers la colonne " + finalCol);
-		                    reconstruireAffichageColonnes();
-		                } else {
-		                    System.out.println("Déplacement échoué");
-		                    
-		                }
-		                colonneSourceSelectionnee = -1;
-		                positionCarteDansColonne = -1;
-		            }
-		        }
-		    });
-		}
+			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(pileVideLabel);
 
+			pileVideLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (colonneSourceSelectionnee != -1) {
+						boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart, colonneSourceSelectionnee,
+								finalCol);
+						if (reussi) {
+							System.out.println("Déplacement réussi de la colonne " + colonneSourceSelectionnee
+									+ " vers la colonne " + finalCol);
+							reconstruireAffichageColonnes();
+						} else {
+							System.out.println("Déplacement échoué");
+
+						}
+						colonneSourceSelectionnee = -1;
+						positionCarteDansColonne = -1;
+					}
+				}
+			});
+		}
 
 		// Colonnes de la pioche
 		ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
@@ -353,9 +356,8 @@ public class Gui extends JFrame {
 				// Si nous sommes à la dernière carte de la colonne source, utilisez une carte
 				// aléatoire du deck
 				if (col == colonneSourceSelectionnee && cardIndex == colonne.size() - 1) {
-					ImageIcon carteAleatoireIcon = obtenirCarteAleatoireDuDeck();
-					cardLabel = new JLabel(carteAleatoireIcon);
-
+					ImageIcon carteIcon = obtenirImageCarte(carte);
+					cardLabel = new JLabel(carteIcon);
 				} else {
 					// Utilise l'image de dos de la carte ou l'image de la carte en fonction de
 					// estVisible
@@ -478,6 +480,17 @@ public class Gui extends JFrame {
 		}
 		int index = (int) (Math.random() * deck.size());
 		return deck.remove(index); // Retourne et retire la carte du deck
+	}
+
+	private ImageIcon obtenirImageCarte(Carte carte) {
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
+		if (carte == null)
+			return null;
+		String chemin = "src\\cartes\\" + carte.getNom() + "_" + carte.getCouleur() + ".png";
+		return resizeCardImage(chemin, cardWidth, cardHeight); // Utilisez la méthode existante pour redimensionner
+																// l'image
 	}
 
 	private void rendreDernieresCartesVisibles() {
