@@ -232,6 +232,7 @@ public class Gui extends JFrame {
 											reconstruireAffichageColonnes();
 										} else {
 											System.out.println("Déplacement échoué");
+											reconstruireAffichageColonnes();
 										}
 										colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un
 																		// déplacement
@@ -395,7 +396,7 @@ public class Gui extends JFrame {
 										reconstruireAffichageColonnes();
 									} else {
 										System.out.println("Déplacement échoué");
-										cardLabel.setBorder(null);
+										reconstruireAffichageColonnes();
 									}
 									colonneSourceSelectionnee = -1; // Réinitialiser la sélection après un déplacement
 									positionCarteDansColonne = -1;
