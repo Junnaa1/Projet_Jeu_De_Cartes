@@ -40,6 +40,8 @@ public class Gui extends JFrame {
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
 
+	public Carte cartePiochee = null;
+
 	List<Carte> deck = SolitaireController.getDeck();
 
 	// Parcourir les colonnes d
@@ -440,6 +442,8 @@ public class Gui extends JFrame {
 				if (!deck.isEmpty()) {
 					// Prend la dernière carte du deck
 					Carte carteTiree = deck.remove(deck.size() - 1);
+					cartePiochee = carteTiree;
+					cartePiochee.setVisible(true);
 					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
 
 					// Redimensionnement de l'ImageIcon de la carte tirée pour correspondre à la

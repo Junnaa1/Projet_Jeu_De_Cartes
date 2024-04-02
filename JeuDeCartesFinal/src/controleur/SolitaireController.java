@@ -90,7 +90,7 @@ public class SolitaireController {
 		deplacerCarte(colonnes, 4, 8);
 		deplacerCarte(colonnes, 5, 8);
 		deplacerCarte(colonnes, 6, 8);
-		deplacerColonne(colonnes, 8, 9, 0);// Déplacer les cartes de la colonne 8 à   la colonne 9 à partir de l'index 0
+		deplacerColonne(colonnes, 8, 9, 0);// Déplacer les cartes de la colonne 8 à la colonne 9 à partir de l'index 0
 											// de la colonne 8
 	}
 
