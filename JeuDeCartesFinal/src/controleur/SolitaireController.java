@@ -16,7 +16,7 @@ public class SolitaireController {
 	private List<Carte> colR2 = new ArrayList<>();
 	private List<Carte> colR3 = new ArrayList<>();
 	private List<Carte> colR4 = new ArrayList<>();
-	private static final List<Carte> deck = new ArrayList<>();
+	private static List<Carte> deck = initDeck();
 
 	// Creation d'un jeu de cartes de 52 cartes
 	public List<Carte> createJeu52Cartes() {
@@ -44,7 +44,7 @@ public class SolitaireController {
 	}
 
 	public static List<List<Carte>> creerColonnesDeDepart() {
-		List<Carte> deck = initDeck(); // Assurez-vous que ce deck est mélangé si nécessaire.
+
 		List<List<Carte>> colonnes = new ArrayList<>();
 
 		// Générer les colonnes de départ
@@ -327,6 +327,10 @@ public class SolitaireController {
 		// destionationColonne
 		// 2:
 		return false; // Si déplacement non valide
+	}
+
+	public static List<Carte> getDeck() {
+		return deck; // Assurez-vous que ce deck est le deck unique utilisé partout
 	}
 
 	public boolean peutPiocher() {

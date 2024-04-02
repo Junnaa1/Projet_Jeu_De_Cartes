@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -41,7 +40,7 @@ public class Gui extends JFrame {
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
 
-	public static List<ImageIcon> deck = new ArrayList<>();
+	List<Carte> deck = SolitaireController.getDeck();
 
 	// Parcourir les colonnes d
 	public Gui() {
@@ -167,20 +166,17 @@ public class Gui extends JFrame {
 		int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
 		int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
 
-		// Initialisation des cartes pour les reconnaitre
-		String[] suits = { "COEUR", "CARREAU", "TREFLE", "PIQUE" };
-		String[] values = { "DEUX", "TROIS", "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE",
-				"ROI", "ace" };
-
-		// Ajoute les cartes au deck
-		for (String suit : suits) {
-			for (String value : values) {
-				if (!suit.equals("CACHEE") && !value.equals("CACHEE")) {
-					String cardPath = "src\\cartes\\" + value + "_" + suit + ".png";
-					deck.add(resizeCardImage(cardPath, cardWidth, cardHeight));
-				}
-			}
-		}
+		/*
+		 * Initialisation des cartes pour les reconnaitre String[] suits = { "COEUR",
+		 * "CARREAU", "TREFLE", "PIQUE" }; String[] values = { "DEUX", "TROIS",
+		 * "QUATRE", "COEUR", "SIX", "SEPT", "HUIT", "NEUF", "DIX", "VALET", "REINE",
+		 * "ROI", "ace" };
+		 * 
+		 * // Ajoute les cartes au deck for (String suit : suits) { for (String value :
+		 * values) { if (!suit.equals("CACHEE") && !value.equals("CACHEE")) { String
+		 * cardPath = "src\\cartes\\" + value + "_" + suit + ".png";
+		 * deck.add(resizeCardImage(cardPath, cardWidth, cardHeight)); } } }
+		 */
 
 		// Placement des cartes en colonnes avec décalage vertical pour effet empilé
 		for (int col = 0; col < colonnesDeDepart.size(); col++) {
@@ -422,6 +418,8 @@ public class Gui extends JFrame {
 	}
 
 	private void creerPioche(JLabel bgLabel) {
+		System.out.println("Taille du deck après initialisation : " + SolitaireController.getDeck().size());
+
 		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
@@ -441,8 +439,13 @@ public class Gui extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (!deck.isEmpty()) {
 					// Prend la dernière carte du deck
-					ImageIcon carteTireeIcon = deck.remove(deck.size() - 1);
+					Carte carteTiree = deck.remove(deck.size() - 1);
+					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
 
+					// Redimensionnement de l'ImageIcon de la carte tirée pour correspondre à la
+					// taille définie
+					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
+							cardHeight);
 					// Remplace l'icône de pileVideLabel par celle de la carte tirée
 					pileVideLabel.setIcon(carteTireeIcon);
 
@@ -454,6 +457,13 @@ public class Gui extends JFrame {
 				}
 			}
 		});
+	}
+
+	private ImageIcon carteToImageIcon(Carte carte) {
+		String nom = carte.getNom().toString();
+		String couleur = carte.getCouleur().toString();
+		String cheminImage = "src/cartes/" + nom + "_" + couleur + ".png";
+		return new ImageIcon(cheminImage);
 	}
 
 	private ImageIcon obtenirImageCarte(Carte carte) {
