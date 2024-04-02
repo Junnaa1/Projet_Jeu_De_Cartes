@@ -31,6 +31,8 @@ public class Gui extends JFrame {
 	JPanel panelSolitaire = new JPanel();
 	List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
 
+	private boolean isPileVideLabelSelected = false;
+
 	int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
 	int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
 	int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
@@ -461,6 +463,36 @@ public class Gui extends JFrame {
 				}
 			}
 		});
+
+		// Ajout d'un MouseListener à pileVideLabel pour gérer les clics
+		pileVideLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isPileVideLabelSelected = !isPileVideLabelSelected; // Bascule l'état de sélection
+				if (isPileVideLabelSelected) {
+					// Mettre une bordure verte si sélectionné
+					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
+					// Réinitialiser les sélections d'autres éléments si nécessaire
+					deselectionnerAutres();
+				} else {
+					// Retirer la bordure si désélectionné
+					pileVideLabel.setBorder(null);
+				}
+			}
+		});
+	}
+
+	private void deselectionnerAutres() {
+		// Méthode pour réinitialiser les sélections d'autres cartes ou éléments
+		if (colonneSourceSelectionnee != -1) {
+			// Logique pour réinitialiser la sélection des cartes, etc.
+			colonneSourceSelectionnee = -1;
+			positionCarteDansColonne = -1;
+			carteSelectionnee = null;
+			// Assurez-vous de mettre à jour l'interface graphique ici si nécessaire
+		}
+		// Ajoutez d'autres logiques de réinitialisation pour d'autres éléments si
+		// nécessaire
 	}
 
 	private ImageIcon carteToImageIcon(Carte carte) {
