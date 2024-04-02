@@ -257,6 +257,7 @@ public class Gui extends JFrame {
 		}
 
 		creerPioche(bgLabel);
+		creerColonneFinale(bgLabel);
 
 		// Boutons pour revenir à l'accueil
 
@@ -374,23 +375,10 @@ public class Gui extends JFrame {
 				panelSolitaire.setComponentZOrder(cardLabel, 0);
 			}
 		}
-
-		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
-		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
-		int pilocheSpacing = 10; // Espace horizontal entre les piles vides
-
-		// Création des quatre colonnes finales
-		for (int i = 0; i < 4; i++) {
-			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-			JLabel pileVideLabel = new JLabel(pileVideIcon);
-			int x = piocheXStart + (cardWidth + pilocheSpacing) * i;
-			int y = piocheYStart;
-			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-			bgLabel.add(pileVideLabel);
-		}
-
-		creerPioche(bgLabel);
-
+		
+				
+			creerColonneFinale(bgLabel);
+				
 		// Boutons pour revenir à l'accueil
 
 		JPanel panelBoutons = new JPanel();
@@ -420,7 +408,7 @@ public class Gui extends JFrame {
 		panelSolitaire.revalidate();
 		panelSolitaire.repaint();
 	}
-
+	
 	private void creerPioche(JLabel bgLabel) {
 		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
 		int cardWidth = cardBackIcon.getIconWidth();
@@ -484,4 +472,57 @@ public class Gui extends JFrame {
 		return PanelSolitaire();
 	}
 
-}
+	public void creerColonneFinale(JLabel bgLabel) {
+		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
+		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
+		int piocheSpacing = 10; // Espace horizontal entre les piles vides
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
+	
+			// Création des quatre colonnes finales
+					for (int i = 0; i < 4; i++) {
+						ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+						JLabel pileVideLabel = new JLabel(pileVideIcon);
+						int x = piocheXStart + (cardWidth + piocheSpacing) * i;
+						int y = piocheYStart;
+						pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+						bgLabel.add(pileVideLabel);
+					}
+
+	
+	
+	}
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
