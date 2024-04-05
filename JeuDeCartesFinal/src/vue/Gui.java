@@ -375,10 +375,10 @@ public class Gui extends JFrame {
 				panelSolitaire.setComponentZOrder(cardLabel, 0);
 			}
 		}
-		
-				
-			creerColonneFinale(bgLabel);
-				
+
+		creerPioche(bgLabel);
+		creerColonneFinale(bgLabel);
+
 		// Boutons pour revenir à l'accueil
 
 		JPanel panelBoutons = new JPanel();
@@ -408,7 +408,7 @@ public class Gui extends JFrame {
 		panelSolitaire.revalidate();
 		panelSolitaire.repaint();
 	}
-	
+
 	private void creerPioche(JLabel bgLabel) {
 		System.out.println("Taille du deck après initialisation : " + SolitaireController.getDeck().size());
 		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
@@ -434,6 +434,7 @@ public class Gui extends JFrame {
 					Carte carteTiree = deck.remove(deck.size() - 1);
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true);
+
 					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
 					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
 							cardHeight);
@@ -442,6 +443,7 @@ public class Gui extends JFrame {
 
 					// Sélectionner la carte piochée pour le déplacement
 					carteSelectionnee = carteTiree;
+
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
 				}
 			}
@@ -459,6 +461,7 @@ public class Gui extends JFrame {
 				} else if (cartePiochee != null) {
 					isPileVideLabelSelected = true;
 					carteSelectionnee = cartePiochee;
+					System.out.println("Carte piochée: " + carteSelectionnee);
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
 					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
 				}
@@ -522,50 +525,16 @@ public class Gui extends JFrame {
 		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
-	
-			// Création des quatre colonnes finales
-					for (int i = 0; i < 4; i++) {
-						ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-						JLabel pileVideLabel = new JLabel(pileVideIcon);
-						int x = piocheXStart + (cardWidth + piocheSpacing) * i;
-						int y = piocheYStart;
-						pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-						bgLabel.add(pileVideLabel);
-					}
 
-	
-	
+		// Création des quatre colonnes finales
+		for (int i = 0; i < 4; i++) {
+			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+			JLabel pileVideLabel = new JLabel(pileVideIcon);
+			int x = piocheXStart + (cardWidth + piocheSpacing) * i;
+			int y = piocheYStart;
+			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(pileVideLabel);
+		}
+
 	}
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
+}
