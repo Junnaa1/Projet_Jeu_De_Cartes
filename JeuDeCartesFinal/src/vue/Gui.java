@@ -498,9 +498,9 @@ public class Gui extends JFrame {
 					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
 							cardHeight);
 					pileVideLabel.setIcon(carteTireeIcon);
-
-					carteSelectionnee = carteTiree;
-					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+//Désélection automatique de la carte piochée
+					//carteSelectionnee = carteTiree;
+					//colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
 
 				} else {
 					// Ici, vous pouvez gérer le cas où il n'y a plus de cartes à piocher après le
