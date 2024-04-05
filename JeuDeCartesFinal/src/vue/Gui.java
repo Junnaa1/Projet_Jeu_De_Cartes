@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.Icon;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,6 +45,9 @@ public class Gui extends JFrame {
 	public Carte carteSelectionnee = null;
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
+
+	private Clip musicClip;
+	private static boolean isMusicMuted = false;
 
 	public Carte cartePiochee = null;
 
@@ -106,12 +111,28 @@ public class Gui extends JFrame {
 		}
 	}
 
+	public void playMusic(String filepath) {
+
+		try {
+			File musicPath = new File(filepath);
+			if (musicPath.exists()) {
+				AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+				musicClip = AudioSystem.getClip();
+				musicClip.open(audioInput);
+				musicClip.start();
+				musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+			} else {
+				System.out.println("Can't find file");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public JPanel MainPage() {
 
 		// Icones chargées
-
-		Icon Leave = new ImageIcon("src\\Leave.png");
-		Icon PlaySolitaire = new ImageIcon("src\\Solitaire.png");
+		playMusic("src\\testtheme.wav");
 
 		//
 
@@ -290,6 +311,26 @@ public class Gui extends JFrame {
 		bgLabel.setComponentZOrder(loadingLabel, 0);
 		bgLabel.setComponentZOrder(loadingLabel2, 0);
 
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelPrincipal.add(musicControlLabel);
+		bgLabel.setComponentZOrder(musicControlLabel, 0);
+
 		return panelPrincipal;
 	}
 
@@ -433,6 +474,25 @@ public class Gui extends JFrame {
 		panelBoutons.setBounds(-130, 450, 420, 60);
 		bgLabel.add(panelBoutons);
 
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelSolitaire.add(musicControlLabel);
+		bgLabel.setComponentZOrder(musicControlLabel, 0);
 		return panelSolitaire;
 	}
 
@@ -557,6 +617,26 @@ public class Gui extends JFrame {
 		// nouvelles colonnes de cartes.
 
 		rendreDernieresCartesVisibles();
+
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelSolitaire.add(musicControlLabel);
+		bgLabel.setComponentZOrder(musicControlLabel, 0);
 
 		panelSolitaire.revalidate();
 		panelSolitaire.repaint();

@@ -10,12 +10,6 @@ import modele.CouleurCarte;
 import modele.NomCarte;
 
 public class SolitaireController {
-	// Déclaration des colonnes de jeu, 4 pour le résultat final,7 pour les colonnes
-	// de base
-	private List<Carte> colR1 = new ArrayList<>();
-	private List<Carte> colR2 = new ArrayList<>();
-	private List<Carte> colR3 = new ArrayList<>();
-	private List<Carte> colR4 = new ArrayList<>();
 	private static List<Carte> deck = initDeck();
 
 	public static final int INDEX_COLONNE_PIOCHE = creerColonnesDeDepart().size() - 1;
@@ -214,7 +208,7 @@ public class SolitaireController {
 	// Méthode pour vérifier si le déplacement d'une carte depuis la pioche vers une
 	// colonne est valide
 	public static boolean estDeplacementDepuisPiocheValide(List<Carte> colonnePioche, List<Carte> colonneDestination) {
-		Carte cartePioche = colonnePioche.get(colonnePioche.size() -1);
+		Carte cartePioche = colonnePioche.get(colonnePioche.size() - 1);
 		if (colonneDestination.isEmpty()) {
 			// Permettre le déplacement si la carte est un AS.
 			return cartePioche.getNom() == NomCarte.AS;
@@ -224,27 +218,6 @@ public class SolitaireController {
 					&& (cartePioche.getCouleur().getPoints() < 3 && carteSommet.getCouleur().getPoints() >= 3
 							|| cartePioche.getCouleur().getPoints() > 2 && carteSommet.getCouleur().getPoints() <= 2);
 		}
-	}
-
-	// Supposons que cette méthode est appelée pour révéler une carte dans la
-	// colonne source
-	public static Carte revelerCarte(List<Carte> source) {
-		Random random = new Random();
-		// Assurez-vous que la dernière carte est bien une carte cachée avant de la
-		// révéler
-		if (!source.isEmpty() && source.get(source.size() - 1).getNom() == NomCarte.CACHEE) {
-			// Remplacez ici la logique de sélection aléatoire par la révélation de la carte
-			// supérieure du deck
-			Carte carteRevelee = source.remove(source.size() - 1); // Retire la carte cachée
-			// Ici, vous devriez avoir une logique pour sélectionner la carte suivante à
-			// révéler
-			// par exemple, prenez la prochaine carte du deck (assurez-vous que le deck est
-			// bien mélangé au préalable)
-			Carte nouvelleCarte = deck.remove(0); // Simulez 'deck' comme étant votre deck de cartes mélangé
-			source.add(nouvelleCarte); // Ajoutez la carte révélée à la colonne
-			return nouvelleCarte; // Retournez la nouvelle carte pour mise à jour dans l'interface utilisateur
-		}
-		return null; // Aucune carte à révéler
 	}
 
 	public static boolean deplacerCarteSimplifie(List<List<Carte>> colonnes, int colonneSource,
@@ -380,12 +353,12 @@ public class SolitaireController {
 			System.out.println(colonnePioche);
 			System.out.println(destination);
 
-			System.out.println(estDeplacementDepuisPiocheValide(colonnePioche,destination));
+			System.out.println(estDeplacementDepuisPiocheValide(colonnePioche, destination));
 			// Vérifiez si le déplacement est valide.
 			if (estDeplacementDepuisPiocheValide(colonnePioche, destination)) {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
 				destination.add(cartePioche);
-				colonnePioche.remove(colonnePioche.size() -1);// Ajoutez la carte à la colonne de destination
+				colonnePioche.remove(colonnePioche.size() - 1);// Ajoutez la carte à la colonne de destination
 				return true;
 			} else {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
@@ -433,25 +406,27 @@ public class SolitaireController {
 		return carteADeplacer.getValeur() == carteDestination.getValeur() - 1
 				&& ((carteADeplacer.getCouleur().getPoints() < 3) != (carteDestination.getCouleur().getPoints() < 3));
 	}
-	
+
 	public static boolean deplacementVersPileFinale(Carte carteADeplacer, List<Carte> colonneDestination) {
-	    if (carteADeplacer == null) {
-	        // La carte à déplacer ne peut pas être nulle
-	        return false;
-	    }
-	    
-	    if (colonneDestination.isEmpty()) {
-	        // Seule une carte AS peut être déplacée vers une pile finale vide
-	        return carteADeplacer.getNom() == NomCarte.AS;
-	    } else {
-	        Carte derniereCartePileFinale = colonneDestination.get(colonneDestination.size() - 1);
-	        // Vérifier si la carte à déplacer peut être placée sur la pile finale selon les règles du solitaire
-	        return (carteADeplacer.getValeur() == derniereCartePileFinale.getValeur() + 1) && // La carte à déplacer doit avoir une valeur supérieure d'une unité
-	               (carteADeplacer.getCouleur() == derniereCartePileFinale.getCouleur()); // Les couleurs doivent être différentes
-	    }
+		if (carteADeplacer == null) {
+			// La carte à déplacer ne peut pas être nulle
+			return false;
+		}
+
+		if (colonneDestination.isEmpty()) {
+			// Seule une carte AS peut être déplacée vers une pile finale vide
+			return carteADeplacer.getNom() == NomCarte.AS;
+		} else {
+			Carte derniereCartePileFinale = colonneDestination.get(colonneDestination.size() - 1);
+			// Vérifier si la carte à déplacer peut être placée sur la pile finale selon les
+			// règles du solitaire
+			return (carteADeplacer.getValeur() == derniereCartePileFinale.getValeur() + 1) && // La carte à déplacer
+																								// doit avoir une valeur
+																								// supérieure d'une
+																								// unité
+					(carteADeplacer.getCouleur() == derniereCartePileFinale.getCouleur()); // Les couleurs doivent être
+																							// différentes
+		}
 	}
-
-
-
 
 }
