@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
 import controleur.SolitaireController;
@@ -453,7 +454,36 @@ public class Gui extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (deck.isEmpty()) {
-					remelangerPiocheDansDeck(colonnesDeDepart); // Remet les cartes dans le deck et le remélange
+					// Initialisez un compteur pour suivre l'image de mélange actuelle
+					final int[] compteur = { 0 };
+
+					Timer timer = new Timer(500, null); // Créer un timer avec un délai de 500 ms
+					timer.addActionListener(actionEvent -> {
+						compteur[0]++; // Incrémentez le compteur à chaque tick
+
+						// En fonction du compteur, changez l'icône
+						switch (compteur[0]) {
+						case 1:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
+							break;
+						case 2:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange2.png"));
+							break;
+						case 3:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange3.png"));
+							// Remélangez le deck ici pour s'assurer que le remélange se fait au dernier
+							// changement d'image
+							remelangerPiocheDansDeck(colonnesDeDepart);
+							break;
+						default:
+							// Après le dernier changement, revenez à l'icône de carte retournée et arrêtez
+							// le timer
+							piocheLabel.setIcon(cardBackIcon);
+							timer.stop();
+						}
+					});
+					timer.setInitialDelay(0); // Commencez immédiatement sans retard
+					timer.start();
 				}
 				if (!deck.isEmpty()) {
 					// Continuez avec la logique de pioche existante ici, car maintenant le deck
@@ -471,6 +501,7 @@ public class Gui extends JFrame {
 
 					carteSelectionnee = carteTiree;
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+
 				} else {
 					// Ici, vous pouvez gérer le cas où il n'y a plus de cartes à piocher après le
 					// remélange, si nécessaire
