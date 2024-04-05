@@ -94,6 +94,19 @@ public class Gui extends JFrame {
 			e.printStackTrace();
 			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
 		}
+		try {
+			// Chemin relatif au fichier de police dans le dossier des ressources
+			File fontFile = new File("src\\Gotham-Black.otf");
+			Font gothamblack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
+			System.out.println("Nom de la police chargée: " + gothamblack.getFontName());
+
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			// Enregistre la police
+			ge.registerFont(gothamblack);
+		} catch (IOException | FontFormatException e) {
+			e.printStackTrace();
+			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
+		}
 	}
 
 	public JPanel MainPage() {
@@ -298,7 +311,7 @@ public class Gui extends JFrame {
 		panelSolitaire.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
@@ -436,7 +449,7 @@ public class Gui extends JFrame {
 		int cardHeight = cardBackIcon.getIconHeight();
 
 		// Redessine l'arrière-plan sur le panelSolitaire.
-		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
