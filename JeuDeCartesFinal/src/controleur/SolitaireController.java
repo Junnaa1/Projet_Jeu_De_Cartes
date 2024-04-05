@@ -18,6 +18,8 @@ public class SolitaireController {
 	private List<Carte> colR4 = new ArrayList<>();
 	private static List<Carte> deck = initDeck();
 
+	public static final int INDEX_COLONNE_PIOCHE = creerColonnesDeDepart().size() - 1;
+
 	// Creation d'un jeu de cartes de 52 cartes
 	public List<Carte> createJeu52Cartes() {
 		List<Carte> listeCartes = new ArrayList<>();
@@ -44,6 +46,9 @@ public class SolitaireController {
 	}
 
 	public static List<List<Carte>> creerColonnesDeDepart() {
+		// Initialisation et mélange du deck
+		deck = initDeck(); // Assurez-vous que cette ligne n'est pas redondante avec d'autres appels
+							// initDeck()
 
 		List<List<Carte>> colonnes = new ArrayList<>();
 
@@ -51,17 +56,16 @@ public class SolitaireController {
 		for (int i = 0; i < 7; i++) {
 			List<Carte> colonne = new ArrayList<>();
 			for (int j = 0; j <= i; j++) {
-				// Prendre la carte du dessus du deck
-				Carte carteTiree = deck.remove(0); // Retire la première carte du deck
-				colonne.add(carteTiree);
-				if (j < i) {
-					// Toutes les cartes, sauf la dernière de chaque colonne, sont cachées
-					carteTiree.setVisible(false);
+				// Vérifiez si le deck contient encore des cartes
+				if (!deck.isEmpty()) {
+					Carte carteTiree = deck.remove(0); // Retire la première carte du deck
+					colonne.add(carteTiree);
+					// Seules les dernières cartes de chaque colonne sont visibles
+					carteTiree.setVisible(j == i);
 				} else {
-					// La dernière carte de chaque colonne est visible
-					carteTiree.setVisible(true);
+					System.out.println("Le deck est vide, impossible de continuer à distribuer.");
+					break;
 				}
-
 			}
 			colonnes.add(colonne);
 		}
@@ -71,12 +75,8 @@ public class SolitaireController {
 			colonnes.add(new ArrayList<>());
 		}
 
-		// Ajout d'une colonne pour la pioche et remplissage avec 24 cartes cachées
-		List<Carte> pioche = new ArrayList<>();
-		for (int i = 0; i < 24; i++) {
-			pioche.add(new Carte(NomCarte.CACHEE, CouleurCarte.CACHEE));
-		}
-		colonnes.add(pioche);
+		// Ajoutez une colonne pour la pioche si nécessaire
+		colonnes.add(new ArrayList<>());
 
 		return colonnes;
 	}
@@ -151,6 +151,7 @@ public class SolitaireController {
 		if (source == destination || source.isEmpty()) {
 			return false;
 		}
+
 		// Impossibilité de déplacer une carte dans une colonne de départ qui a été
 		// vidée
 		if (colonneDestination < 6 && destination.isEmpty()) {
@@ -207,6 +208,22 @@ public class SolitaireController {
 		}
 
 		return false;
+	}
+
+	// Méthode pour vérifier si le déplacement d'une carte depuis la pioche vers une
+	// colonne est valide
+	public static boolean estDeplacementDepuisPiocheValide(Carte cartePioche, List<Carte> colonneDestination) {
+		if (colonneDestination.isEmpty()) {
+			// Permettre le déplacement si la carte est un AS.
+			return cartePioche.getNom() == NomCarte.AS;
+		} else {
+			Carte carteSommet = colonneDestination.get(colonneDestination.size() - 1);
+			// Vérifier que la carte de la pioche est d'une valeur inférieure de 1 à celle
+			// du sommet de la colonne
+			// et que les couleurs sont alternées.
+			return cartePioche.getValeur() == carteSommet.getValeur() - 1
+					&& ((cartePioche.getCouleur().getPoints() < 3) != (carteSommet.getCouleur().getPoints() < 3));
+		}
 	}
 
 	// Supposons que cette méthode est appelée pour révéler une carte dans la
@@ -346,6 +363,69 @@ public class SolitaireController {
 	// ToDo
 	public void chargerSauvegarde() {
 
+	}
+
+	public static boolean deplacerCarteTest(List<List<Carte>> colonnes, int colonneSource, int colonneDestination) {
+		// Cas spécial pour la pioche
+		if (colonneSource == INDEX_COLONNE_PIOCHE) {
+			// Logique pour déplacer depuis la pioche
+			if (deck.isEmpty())
+				return false; // Ne rien faire si la pioche est vide
+
+			Carte cartePioche = deck.get(deck.size() - 1); // Obtenez la carte en haut de la pioche
+			List<Carte> destination = colonnes.get(colonneDestination);
+
+			// Vérifiez si le déplacement est valide.
+			if (estDeplacementDepuisPiocheValide(cartePioche, destination)) {
+				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
+				destination.add(cartePioche); // Ajoutez la carte à la colonne de destination
+				deck.remove(deck.size() - 1); // Retirez la carte de la pioche
+				return true;
+			} else {
+				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
+				return false; // Le déplacement n'est pas valide
+			}
+		} else {
+			// Votre logique existante pour déplacer une carte d'une colonne à une autre
+			if (colonneSource < 0 || colonneSource >= colonnes.size() || colonneDestination < 0
+					|| colonneDestination >= colonnes.size() || colonneSource == colonneDestination) {
+				return false;
+			}
+
+			List<Carte> source = colonnes.get(colonneSource);
+			if (source.isEmpty()) {
+				return false;
+			}
+
+			Carte carteADeplacer = source.get(source.size() - 1);
+			List<Carte> destination = colonnes.get(colonneDestination);
+
+			if (!destination.isEmpty()) {
+				Carte derniereCarte = destination.get(destination.size() - 1);
+				// Vérifiez si le déplacement est valide selon les règles du jeu
+				if (!estDeplacementValide(carteADeplacer, derniereCarte)) {
+					return false;
+				}
+			} else {
+				// Si la destination est vide, vérifiez si la carte est un AS (si nécessaire
+				// selon les règles)
+				if (carteADeplacer.getNom() != NomCarte.AS && colonneDestination < 7) { // Modifier si besoin
+					return false;
+				}
+			}
+
+			// Ajoutez la carte à la colonne de destination et retirez-la de la source
+			destination.add(carteADeplacer);
+			source.remove(source.size() - 1);
+			return true;
+		}
+	}
+
+	// Méthode supplémentaire pour vérifier la validité d'un déplacement entre deux
+	// cartes
+	public static boolean estDeplacementValide(Carte carteADeplacer, Carte carteDestination) {
+		return carteADeplacer.getValeur() == carteDestination.getValeur() - 1
+				&& ((carteADeplacer.getCouleur().getPoints() < 3) != (carteDestination.getCouleur().getPoints() < 3));
 	}
 
 }

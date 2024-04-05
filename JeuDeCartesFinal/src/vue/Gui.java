@@ -224,7 +224,7 @@ public class Gui extends JFrame {
 								} else {
 									// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 									if (finalCol != colonneSourceSelectionnee) {
-										boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart,
+										boolean reussi = SolitaireController.deplacerCarteTest(colonnesDeDepart,
 												colonneSourceSelectionnee, finalCol);
 										if (reussi) {
 											System.out.println("Déplacement réussi de la colonne "
@@ -343,7 +343,7 @@ public class Gui extends JFrame {
 							} else {
 								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 								if (finalCol != colonneSourceSelectionnee) {
-									boolean reussi = SolitaireController.deplacerCarte(colonnesDeDepart,
+									boolean reussi = SolitaireController.deplacerCarteTest(colonnesDeDepart,
 											colonneSourceSelectionnee, finalCol);
 									if (reussi) {
 										System.out.println("Déplacement réussi de la colonne "
@@ -423,7 +423,6 @@ public class Gui extends JFrame {
 
 	private void creerPioche(JLabel bgLabel) {
 		System.out.println("Taille du deck après initialisation : " + SolitaireController.getDeck().size());
-
 		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
@@ -437,7 +436,8 @@ public class Gui extends JFrame {
 		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
 		bgLabel.add(piocheLabel);
 
-		// Ajout d'un MouseListener à piocheLabel pour gérer les clics
+		// Ajout d'un MouseListener à piocheLabel pour gérer les clics et piocher une
+		// carte
 		piocheLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -447,39 +447,36 @@ public class Gui extends JFrame {
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true);
 					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
-
-					// Redimensionnement de l'ImageIcon de la carte tirée pour correspondre à la
-					// taille définie
 					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
 							cardHeight);
 					// Remplace l'icône de pileVideLabel par celle de la carte tirée
 					pileVideLabel.setIcon(carteTireeIcon);
 
-					// Force la mise à jour de l'affichage de bgLabel
-					bgLabel.repaint();
-				} else {
-					// Afficher un message ou effectuer une action lorsque le deck est vide
-					System.out.println("Le deck est vide.");
+					// Sélectionner la carte piochée pour le déplacement
+					carteSelectionnee = carteTiree;
+					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
 				}
 			}
 		});
 
-		// Ajout d'un MouseListener à pileVideLabel pour gérer les clics
+		// Gérer la sélection/déplacement de la carte piochée
 		pileVideLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				isPileVideLabelSelected = !isPileVideLabelSelected; // Bascule l'état de sélection
-				if (isPileVideLabelSelected) {
-					// Mettre une bordure verte si sélectionné
-					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
-					// Réinitialiser les sélections d'autres éléments si nécessaire
-					deselectionnerAutres();
-				} else {
-					// Retirer la bordure si désélectionné
+				if (cartePiochee != null && isPileVideLabelSelected) {
+					isPileVideLabelSelected = false;
+					carteSelectionnee = null;
+					colonneSourceSelectionnee = -1;
 					pileVideLabel.setBorder(null);
+				} else if (cartePiochee != null) {
+					isPileVideLabelSelected = true;
+					carteSelectionnee = cartePiochee;
+					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
 				}
 			}
 		});
+
 	}
 
 	private void deselectionnerAutres() {
