@@ -19,7 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
@@ -84,13 +83,13 @@ public class Gui extends JFrame {
 	private void initCustomFonts() {
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
-			File fontFile = new File("src\\Gotham-Black.otf");
-			Font gothamBlack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
-			System.out.println("Nom de la police chargée: " + gothamBlack.getFontName());
+			File fontFile = new File("src\\GOTHICI.ttf");
+			Font gothici = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
+			System.out.println("Nom de la police chargée: " + gothici.getFontName());
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			// Enregistre la police
-			ge.registerFont(gothamBlack);
+			ge.registerFont(gothici);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
@@ -115,51 +114,171 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelPrincipal.add(bgLabel);
 
-		// Image en plus
-		ImageIcon overlayIcon = new ImageIcon("src\\Background2.png");
-		JLabel overlayLabel = new JLabel(overlayIcon);
-		overlayLabel.setBounds(0, 0, 960, 540);
-		bgLabel.add(overlayLabel);
+		ImageIcon particlesIcon = new ImageIcon("src\\particles.gif");
+		JLabel particlesLabel = new JLabel(particlesIcon);
+		particlesLabel.setBounds(-240, 0, 960, 540);
+		panelPrincipal.add(particlesLabel);
 
-		// Création du panel pour les boutons avec une transparence
-		JPanel panelBoutons = new JPanel();
-		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		panelBoutons.setOpaque(false); // Rend le panel transparent
+		ImageIcon particlesIcon2 = new ImageIcon("src\\particles.gif");
+		JLabel particlesLabel2 = new JLabel(particlesIcon2);
+		particlesLabel2.setBounds(250, 0, 960, 540);
+		panelPrincipal.add(particlesLabel2);
 
-		boutonSolitaire = new JButton("Solitaire", PlaySolitaire);
-		boutonSolitaire.setBackground(new Color(91, 4, 75));
-		boutonSolitaire.setForeground(Color.WHITE);
-		boutonSolitaire.setFocusPainted(false);
-		boutonSolitaire.setFont(new Font("Gotham Black", Font.BOLD, 26));
+		ImageIcon loadingIconOriginal = new ImageIcon("src\\loading.gif");
+		Image tempLoading = loadingIconOriginal.getImage().getScaledInstance(125, 100, Image.SCALE_DEFAULT);
+		ImageIcon resizedIcon = new ImageIcon(tempLoading);
+		JLabel loadingLabel = new JLabel(resizedIcon);
+		loadingLabel.setBounds(420, 200, 960, 540);
+		panelPrincipal.add(loadingLabel);
 
-		boutonQuitter = new JButton("Quitter", Leave);
-		boutonQuitter.setBackground(new Color(91, 4, 75));
-		boutonQuitter.setForeground(Color.WHITE);
-		boutonQuitter.setFocusPainted(false);
-		boutonQuitter.setFont(new Font("Gotham Black", Font.BOLD, 26));
+		ImageIcon loading2IconOriginal = new ImageIcon("src\\loading.gif");
+		Image tempLoading2 = loading2IconOriginal.getImage().getScaledInstance(125, 100, Image.SCALE_DEFAULT);
+		ImageIcon resizedIcon2 = new ImageIcon(tempLoading2);
+		JLabel loadingLabel2 = new JLabel(resizedIcon2);
+		loadingLabel2.setBounds(-430, 200, 960, 540);
+		panelPrincipal.add(loadingLabel2);
 
-		panelBoutons.add(boutonSolitaire);
-		panelBoutons.add(boutonQuitter);
+		// Image sous "Nouvelle partie"
+		ImageIcon imageIcon = new ImageIcon("src\\bouton1.png");
+		JLabel imageLabel = new JLabel(imageIcon);
+		// Assurez-vous que la position est correcte pour que l'image apparaisse sous
+		// "Nouvelle partie"
+		imageLabel.setBounds(-20, -15, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		imageLabel.setVisible(false); // Invisible par défaut
+		bgLabel.add(imageLabel);
 
-		boutonSolitaire.addActionListener(souris);
-		boutonQuitter.addActionListener(souris);
+		// Image sous "Nouvelle partie"
+		ImageIcon bouton2icon = new ImageIcon("src\\bouton1.png");
+		JLabel bouton2Label = new JLabel(bouton2icon);
 
-		boutonSolitaire.setActionCommand("Solitaire");
-		boutonQuitter.setActionCommand("Quitter");
+		bouton2Label.setBounds(-20, 45, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		bouton2Label.setVisible(false); // Invisible par défaut
+		bgLabel.add(bouton2Label);
 
-		boutonSolitaire.addMouseListener(souris);
-		boutonQuitter.addMouseListener(souris);
+		// Image sous "Nouvelle partie"
+		ImageIcon bouton3icon = new ImageIcon("src\\bouton1.png");
+		JLabel bouton3Label = new JLabel(bouton3icon);
 
-		// Création du label de titre
-		JLabel labelTitre = new JLabel("Bienvenue au choix de jeu de cartes", SwingConstants.CENTER);
-		labelTitre.setFont(new Font("Gotham Black", Font.BOLD, 26));
-		labelTitre.setForeground(Color.WHITE); // Couleur du texte
-		labelTitre.setBounds(0, 20, 960, 30);
+		bouton3Label.setBounds(-20, 105, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		bouton3Label.setVisible(false); // Invisible par défaut
+		bgLabel.add(bouton3Label);
 
-		// Ajout du label et des boutons au panel principal
-		panelBoutons.setBounds(270, 420, 420, 60);
-		bgLabel.add(panelBoutons);
-		bgLabel.add(labelTitre);
+		// Image sous "Nouvelle partie"
+		ImageIcon bouton4icon = new ImageIcon("src\\bouton1.png");
+		JLabel bouton4Label = new JLabel(bouton4icon);
+
+		bouton4Label.setBounds(-20, 165, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		bouton4Label.setVisible(false); // Invisible par défaut
+		bgLabel.add(bouton4Label);
+
+		// "Nouvelle partie"
+		JLabel nouvellepartie = new JLabel("Nouvelle partie");
+		nouvellepartie.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		nouvellepartie.setForeground(Color.WHITE);
+		nouvellepartie.setBounds(20, 20, 500, 30);
+		nouvellepartie.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				imageLabel.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				imageLabel.setVisible(false);
+			}
+		});
+		bgLabel.add(nouvellepartie);
+
+		JLabel continuer = new JLabel("Continuer");
+		continuer.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		continuer.setForeground(Color.WHITE);
+		continuer.setBounds(20, 80, 500, 30);
+		continuer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				bouton2Label.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				bouton2Label.setVisible(false);
+			}
+		});
+		bgLabel.add(continuer);
+
+		JLabel regles = new JLabel("Règles");
+		regles.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		regles.setForeground(Color.WHITE);
+		regles.setBounds(20, 140, 500, 30);
+		regles.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				bouton3Label.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				bouton3Label.setVisible(false);
+			}
+		});
+		bgLabel.add(regles);
+
+		JLabel quitter = new JLabel("Quitter");
+		quitter.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		quitter.setForeground(Color.WHITE);
+		quitter.setBounds(20, 200, 500, 30);
+		quitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				bouton4Label.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				bouton4Label.setVisible(false);
+			}
+		});
+		bgLabel.add(quitter);
+
+		// En arrière-plan, donc c'est l'index le plus élevé.
+		bgLabel.setComponentZOrder(particlesLabel, bgLabel.getComponentCount() - 1);
+		bgLabel.setComponentZOrder(particlesLabel2, bgLabel.getComponentCount() - 1);
+
+		// Les images de bouton viennent au-dessus des particules
+		bgLabel.setComponentZOrder(imageLabel, 0);
+		bgLabel.setComponentZOrder(bouton2Label, 0);
+		bgLabel.setComponentZOrder(bouton3Label, 0);
+		bgLabel.setComponentZOrder(bouton4Label, 0);
+
+		// Les labels de texte viennent au-dessus des images de bouton
+		bgLabel.setComponentZOrder(nouvellepartie, 0);
+		bgLabel.setComponentZOrder(continuer, 0);
+		bgLabel.setComponentZOrder(regles, 0);
+		bgLabel.setComponentZOrder(quitter, 0);
+
+		// Le gif de chargement vient tout en haut
+		bgLabel.setComponentZOrder(loadingLabel, 0);
+		bgLabel.setComponentZOrder(loadingLabel2, 0);
 
 		return panelPrincipal;
 	}
@@ -493,25 +612,26 @@ public class Gui extends JFrame {
 					timer.start();
 				}
 				if (!deck.isEmpty()) {
-					// Continuez avec la logique de pioche existante ici, car maintenant le deck
-					// n'est plus vide
-					Carte carteTiree = deck.remove(deck.size() - 1);
+					Carte carteTiree = deck.remove(deck.size() - 1); // Retire la dernière carte du deck
 					cartePiochee = carteTiree;
-					cartePiochee.setVisible(true);
-					List<Carte> colonne = colonnesDeDepart.get(11);
-					colonne.add(carteTiree); // Ajoute la carte tirée à la colonne de pioche
+					cartePiochee.setVisible(true); // Définir la carte comme étant visible
+					List<Carte> colonnePioche = colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE); // Index
+																												// pour
+																												// la
+																												// colonne
+																												// de
+																												// pioche
+					colonnePioche.add(carteTiree); // Ajoute la carte tirée à la colonne de pioche
 
-					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
-					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
+					ImageIcon carteTireeIcon = carteToImageIcon(carteTiree); // Convertir la carte en ImageIcon
+					ImageIcon carteTireeIconRedimensionnee = resizeCardImage(carteTireeIcon.getDescription(), cardWidth,
 							cardHeight);
-					pileVideLabel.setIcon(carteTireeIcon);
+					pileVideLabel.setIcon(carteTireeIconRedimensionnee); // Mettre à jour l'icône de la pile vide avec
+																			// l'image de la carte tirée
 
+					// Mise à jour pour indiquer que la carte sélectionnée provient de la pioche
 					carteSelectionnee = carteTiree;
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
-
-				} else {
-					// Ici, vous pouvez gérer le cas où il n'y a plus de cartes à piocher après le
-					// remélange, si nécessaire
 				}
 			}
 		});
@@ -582,68 +702,63 @@ public class Gui extends JFrame {
 	}
 
 	private void creerColonneFinale(JLabel bgLabel) {
-	    int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
-	    int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
-	    int piocheSpacing = 10; // Espace horizontal entre les piles vides
-	    ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
-	    int cardWidth = cardBackIcon.getIconWidth();
-	    int cardHeight = cardBackIcon.getIconHeight();
+		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
+		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
+		int piocheSpacing = 10; // Espace horizontal entre les piles vides
+		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		int cardWidth = cardBackIcon.getIconWidth();
+		int cardHeight = cardBackIcon.getIconHeight();
 
-	    for (int i = 0; i < colonnesDeDepart.size(); i++) {
-	        System.out.println("Colonne " + i + ":");
-	        List<Carte> colonne = colonnesDeDepart.get(i);
-	        for (Carte carte : colonne) {
-	            System.out.println("\t" + carte);
-	        }
-	    }
+		for (int i = 0; i < colonnesDeDepart.size(); i++) {
+			System.out.println("Colonne " + i + ":");
+			List<Carte> colonne = colonnesDeDepart.get(i);
+			for (Carte carte : colonne) {
+				System.out.println("\t" + carte);
+			}
+		}
 
-	    // Création des quatre colonnes finales
-	    for (int i = 0; i < 4; i++) {
-	        ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-	        JLabel pileVideLabel = new JLabel(pileVideIcon);
-	        int x = piocheXStart + (cardWidth + piocheSpacing) * i;
-	        int y = piocheYStart;
-	        pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-	        bgLabel.add(pileVideLabel);
+		// Création des quatre colonnes finales
+		for (int i = 0; i < 4; i++) {
+			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+			JLabel pileVideLabel = new JLabel(pileVideIcon);
+			int x = piocheXStart + (cardWidth + piocheSpacing) * i;
+			int y = piocheYStart;
+			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+			bgLabel.add(pileVideLabel);
 
-	        // Ajouter un MouseAdapter à chaque pile finale
-	        final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
-			List<Carte> colonne = colonnesDeDepart.get(finalI+6);
-	        pileVideLabel.addMouseListener(new MouseAdapter() {
-	            @Override
-	            public void mouseClicked(MouseEvent e) {
-	                // Vérifier s'il y a une carte sélectionnée dans une colonne source
-	                if (carteSelectionnee != null) {
-	                    // Vérifier si la carte peut être déplacée vers cette pile finale
-	                    if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, colonne)) {
-	                        // Ajouter la carte à la pile finale
-	                        List<Carte> pileFinale = colonnesDeDepart.get(finalI+6);
-	                        pileFinale.add(carteSelectionnee);
+			// Ajouter un MouseAdapter à chaque pile finale
+			final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
+			List<Carte> colonne = colonnesDeDepart.get(finalI + 6);
+			pileVideLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// Vérifier s'il y a une carte sélectionnée dans une colonne source
+					if (carteSelectionnee != null) {
+						// Vérifier si la carte peut être déplacée vers cette pile finale
+						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, colonne)) {
+							// Ajouter la carte à la pile finale
+							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 6);
+							pileFinale.add(carteSelectionnee);
 
-	                        // Supprimer la carte de son emplacement précédent (colonne source)
-	                        if (colonneSourceSelectionnee != -1) {
-	                            List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
-	                            colonneSource.remove(carteSelectionnee);
-	                        }
+							// Supprimer la carte de son emplacement précédent (colonne source)
+							if (colonneSourceSelectionnee != -1) {
+								List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
+								colonneSource.remove(carteSelectionnee);
+							}
 
-	                        // Mettre à jour l'affichage
-	                        reconstruireAffichageColonnes();
+							// Mettre à jour l'affichage
+							reconstruireAffichageColonnes();
 
-	                        // Réinitialiser les variables de sélection de carte
-	                        carteSelectionnee = null;
-	                        colonneSourceSelectionnee = -1;
-	                    }
-	                }
-	            }
-	        });
-	    
-	}
+							// Réinitialiser les variables de sélection de carte
+							carteSelectionnee = null;
+							colonneSourceSelectionnee = -1;
+						}
+					}
+				}
+			});
 
-
-
-
-	    
-	}
-
+		}
 
 	}
+
+}
