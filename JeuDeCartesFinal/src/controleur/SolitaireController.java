@@ -222,7 +222,8 @@ public class SolitaireController {
 			// du sommet de la colonne
 			// et que les couleurs sont alternées.
 			return cartePioche.getValeur() == carteSommet.getValeur() - 1
-					&& ((cartePioche.getCouleur().getPoints() < 3) != (carteSommet.getCouleur().getPoints() < 3));
+					&& (cartePioche.getCouleur().getPoints() < 3 && carteSommet.getCouleur().getPoints() >= 3
+							|| cartePioche.getCouleur().getPoints() > 2 && carteSommet.getCouleur().getPoints() <= 2);
 		}
 	}
 
@@ -374,7 +375,10 @@ public class SolitaireController {
 
 			Carte cartePioche = deck.get(deck.size() - 1); // Obtenez la carte en haut de la pioche
 			List<Carte> destination = colonnes.get(colonneDestination);
-
+			System.out.println(deck);
+			System.out.println(cartePioche);
+			System.out.println(destination);
+			System.out.println(estDeplacementDepuisPiocheValide(cartePioche,destination));
 			// Vérifiez si le déplacement est valide.
 			if (estDeplacementDepuisPiocheValide(cartePioche, destination)) {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté

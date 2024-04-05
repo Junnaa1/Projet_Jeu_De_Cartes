@@ -431,7 +431,7 @@ public class Gui extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (!deck.isEmpty()) {
 					// Prend la dernière carte du deck
-					Carte carteTiree = deck.remove(deck.size() - 1);
+					Carte carteTiree = deck.get(deck.size() - 1);
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true);
 
