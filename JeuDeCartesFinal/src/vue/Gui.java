@@ -29,9 +29,6 @@ import modele.Carte;
 public class Gui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-
-	private JButton boutonSolitaire;
-	private JButton boutonQuitter;
 	private Souris souris;
 	JPanel panelSolitaire = new JPanel();
 	List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
@@ -642,9 +639,9 @@ public class Gui extends JFrame {
 					pileVideLabel.setIcon(carteTireeIconRedimensionnee); // Mettre à jour l'icône de la pile vide avec
 																			// l'image de la carte tirée
 
-					// Mise à jour pour indiquer que la carte sélectionnée provient de la pioche
-					carteSelectionnee = carteTiree;
-					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+					if (deck.isEmpty()) {
+						piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+					}
 				}
 			}
 		});
