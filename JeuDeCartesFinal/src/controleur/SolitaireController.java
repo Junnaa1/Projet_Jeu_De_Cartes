@@ -212,15 +212,13 @@ public class SolitaireController {
 
 	// Méthode pour vérifier si le déplacement d'une carte depuis la pioche vers une
 	// colonne est valide
-	public static boolean estDeplacementDepuisPiocheValide(Carte cartePioche, List<Carte> colonneDestination) {
+	public static boolean estDeplacementDepuisPiocheValide(List<Carte> colonnePioche, List<Carte> colonneDestination) {
+		Carte cartePioche = colonnePioche.get(colonnePioche.size() -1);
 		if (colonneDestination.isEmpty()) {
 			// Permettre le déplacement si la carte est un AS.
 			return cartePioche.getNom() == NomCarte.AS;
 		} else {
 			Carte carteSommet = colonneDestination.get(colonneDestination.size() - 1);
-			// Vérifier que la carte de la pioche est d'une valeur inférieure de 1 à celle
-			// du sommet de la colonne
-			// et que les couleurs sont alternées.
 			return cartePioche.getValeur() == carteSommet.getValeur() - 1
 					&& (cartePioche.getCouleur().getPoints() < 3 && carteSommet.getCouleur().getPoints() >= 3
 							|| cartePioche.getCouleur().getPoints() > 2 && carteSommet.getCouleur().getPoints() <= 2);
@@ -373,17 +371,20 @@ public class SolitaireController {
 			if (deck.isEmpty())
 				return false; // Ne rien faire si la pioche est vide
 
-			Carte cartePioche = deck.get(deck.size() - 1); // Obtenez la carte en haut de la pioche
 			List<Carte> destination = colonnes.get(colonneDestination);
+			List<Carte> colonnePioche = colonnes.get(11);
+			Carte cartePioche = colonnePioche.get(colonnePioche.size() - 1);
 			System.out.println(deck);
 			System.out.println(cartePioche);
+			System.out.println(colonnePioche);
 			System.out.println(destination);
-			System.out.println(estDeplacementDepuisPiocheValide(cartePioche,destination));
+
+			System.out.println(estDeplacementDepuisPiocheValide(colonnePioche,destination));
 			// Vérifiez si le déplacement est valide.
-			if (estDeplacementDepuisPiocheValide(cartePioche, destination)) {
+			if (estDeplacementDepuisPiocheValide(colonnePioche, destination)) {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
-				destination.add(cartePioche); // Ajoutez la carte à la colonne de destination
-				deck.remove(deck.size() - 1); // Retirez la carte de la pioche
+				destination.add(cartePioche);
+				colonnePioche.remove(colonnePioche.size() -1);// Ajoutez la carte à la colonne de destination
 				return true;
 			} else {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté

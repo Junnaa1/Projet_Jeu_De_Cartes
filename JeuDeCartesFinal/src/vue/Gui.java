@@ -431,9 +431,11 @@ public class Gui extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (!deck.isEmpty()) {
 					// Prend la dernière carte du deck
-					Carte carteTiree = deck.get(deck.size() - 1);
+					Carte carteTiree = deck.remove(deck.size() - 1);
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true);
+					List<Carte> colonne = colonnesDeDepart.get(11);
+		            colonne.add(carteTiree); // Ajoute la carte tirée à la 12ème colonne (index 11)
 
 					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
 					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
@@ -462,6 +464,7 @@ public class Gui extends JFrame {
 					isPileVideLabelSelected = true;
 					carteSelectionnee = cartePiochee;
 					System.out.println("Carte piochée: " + carteSelectionnee);
+					System.out.println(colonnesDeDepart.get(11));
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
 					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
 				}
