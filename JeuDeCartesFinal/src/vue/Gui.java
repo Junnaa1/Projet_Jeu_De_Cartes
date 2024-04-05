@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -451,24 +452,28 @@ public class Gui extends JFrame {
 		piocheLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (deck.isEmpty()) {
+					remelangerPiocheDansDeck(colonnesDeDepart); // Remet les cartes dans le deck et le remélange
+				}
 				if (!deck.isEmpty()) {
-					// Prend la dernière carte du deck
+					// Continuez avec la logique de pioche existante ici, car maintenant le deck
+					// n'est plus vide
 					Carte carteTiree = deck.remove(deck.size() - 1);
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true);
 					List<Carte> colonne = colonnesDeDepart.get(11);
-		            colonne.add(carteTiree); // Ajoute la carte tirée à la 12ème colonne (index 11)
+					colonne.add(carteTiree); // Ajoute la carte tirée à la colonne de pioche
 
 					ImageIcon carteTireeIconBrute = carteToImageIcon(carteTiree);
 					ImageIcon carteTireeIcon = resizeCardImage(carteTireeIconBrute.getDescription(), cardWidth,
 							cardHeight);
-					// Remplace l'icône de pileVideLabel par celle de la carte tirée
 					pileVideLabel.setIcon(carteTireeIcon);
 
-					// Sélectionner la carte piochée pour le déplacement
 					carteSelectionnee = carteTiree;
-
 					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+				} else {
+					// Ici, vous pouvez gérer le cas où il n'y a plus de cartes à piocher après le
+					// remélange, si nécessaire
 				}
 			}
 		});
@@ -495,17 +500,12 @@ public class Gui extends JFrame {
 
 	}
 
-	private void deselectionnerAutres() {
-		// Méthode pour réinitialiser les sélections d'autres cartes ou éléments
-		if (colonneSourceSelectionnee != -1) {
-			// Logique pour réinitialiser la sélection des cartes, etc.
-			colonneSourceSelectionnee = -1;
-			positionCarteDansColonne = -1;
-			carteSelectionnee = null;
-			// Assurez-vous de mettre à jour l'interface graphique ici si nécessaire
-		}
-		// Ajoutez d'autres logiques de réinitialisation pour d'autres éléments si
-		// nécessaire
+	public static void remelangerPiocheDansDeck(List<List<Carte>> colonnesDeDepart) {
+		// Assumons que l'index 11 est utilisé pour la pioche
+		List<Carte> pioche = colonnesDeDepart.get(11); // Obtient la liste des cartes piochées
+		SolitaireController.getDeck().addAll(pioche); // Ajoute toutes les cartes de la pioche au deck
+		pioche.clear(); // Vide la pioche
+		Collections.shuffle(SolitaireController.getDeck()); // Mélange le deck
 	}
 
 	private ImageIcon carteToImageIcon(Carte carte) {
