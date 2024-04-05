@@ -457,7 +457,7 @@ public class Gui extends JFrame {
 					// Initialisez un compteur pour suivre l'image de mélange actuelle
 					final int[] compteur = { 0 };
 
-					Timer timer = new Timer(500, null); // Créer un timer avec un délai de 500 ms
+					Timer timer = new Timer(80, null); // Créer un timer avec un délai de 500 ms
 					timer.addActionListener(actionEvent -> {
 						compteur[0]++; // Incrémentez le compteur à chaque tick
 
@@ -471,8 +471,15 @@ public class Gui extends JFrame {
 							break;
 						case 3:
 							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange3.png"));
-							// Remélangez le deck ici pour s'assurer que le remélange se fait au dernier
-							// changement d'image
+							break;
+						case 4:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange4.png"));
+							break;
+						case 5:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange5.png"));
+							break;
+						case 6:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
 							remelangerPiocheDansDeck(colonnesDeDepart);
 							break;
 						default:
