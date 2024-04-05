@@ -3,9 +3,13 @@ package vue;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -55,6 +59,7 @@ public class Gui extends JFrame {
 
 	private void initGUI() {
 		setTitle("Jeu de cartes");
+		initCustomFonts();
 		setSize(960, 540); // Taille de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null); // Centre la fenêtre
@@ -62,6 +67,7 @@ public class Gui extends JFrame {
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
 		setContentPane(MainPage()); // Utilisation du panel principal comme content pane
 		setVisible(true); // Rendre la fenêtre visible
+
 	}
 
 	public void setPanel(JPanel panel) {
@@ -71,6 +77,22 @@ public class Gui extends JFrame {
 		}
 		revalidate();
 		repaint();
+	}
+
+	private void initCustomFonts() {
+		try {
+			// Chemin relatif au fichier de police dans le dossier des ressources
+			File fontFile = new File("src\\Gotham-Black.otf");
+			Font gothamBlack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
+			System.out.println("Nom de la police chargée: " + gothamBlack.getFontName());
+
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			// Enregistre la police
+			ge.registerFont(gothamBlack);
+		} catch (IOException | FontFormatException e) {
+			e.printStackTrace();
+			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
+		}
 	}
 
 	public JPanel MainPage() {
