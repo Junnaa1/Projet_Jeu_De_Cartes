@@ -457,7 +457,7 @@ public class Gui extends JFrame {
 					// Initialisez un compteur pour suivre l'image de mélange actuelle
 					final int[] compteur = { 0 };
 
-					Timer timer = new Timer(500, null); // Créer un timer avec un délai de 500 ms
+					Timer timer = new Timer(80, null); // Créer un timer avec un délai de 500 ms
 					timer.addActionListener(actionEvent -> {
 						compteur[0]++; // Incrémentez le compteur à chaque tick
 
@@ -471,8 +471,15 @@ public class Gui extends JFrame {
 							break;
 						case 3:
 							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange3.png"));
-							// Remélangez le deck ici pour s'assurer que le remélange se fait au dernier
-							// changement d'image
+							break;
+						case 4:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange4.png"));
+							break;
+						case 5:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange5.png"));
+							break;
+						case 6:
+							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
 							remelangerPiocheDansDeck(colonnesDeDepart);
 							break;
 						default:
@@ -574,23 +581,69 @@ public class Gui extends JFrame {
 		return PanelSolitaire();
 	}
 
-	public void creerColonneFinale(JLabel bgLabel) {
-		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
-		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
-		int piocheSpacing = 10; // Espace horizontal entre les piles vides
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
-		int cardWidth = cardBackIcon.getIconWidth();
-		int cardHeight = cardBackIcon.getIconHeight();
+	private void creerColonneFinale(JLabel bgLabel) {
+	    int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
+	    int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
+	    int piocheSpacing = 10; // Espace horizontal entre les piles vides
+	    ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+	    int cardWidth = cardBackIcon.getIconWidth();
+	    int cardHeight = cardBackIcon.getIconHeight();
 
-		// Création des quatre colonnes finales
-		for (int i = 0; i < 4; i++) {
-			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
-			JLabel pileVideLabel = new JLabel(pileVideIcon);
-			int x = piocheXStart + (cardWidth + piocheSpacing) * i;
-			int y = piocheYStart;
-			pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
-			bgLabel.add(pileVideLabel);
-		}
+	    for (int i = 0; i < colonnesDeDepart.size(); i++) {
+	        System.out.println("Colonne " + i + ":");
+	        List<Carte> colonne = colonnesDeDepart.get(i);
+	        for (Carte carte : colonne) {
+	            System.out.println("\t" + carte);
+	        }
+	    }
+
+	    // Création des quatre colonnes finales
+	    for (int i = 0; i < 4; i++) {
+	        ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+	        JLabel pileVideLabel = new JLabel(pileVideIcon);
+	        int x = piocheXStart + (cardWidth + piocheSpacing) * i;
+	        int y = piocheYStart;
+	        pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+	        bgLabel.add(pileVideLabel);
+
+	        // Ajouter un MouseAdapter à chaque pile finale
+	        final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
+			List<Carte> colonne = colonnesDeDepart.get(finalI+6);
+	        pileVideLabel.addMouseListener(new MouseAdapter() {
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                // Vérifier s'il y a une carte sélectionnée dans une colonne source
+	                if (carteSelectionnee != null) {
+	                    // Vérifier si la carte peut être déplacée vers cette pile finale
+	                    if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, colonne)) {
+	                        // Ajouter la carte à la pile finale
+	                        List<Carte> pileFinale = colonnesDeDepart.get(finalI+6);
+	                        pileFinale.add(carteSelectionnee);
+
+	                        // Supprimer la carte de son emplacement précédent (colonne source)
+	                        if (colonneSourceSelectionnee != -1) {
+	                            List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
+	                            colonneSource.remove(carteSelectionnee);
+	                        }
+
+	                        // Mettre à jour l'affichage
+	                        reconstruireAffichageColonnes();
+
+	                        // Réinitialiser les variables de sélection de carte
+	                        carteSelectionnee = null;
+	                        colonneSourceSelectionnee = -1;
+	                    }
+	                }
+	            }
+	        });
+	    
+	}
+
+
+
+
+	    
+	}
+
 
 	}
-}

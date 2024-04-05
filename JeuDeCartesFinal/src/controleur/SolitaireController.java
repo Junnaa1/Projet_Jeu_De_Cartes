@@ -433,5 +433,25 @@ public class SolitaireController {
 		return carteADeplacer.getValeur() == carteDestination.getValeur() - 1
 				&& ((carteADeplacer.getCouleur().getPoints() < 3) != (carteDestination.getCouleur().getPoints() < 3));
 	}
+	
+	public static boolean deplacementVersPileFinale(Carte carteADeplacer, List<Carte> colonneDestination) {
+	    if (carteADeplacer == null) {
+	        // La carte à déplacer ne peut pas être nulle
+	        return false;
+	    }
+	    
+	    if (colonneDestination.isEmpty()) {
+	        // Seule une carte AS peut être déplacée vers une pile finale vide
+	        return carteADeplacer.getNom() == NomCarte.AS;
+	    } else {
+	        Carte derniereCartePileFinale = colonneDestination.get(colonneDestination.size() - 1);
+	        // Vérifier si la carte à déplacer peut être placée sur la pile finale selon les règles du solitaire
+	        return (carteADeplacer.getValeur() == derniereCartePileFinale.getValeur() + 1) && // La carte à déplacer doit avoir une valeur supérieure d'une unité
+	               (carteADeplacer.getCouleur() == derniereCartePileFinale.getCouleur()); // Les couleurs doivent être différentes
+	    }
+	}
+
+
+
 
 }
