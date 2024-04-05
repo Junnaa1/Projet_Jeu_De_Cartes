@@ -136,6 +136,7 @@ public class SolitaireController {
 	 * @param destinationColonne
 	 */
 	// Fonction pour déplacer une carte d'une colonne à une autre
+
 	public static boolean deplacerCarte(List<List<Carte>> colonnes, int colonneSource, int colonneDestination) {
 		if (colonneSource < 0 || colonneSource >= colonnes.size() || colonneDestination < 0
 				|| colonneDestination >= colonnes.size()) {
