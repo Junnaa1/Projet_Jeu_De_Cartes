@@ -50,6 +50,7 @@ public class Gui extends JFrame {
 	private static boolean isMusicMuted = false;
 
 	public Carte cartePiochee = null;
+	private Carte derniereCartePiochee = null;
 
 	List<Carte> deck = SolitaireController.getDeck();
 
@@ -62,6 +63,7 @@ public class Gui extends JFrame {
 
 	private void initGUI() {
 		setTitle("Jeu de cartes");
+		playMusic("src\\testtheme.wav");
 		initCustomFonts();
 		setSize(960, 540); // Taille de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,11 +132,6 @@ public class Gui extends JFrame {
 	}
 
 	public JPanel MainPage() {
-
-		// Icones chargées
-		playMusic("src\\testtheme.wav");
-
-		//
 
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setLayout(null);
@@ -313,7 +310,7 @@ public class Gui extends JFrame {
 
 		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -476,7 +473,7 @@ public class Gui extends JFrame {
 
 		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -513,7 +510,7 @@ public class Gui extends JFrame {
 
 		// Itère à travers chaque colonne de départ pour reconstruire l'affichage des
 		// cartes.
-		for (int col = 0; col < colonnesDeDepart.size(); col++) {
+		for (int col = 0; col < 7; col++) {
 			List<Carte> colonne = colonnesDeDepart.get(col);
 
 			for (int cardIndex = 0; cardIndex < colonne.size(); cardIndex++) {
@@ -582,6 +579,25 @@ public class Gui extends JFrame {
 					}
 				});
 
+				int xStartFinale = 130; // Exemple de position de départ x pour les colonnes finales
+				for (int i = 7; i <= 10; i++) { // Parcourir les colonnes finales
+					List<Carte> colonneFinale = colonnesDeDepart.get(i);
+					int y2 = 30; // Position y fixe pour les cartes dans les colonnes finales
+					int x2 = xStartFinale + ((i - 7) * (cardWidth + gamecolumnsxSpacing)); // Calculer la position x en
+																							// fonction de l'indice de
+																							// la
+					// colonne finale
+
+					for (Carte carte2 : colonneFinale) {
+						// Afficher chaque carte de la colonne finale
+						ImageIcon carteImage = obtenirImageCarte(carte2);
+						JLabel cardLabel2 = new JLabel(carteImage);
+						cardLabel2.setBounds(x2, y2, carteImage.getIconWidth(), carteImage.getIconHeight());
+						bgLabel.add(cardLabel2);
+						bgLabel.setComponentZOrder(cardLabel2, 0);
+					}
+				}
+
 				panelSolitaire.add(cardLabel);
 
 				// Ajustez l'ordre Z pour que les cartes soient empilées correctement.
@@ -620,7 +636,7 @@ public class Gui extends JFrame {
 
 		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(875, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -657,6 +673,12 @@ public class Gui extends JFrame {
 		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
 		bgLabel.add(piocheLabel);
 
+		if (derniereCartePiochee != null) {
+			ImageIcon cartePiocheeIcon = carteToImageIcon(derniereCartePiochee);
+			ImageIcon cartePiocheeIconRedimensionnee = resizeCardImage(cartePiocheeIcon.getDescription(), cardWidth,
+					cardHeight);
+			pileVideLabel.setIcon(cartePiocheeIconRedimensionnee);
+		}
 		// Ajout d'un MouseListener à piocheLabel pour gérer les clics et piocher une
 		// carte
 		piocheLabel.addMouseListener(new MouseAdapter() {
@@ -703,14 +725,11 @@ public class Gui extends JFrame {
 				}
 				if (!deck.isEmpty()) {
 					Carte carteTiree = deck.remove(deck.size() - 1); // Retire la dernière carte du deck
+					derniereCartePiochee = carteTiree;
 					cartePiochee = carteTiree;
 					cartePiochee.setVisible(true); // Définir la carte comme étant visible
 					List<Carte> colonnePioche = colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE); // Index
-																												// pour
-																												// la
-																												// colonne
-																												// de
-																												// pioche
+					// pioche
 					colonnePioche.add(carteTiree); // Ajoute la carte tirée à la colonne de pioche
 
 					ImageIcon carteTireeIcon = carteToImageIcon(carteTiree); // Convertir la carte en ImageIcon
@@ -818,7 +837,7 @@ public class Gui extends JFrame {
 
 			// Ajouter un MouseAdapter à chaque pile finale
 			final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
-			List<Carte> colonne = colonnesDeDepart.get(finalI + 6);
+			List<Carte> colonne = colonnesDeDepart.get(finalI + 7);
 			pileVideLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -827,7 +846,7 @@ public class Gui extends JFrame {
 						// Vérifier si la carte peut être déplacée vers cette pile finale
 						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, colonne)) {
 							// Ajouter la carte à la pile finale
-							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 6);
+							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 7);
 							pileFinale.add(carteSelectionnee);
 
 							// Supprimer la carte de son emplacement précédent (colonne source)
