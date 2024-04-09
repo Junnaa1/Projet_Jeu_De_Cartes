@@ -217,6 +217,7 @@ public class Gui extends JFrame {
 		nouvellepartie.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				reinitialiserJeu();
 				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
 			}
 
@@ -973,6 +974,22 @@ public class Gui extends JFrame {
 
 		}
 
+	}
+
+	public void reinitialiserJeu() {
+		// Réinitialisation du deck et des colonnes
+		deck = SolitaireController.initDeck(); // Recréer le deck
+		colonnesDeDepart = SolitaireController.creerColonnesDeDepart(); // Recréer les colonnes de départ
+
+		// Réinitialiser les autres attributs d'état du jeu si nécessaire
+		carteSelectionnee = null;
+		colonneSourceSelectionnee = -1;
+		cartePiochee = null;
+		derniereCartePiochee = null;
+		isPileVideLabelSelected = false;
+		doitRemelanger = false;
+
+		setPanel(PanelSolitaire());
 	}
 
 }
