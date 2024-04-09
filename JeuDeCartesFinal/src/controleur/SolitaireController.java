@@ -414,6 +414,11 @@ public class SolitaireController {
 				if (carteADeplacer.getNom() != NomCarte.AS && colonneDestination < 7) { // Modifier si besoin
 					return false;
 				}
+				else {
+					if (carteADeplacer.getNom() != NomCarte.ROI || colonneDestination >6) {
+						return false;
+					}
+				}
 			}
 
 			// Ajoutez la carte à la colonne de destination et retirez-la de la source
