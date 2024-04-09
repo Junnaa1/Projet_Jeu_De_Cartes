@@ -8,6 +8,7 @@ import java.util.Random;
 import modele.Carte;
 import modele.CouleurCarte;
 import modele.NomCarte;
+import vue.Gui;
 
 public class SolitaireController {
 	private static List<Carte> deck = initDeck();
@@ -120,7 +121,7 @@ public class SolitaireController {
 	}
 
 	public static void main(String[] args) {
-		new SolitaireController().demarrerJeu(); // Modifiez cette ligne
+		new Gui();
 	}
 
 	/**
@@ -342,6 +343,7 @@ public class SolitaireController {
 		// Cas spécial pour la pioche
 		if (colonneSource == INDEX_COLONNE_PIOCHE) {
 			List<Carte> colonnePioche = colonnes.get(11);
+
 			if (!colonnePioche.isEmpty()) {
 				Carte cartePiochee = colonnePioche.remove(colonnePioche.size() - 1); // Retirer la dernière carte de la
 																						// pioche
@@ -368,6 +370,14 @@ public class SolitaireController {
 
 			System.out.println(estDeplacementDepuisPiocheValide(colonnePioche, destination));
 			// Vérifiez si le déplacement est valide.
+			if (!colonnes.get(colonneSource).isEmpty()) {
+				List<Carte> colonneSrc = colonnes.get(colonneSource);
+				Carte derniereCarteSrc = colonneSrc.get(colonneSrc.size() - 1);
+				// Assurez-vous que la carte du dessus est visible
+				if (!derniereCarteSrc.estVisible()) {
+					derniereCarteSrc.setVisible(true);
+				}
+			}
 			if (estDeplacementDepuisPiocheValide(colonnePioche, destination)) {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
 				destination.add(cartePioche);

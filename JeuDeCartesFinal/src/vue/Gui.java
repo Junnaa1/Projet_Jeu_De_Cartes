@@ -65,7 +65,7 @@ public class Gui extends JFrame {
 
 	private void initGUI() {
 		setTitle("Jeu de cartes");
-		// playMusic("src\\testtheme.wav");
+		playMusic("src\\testtheme.wav");
 		initCustomFonts();
 		setSize(960, 540); // Taille de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -548,8 +548,36 @@ public class Gui extends JFrame {
 		// cartes.
 		for (int col = 0; col < 7; col++) {
 			List<Carte> colonne = colonnesDeDepart.get(col);
+			if (colonne.isEmpty()) {
+				final int finalCol = col;
+				// Affiche un JLabel pour une colonne vide
+				JLabel pileVideLabel = new JLabel(new ImageIcon("src\\cartes\\empty_pile.png"));
+				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
+				int y = gamecolumnsyStart; // La position Y reste constante pour la première carte de la colonne
+				pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
+				bgLabel.add(pileVideLabel);
+				bgLabel.setComponentZOrder(pileVideLabel, 0);
+
+				pileVideLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if (carteSelectionnee != null) {
+							// Ajoute la carte sélectionnée à la colonne vide
+							colonnesDeDepart.get(finalCol).add(carteSelectionnee);
+							// Supprime la carte de sa colonne source
+							colonnesDeDepart.get(colonneSourceSelectionnee).remove(carteSelectionnee);
+							// Réinitialise les variables de sélection
+							carteSelectionnee = null;
+							colonneSourceSelectionnee = -1;
+							// Reconstruit l'affichage pour refléter le changement
+							reconstruireAffichageColonnes();
+						}
+					}
+				});// Assurez-vous que cela s'affiche au-dessus du fond
+			}
 
 			for (int cardIndex = 0; cardIndex < colonne.size(); cardIndex++) {
+
 				Carte carte = colonne.get(cardIndex);
 				JLabel cardLabel;
 				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
