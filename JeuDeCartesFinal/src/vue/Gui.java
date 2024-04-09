@@ -834,26 +834,42 @@ public class Gui extends JFrame {
 			}
 		});
 
-		// Gérer la sélection/déplacement de la carte piochée
 		pileVideLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (cartePiochee != null && isPileVideLabelSelected) {
+				// Vérifie si la pioche (colonne de pioche) est vide ou si la dernière carte
+				// piochée a été déplacée
+				if (cartePiochee == null
+						|| !colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE).contains(cartePiochee)) {
+					// Si la pioche est vide ou la dernière carte a été déplacée, désactivez les
+					// interactions
+					// Vous pouvez également mettre à jour l'icône pour montrer que la pioche est
+					// vide
+					pileVideLabel.setIcon(null);
 					isPileVideLabelSelected = false;
 					carteSelectionnee = null;
 					colonneSourceSelectionnee = -1;
 					pileVideLabel.setBorder(null);
-				} else if (cartePiochee != null) {
-					isPileVideLabelSelected = true;
-					carteSelectionnee = cartePiochee;
-					System.out.println("Carte piochée: " + carteSelectionnee);
-					System.out.println(colonnesDeDepart.get(11));
-					colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
-					pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
+					// Optionnel : Réinitialiser l'état de cartePiochee si nécessaire
+					cartePiochee = null;
+				} else {
+					// Si la dernière carte piochée est toujours dans la pioche, permettez la
+					// sélection/déselection
+					if (isPileVideLabelSelected) {
+						isPileVideLabelSelected = false;
+						carteSelectionnee = null;
+						colonneSourceSelectionnee = -1;
+						pileVideLabel.setBorder(null);
+					} else {
+						isPileVideLabelSelected = true;
+						carteSelectionnee = cartePiochee;
+						System.out.println("Carte piochée: " + carteSelectionnee);
+						colonneSourceSelectionnee = SolitaireController.INDEX_COLONNE_PIOCHE;
+						pileVideLabel.setBorder(new LineBorder(Color.GREEN, 3));
+					}
 				}
 			}
 		});
-
 	}
 
 	public static void remelangerPiocheDansDeck(List<List<Carte>> colonnesDeDepart) {
