@@ -51,6 +51,8 @@ public class Gui extends JFrame {
 
 	public Carte cartePiochee = null;
 	private Carte derniereCartePiochee = null;
+	private JLabel pileVideLabel;
+	private boolean doitRemelanger = false;
 
 	List<Carte> deck = SolitaireController.getDeck();
 
@@ -63,7 +65,7 @@ public class Gui extends JFrame {
 
 	private void initGUI() {
 		setTitle("Jeu de cartes");
-		playMusic("src\\testtheme.wav");
+		// playMusic("src\\testtheme.wav");
 		initCustomFonts();
 		setSize(960, 540); // Taille de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -199,6 +201,14 @@ public class Gui extends JFrame {
 		bouton4Label.setVisible(false); // Invisible par défaut
 		bgLabel.add(bouton4Label);
 
+		// Image sous "Nouvelle partie"
+		ImageIcon bouton5icon = new ImageIcon("src\\bouton1.png");
+		JLabel bouton5Label = new JLabel(bouton5icon);
+
+		bouton5Label.setBounds(-20, 225, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+		bouton5Label.setVisible(false); // Invisible par défaut
+		bgLabel.add(bouton5Label);
+
 		// "Nouvelle partie"
 		JLabel nouvellepartie = new JLabel("Nouvelle partie");
 		nouvellepartie.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
@@ -251,7 +261,7 @@ public class Gui extends JFrame {
 		regles.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+
 			}
 
 			@Override
@@ -266,14 +276,14 @@ public class Gui extends JFrame {
 		});
 		bgLabel.add(regles);
 
-		JLabel quitter = new JLabel("Quitter");
-		quitter.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
-		quitter.setForeground(Color.WHITE);
-		quitter.setBounds(20, 200, 500, 30);
-		quitter.addMouseListener(new MouseAdapter() {
+		JLabel options = new JLabel("Options");
+		options.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		options.setForeground(Color.WHITE);
+		options.setBounds(20, 200, 500, 30);
+		options.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+
 			}
 
 			@Override
@@ -284,6 +294,28 @@ public class Gui extends JFrame {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				bouton4Label.setVisible(false);
+			}
+		});
+		bgLabel.add(options);
+
+		JLabel quitter = new JLabel("Quitter");
+		quitter.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		quitter.setForeground(Color.WHITE);
+		quitter.setBounds(20, 260, 500, 30);
+		quitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				bouton5Label.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				bouton5Label.setVisible(false);
 			}
 		});
 		bgLabel.add(quitter);
@@ -297,11 +329,13 @@ public class Gui extends JFrame {
 		bgLabel.setComponentZOrder(bouton2Label, 0);
 		bgLabel.setComponentZOrder(bouton3Label, 0);
 		bgLabel.setComponentZOrder(bouton4Label, 0);
+		bgLabel.setComponentZOrder(bouton5Label, 0);
 
 		// Les labels de texte viennent au-dessus des images de bouton
 		bgLabel.setComponentZOrder(nouvellepartie, 0);
 		bgLabel.setComponentZOrder(continuer, 0);
 		bgLabel.setComponentZOrder(regles, 0);
+		bgLabel.setComponentZOrder(options, 0);
 		bgLabel.setComponentZOrder(quitter, 0);
 
 		// Le gif de chargement vient tout en haut
@@ -420,6 +454,8 @@ public class Gui extends JFrame {
 										if (reussi) {
 											System.out.println("Déplacement réussi de la colonne "
 													+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
+											derniereCartePiochee = null;
+											pileVideLabel.setIcon(null);
 											reconstruireAffichageColonnes();
 										} else {
 											System.out.println("Déplacement échoué");
@@ -559,6 +595,8 @@ public class Gui extends JFrame {
 									if (reussi) {
 										System.out.println("Déplacement réussi de la colonne "
 												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
+										derniereCartePiochee = null;
+										pileVideLabel.setIcon(null);
 										reconstruireAffichageColonnes();
 									} else {
 										System.out.println("Déplacement échoué");
@@ -664,27 +702,50 @@ public class Gui extends JFrame {
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
-		// Pioche vide initialement
-		JLabel pileVideLabel = new JLabel();
-		pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
-		bgLabel.add(pileVideLabel);
+		this.pileVideLabel = new JLabel();
+		this.pileVideLabel.setBounds(630, 30, cardWidth, cardHeight);
+		bgLabel.add(this.pileVideLabel);
 
 		JLabel piocheLabel = new JLabel(cardBackIcon);
 		piocheLabel.setBounds(730, 30, cardWidth, cardHeight);
 		bgLabel.add(piocheLabel);
 
+		if (deck.isEmpty()) {
+			piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+			doitRemelanger = true;
+		} else {
+			// S'assurer que l'icône de la pioche est réinitialisée correctement si le deck
+			// n'est pas vide
+			piocheLabel.setIcon(cardBackIcon);
+			doitRemelanger = false;
+		}
+
 		if (derniereCartePiochee != null) {
-			ImageIcon cartePiocheeIcon = carteToImageIcon(derniereCartePiochee);
-			ImageIcon cartePiocheeIconRedimensionnee = resizeCardImage(cartePiocheeIcon.getDescription(), cardWidth,
-					cardHeight);
-			pileVideLabel.setIcon(cartePiocheeIconRedimensionnee);
+			// Vérifiez si la derniereCartePiochee a été déplacée
+			if (colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE).contains(derniereCartePiochee)) {
+				// Si la dernière carte piochée est toujours dans la pioche, affichez-la
+				ImageIcon cartePiocheeIcon = carteToImageIcon(derniereCartePiochee);
+				ImageIcon cartePiocheeIconRedimensionnee = resizeCardImage(cartePiocheeIcon.getDescription(), cardWidth,
+						cardHeight);
+				pileVideLabel.setIcon(cartePiocheeIconRedimensionnee);
+			} else {
+				// Si la dernière carte piochée a été déplacée, ne l'affichez pas
+				pileVideLabel.setIcon(null); // Ou affichez une icône par défaut représentant une pioche vide
+				derniereCartePiochee = null; // Assurez-vous de réinitialiser derniereCartePiochee puisqu'elle n'est
+												// plus dans la pioche
+			}
+		} else {
+			// S'il n'y a pas de "derniereCartePiochee" à afficher, assurez-vous que
+			// pileVideLabel n'affiche rien ou une icône par défaut
+			pileVideLabel.setIcon(null); // Ou une icône par défaut pour une pioche vide
 		}
 		// Ajout d'un MouseListener à piocheLabel pour gérer les clics et piocher une
 		// carte
 		piocheLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (deck.isEmpty()) {
+				if (doitRemelanger) {
+					piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
 					// Initialisez un compteur pour suivre l'image de mélange actuelle
 					final int[] compteur = { 0 };
 
@@ -712,6 +773,8 @@ public class Gui extends JFrame {
 						case 6:
 							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
 							remelangerPiocheDansDeck(colonnesDeDepart);
+							doitRemelanger = false;
+							piocheLabel.setIcon(cardBackIcon);
 							break;
 						default:
 							// Après le dernier changement, revenez à l'icône de carte retournée et arrêtez
@@ -722,25 +785,23 @@ public class Gui extends JFrame {
 					});
 					timer.setInitialDelay(0); // Commencez immédiatement sans retard
 					timer.start();
-				}
-				if (!deck.isEmpty()) {
+				} else if (deck.isEmpty()) {
+					// S'il n'y a pas de cartes dans le deck et qu'on ne doit pas encore remélanger,
+					// on affiche l'icône indiquant que la pioche est vide et on se prépare au
+					// remélange
+					piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+					doitRemelanger = true;
+				} else {
 					Carte carteTiree = deck.remove(deck.size() - 1); // Retire la dernière carte du deck
 					derniereCartePiochee = carteTiree;
 					cartePiochee = carteTiree;
-					cartePiochee.setVisible(true); // Définir la carte comme étant visible
-					List<Carte> colonnePioche = colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE); // Index
-					// pioche
-					colonnePioche.add(carteTiree); // Ajoute la carte tirée à la colonne de pioche
-
-					ImageIcon carteTireeIcon = carteToImageIcon(carteTiree); // Convertir la carte en ImageIcon
+					cartePiochee.setVisible(true);
+					List<Carte> colonnePioche = colonnesDeDepart.get(SolitaireController.INDEX_COLONNE_PIOCHE);
+					colonnePioche.add(carteTiree);
+					ImageIcon carteTireeIcon = carteToImageIcon(carteTiree);
 					ImageIcon carteTireeIconRedimensionnee = resizeCardImage(carteTireeIcon.getDescription(), cardWidth,
 							cardHeight);
-					pileVideLabel.setIcon(carteTireeIconRedimensionnee); // Mettre à jour l'icône de la pile vide avec
-																			// l'image de la carte tirée
-
-					if (deck.isEmpty()) {
-						piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
-					}
+					pileVideLabel.setIcon(carteTireeIconRedimensionnee); // l'image de la carte tirée
 				}
 			}
 		});

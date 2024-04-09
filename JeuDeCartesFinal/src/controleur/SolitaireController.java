@@ -341,12 +341,25 @@ public class SolitaireController {
 	public static boolean deplacerCarteTest(List<List<Carte>> colonnes, int colonneSource, int colonneDestination) {
 		// Cas spécial pour la pioche
 		if (colonneSource == INDEX_COLONNE_PIOCHE) {
+			List<Carte> colonnePioche = colonnes.get(11);
+			if (!colonnePioche.isEmpty()) {
+				Carte cartePiochee = colonnePioche.remove(colonnePioche.size() - 1); // Retirer la dernière carte de la
+																						// pioche
+				List<Carte> colonneDest = colonnes.get(colonneDestination);
+				colonneDest.add(cartePiochee); // Ajouter la carte piochée à la colonne de destination
+
+				// Après déplacement, vérifier si la pioche est vide pour gérer cet état
+				if (colonnePioche.isEmpty()) {
+					// Logique pour gérer une pioche vide, par exemple, actualiser l'UI
+				}
+				return true; // Le déplacement a été effectué
+			}
 			// Logique pour déplacer depuis la pioche
 			if (deck.isEmpty())
 				return false; // Ne rien faire si la pioche est vide
 
 			List<Carte> destination = colonnes.get(colonneDestination);
-			List<Carte> colonnePioche = colonnes.get(11);
+
 			Carte cartePioche = colonnePioche.get(colonnePioche.size() - 1);
 			System.out.println(deck);
 			System.out.println(cartePioche);
