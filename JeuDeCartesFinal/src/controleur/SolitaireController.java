@@ -395,11 +395,8 @@ public class SolitaireController {
 			}
 
 			List<Carte> source = colonnes.get(colonneSource);
-			if (!source.isEmpty()) {
-				Carte derniereCarteSource = source.get(source.size() - 1);
-				if (!derniereCarteSource.estVisible()) {
-					derniereCarteSource.setVisible(true);
-				}
+			if (source.isEmpty()) {
+				return false;
 			}
 
 			Carte carteADeplacer = source.get(source.size() - 1);
@@ -416,10 +413,6 @@ public class SolitaireController {
 				// selon les règles)
 				if (carteADeplacer.getNom() != NomCarte.AS && colonneDestination < 7) { // Modifier si besoin
 					return false;
-				} else {
-					if (carteADeplacer.getNom() != NomCarte.ROI || colonneDestination > 6) {
-						return false;
-					}
 				}
 			}
 

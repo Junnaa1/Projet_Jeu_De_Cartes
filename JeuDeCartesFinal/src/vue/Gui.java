@@ -47,7 +47,7 @@ public class Gui extends JFrame {
 	private int positionCarteDansColonne;
 
 	private Clip musicClip;
-	private static boolean isMusicMuted = false;
+	private static boolean isMusicMuted = true;
 
 	public Carte cartePiochee = null;
 	private Carte derniereCartePiochee = null;
@@ -116,15 +116,16 @@ public class Gui extends JFrame {
 	}
 
 	public void playMusic(String filepath) {
-
 		try {
 			File musicPath = new File(filepath);
 			if (musicPath.exists()) {
 				AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
 				musicClip = AudioSystem.getClip();
 				musicClip.open(audioInput);
-				musicClip.start();
-				musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+				if (!isMusicMuted) {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+				}
 			} else {
 				System.out.println("Can't find file");
 			}
@@ -201,14 +202,6 @@ public class Gui extends JFrame {
 		bouton4Label.setVisible(false); // Invisible par défaut
 		bgLabel.add(bouton4Label);
 
-		// Image sous "Nouvelle partie"
-		ImageIcon bouton5icon = new ImageIcon("src\\bouton1.png");
-		JLabel bouton5Label = new JLabel(bouton5icon);
-
-		bouton5Label.setBounds(-20, 225, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-		bouton5Label.setVisible(false); // Invisible par défaut
-		bgLabel.add(bouton5Label);
-
 		// "Nouvelle partie"
 		JLabel nouvellepartie = new JLabel("Nouvelle partie");
 		nouvellepartie.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
@@ -217,7 +210,6 @@ public class Gui extends JFrame {
 		nouvellepartie.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				reinitialiserJeu();
 				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
 			}
 
@@ -233,14 +225,14 @@ public class Gui extends JFrame {
 		});
 		bgLabel.add(nouvellepartie);
 
-		JLabel continuer = new JLabel("Continuer");
-		continuer.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
-		continuer.setForeground(Color.WHITE);
-		continuer.setBounds(20, 80, 500, 30);
-		continuer.addMouseListener(new MouseAdapter() {
+		JLabel regles = new JLabel("Règles");
+		regles.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		regles.setForeground(Color.WHITE);
+		regles.setBounds(20, 80, 500, 30);
+		regles.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+
 			}
 
 			@Override
@@ -253,13 +245,13 @@ public class Gui extends JFrame {
 				bouton2Label.setVisible(false);
 			}
 		});
-		bgLabel.add(continuer);
+		bgLabel.add(regles);
 
-		JLabel regles = new JLabel("Règles");
-		regles.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
-		regles.setForeground(Color.WHITE);
-		regles.setBounds(20, 140, 500, 30);
-		regles.addMouseListener(new MouseAdapter() {
+		JLabel options = new JLabel("Options");
+		options.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		options.setForeground(Color.WHITE);
+		options.setBounds(20, 140, 500, 30);
+		options.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
@@ -275,16 +267,16 @@ public class Gui extends JFrame {
 				bouton3Label.setVisible(false);
 			}
 		});
-		bgLabel.add(regles);
+		bgLabel.add(options);
 
-		JLabel options = new JLabel("Options");
-		options.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
-		options.setForeground(Color.WHITE);
-		options.setBounds(20, 200, 500, 30);
-		options.addMouseListener(new MouseAdapter() {
+		JLabel quitter = new JLabel("Quitter");
+		quitter.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
+		quitter.setForeground(Color.WHITE);
+		quitter.setBounds(20, 200, 500, 30);
+		quitter.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				System.exit(0);
 			}
 
 			@Override
@@ -295,28 +287,6 @@ public class Gui extends JFrame {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				bouton4Label.setVisible(false);
-			}
-		});
-		bgLabel.add(options);
-
-		JLabel quitter = new JLabel("Quitter");
-		quitter.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
-		quitter.setForeground(Color.WHITE);
-		quitter.setBounds(20, 260, 500, 30);
-		quitter.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				bouton5Label.setVisible(true);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				bouton5Label.setVisible(false);
 			}
 		});
 		bgLabel.add(quitter);
@@ -330,11 +300,9 @@ public class Gui extends JFrame {
 		bgLabel.setComponentZOrder(bouton2Label, 0);
 		bgLabel.setComponentZOrder(bouton3Label, 0);
 		bgLabel.setComponentZOrder(bouton4Label, 0);
-		bgLabel.setComponentZOrder(bouton5Label, 0);
 
 		// Les labels de texte viennent au-dessus des images de bouton
 		bgLabel.setComponentZOrder(nouvellepartie, 0);
-		bgLabel.setComponentZOrder(continuer, 0);
 		bgLabel.setComponentZOrder(regles, 0);
 		bgLabel.setComponentZOrder(options, 0);
 		bgLabel.setComponentZOrder(quitter, 0);
@@ -974,22 +942,6 @@ public class Gui extends JFrame {
 
 		}
 
-	}
-
-	public void reinitialiserJeu() {
-		// Réinitialisation du deck et des colonnes
-		deck = SolitaireController.initDeck(); // Recréer le deck
-		colonnesDeDepart = SolitaireController.creerColonnesDeDepart(); // Recréer les colonnes de départ
-
-		// Réinitialiser les autres attributs d'état du jeu si nécessaire
-		carteSelectionnee = null;
-		colonneSourceSelectionnee = -1;
-		cartePiochee = null;
-		derniereCartePiochee = null;
-		isPileVideLabelSelected = false;
-		doitRemelanger = false;
-
-		setPanel(PanelSolitaire());
 	}
 
 }
