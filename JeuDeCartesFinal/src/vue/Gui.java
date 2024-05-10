@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -56,6 +58,8 @@ public class Gui extends JFrame {
 	private boolean doitRemelanger = false;
 
 	List<Carte> deck = SolitaireController.getDeck();
+
+	public static String currentTheme = "default";
 
 	// Parcourir les colonnes d
 	public Gui() {
@@ -144,7 +148,7 @@ public class Gui extends JFrame {
 		panelPrincipal.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
+		ImageIcon bgIcon = new ImageIcon("src/Background.png");
 		Image image = bgIcon.getImage();
 		Image newimg = image.getScaledInstance(946, 503, Image.SCALE_SMOOTH);
 		ImageIcon newIcon = new ImageIcon(newimg); // Crée un ImageIcon avec l'image redimensionnée
@@ -262,7 +266,7 @@ public class Gui extends JFrame {
 		options.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				setPanel(PanelOptions());
 			}
 
 			@Override
@@ -357,7 +361,7 @@ public class Gui extends JFrame {
 		panelSolitaire.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
+		ImageIcon bgIcon = new ImageIcon(getBackgroundImagePath());
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
@@ -516,7 +520,7 @@ public class Gui extends JFrame {
 		int cardHeight = cardBackIcon.getIconHeight();
 
 		// Redessine l'arrière-plan sur le panelSolitaire.
-		ImageIcon bgIcon = new ImageIcon("src\\BackgroundGame.png");
+		ImageIcon bgIcon = new ImageIcon(getBackgroundImagePath());
 		JLabel bgLabel = new JLabel(bgIcon);
 		bgLabel.setBounds(0, 0, 960, 540);
 		panelSolitaire.add(bgLabel);
@@ -957,7 +961,7 @@ public class Gui extends JFrame {
 		panelRegles.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon rulesIcon = new ImageIcon("src\\rules.png");
+		ImageIcon rulesIcon = new ImageIcon(getRulesBackgroundPath());
 		JLabel rulesLabel = new JLabel(rulesIcon);
 		rulesLabel.setBounds(0, 0, 946, 503);
 		panelRegles.add(rulesLabel);
@@ -1004,6 +1008,264 @@ public class Gui extends JFrame {
 		panelRegles.add(musicControlLabel);
 		rulesLabel.setComponentZOrder(musicControlLabel, 0);
 		return panelRegles;
+	}
+
+	public JPanel PanelOptions() {
+		JPanel panelOptions = new JPanel();
+		panelOptions.setLayout(null);
+
+		// Arrière-plan
+		ImageIcon optionsIcon = new ImageIcon(getPersonnalisationBackgroundPath());
+		JLabel optionsLabel = new JLabel(optionsIcon);
+		optionsLabel.setBounds(0, 0, 946, 503);
+		panelOptions.add(optionsLabel);
+
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		panelBoutons.setOpaque(false);
+
+		// Bouton Retour
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		boutonRetour.setBounds(20, 450, 140, 40);
+
+		panelOptions.add(boutonRetour);
+
+		boutonRetour.addActionListener(e -> setPanel(getMainPage())); // Action pour retourner à la page principale
+
+		// Bouton pour changer la couleur du fond
+		JButton changeBackgroundButton = new JButton("Changer couleur du fond");
+		changeBackgroundButton.setBackground(new Color(22, 120, 44));
+		changeBackgroundButton.setForeground(Color.WHITE);
+		changeBackgroundButton.setFocusPainted(false);
+		changeBackgroundButton.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		changeBackgroundButton.setBounds(230, 180, 500, 50); // Position centrée
+		changeBackgroundButton.addActionListener(e -> setPanel(PanelBackgroundOptions()));
+		changeBackgroundButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				changeBackgroundButton.setBackground(new Color(15, 82, 30)); // Couleur lors du survol
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				changeBackgroundButton.setBackground(new Color(22, 120, 44)); // Revenir à la couleur initiale
+			}
+		});
+		panelOptions.add(changeBackgroundButton);
+
+		// Bouton pour changer la couleur des cartes
+		JButton changeCardColorButton = new JButton("Changer couleur des cartes");
+		changeCardColorButton.setBackground(new Color(231, 159, 165));
+		changeCardColorButton.setForeground(Color.WHITE);
+		changeCardColorButton.setFocusPainted(false);
+		changeCardColorButton.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		changeCardColorButton.setBounds(230, 280, 500, 50); // Position centrée
+		changeCardColorButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				changeCardColorButton.setBackground(new Color(191, 129, 135)); // Couleur lors du survol
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				changeCardColorButton.setBackground(new Color(231, 159, 165)); // Revenir à la couleur initiale
+			}
+		});
+
+		panelOptions.add(changeCardColorButton);
+
+		// Bouton Mute/Unmute Music
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelOptions.add(musicControlLabel);
+
+		panelOptions.setComponentZOrder(optionsLabel, panelOptions.getComponentCount() - 1);
+		panelOptions.setComponentZOrder(musicControlLabel, 0);
+		panelOptions.setComponentZOrder(changeCardColorButton, 0);
+		panelOptions.setComponentZOrder(changeBackgroundButton, 0);
+		panelOptions.setComponentZOrder(boutonRetour, 0);
+
+		return panelOptions;
+	}
+
+	public JPanel PanelBackgroundOptions() {
+		JPanel panelBackgroundOptions = new JPanel();
+		panelBackgroundOptions.setLayout(null);
+
+		// Arrière-plan
+		ImageIcon backgroundOptionsIcon = new ImageIcon(getColorBackgroundPath());
+		JLabel backgroundOptionsLabel = new JLabel(backgroundOptionsIcon);
+		backgroundOptionsLabel.setBounds(0, 0, 946, 503);
+		panelBackgroundOptions.add(backgroundOptionsLabel);
+
+		// Bouton Retour
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		boutonRetour.setBounds(20, 450, 140, 40);
+		boutonRetour.addActionListener(e -> setPanel(PanelOptions())); // Action pour retourner à PanelOptions
+		panelBackgroundOptions.add(boutonRetour);
+
+		Color green = new Color(22, 120, 44);
+		Color purple = new Color(69, 3, 55);
+		Color red = new Color(113, 13, 27);
+		Color blue = new Color(5, 52, 83);
+
+		JButton boutonVert = createButton("Vert", green, 260, 200, 200, 50);
+		boutonVert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTheme = "default"; // Change le thème
+				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
+				validate();
+				repaint();
+			}
+		});
+
+		JButton boutonViolet = createButton("Violet", purple, 510, 200, 200, 50);
+		boutonViolet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTheme = "purple"; // Change le thème
+				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
+				validate();
+				repaint();
+			}
+		});
+
+		JButton boutonRouge = createButton("Rouge", red, 260, 270, 200, 50);
+		boutonRouge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTheme = "red"; // Change le thème
+				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
+				validate();
+				repaint();
+			}
+		});
+
+		JButton boutonBleu = createButton("Bleu", blue, 510, 270, 200, 50);
+		boutonBleu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTheme = "blue"; // Change le thème
+				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
+				validate();
+				repaint();
+			}
+		});
+
+		panelBackgroundOptions.add(boutonVert);
+		panelBackgroundOptions.add(boutonViolet);
+		panelBackgroundOptions.add(boutonRouge);
+		panelBackgroundOptions.add(boutonBleu);
+
+		// Bouton Mute/Unmute Music
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelBackgroundOptions.add(musicControlLabel);
+
+		// Set component Z-order
+		panelBackgroundOptions.setComponentZOrder(backgroundOptionsLabel,
+				panelBackgroundOptions.getComponentCount() - 1);
+		panelBackgroundOptions.setComponentZOrder(boutonRetour, 0);
+		panelBackgroundOptions.setComponentZOrder(musicControlLabel, 0);
+
+		return panelBackgroundOptions;
+	}
+
+	private JButton createButton(String text, Color backgroundColor, int x, int y, int width, int height) {
+		JButton button = new JButton(text);
+		button.setBackground(backgroundColor);
+		button.setForeground(Color.WHITE);
+		button.setFocusPainted(false);
+		button.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		button.setBounds(x, y, width, height);
+		return button;
+	}
+
+	public static String getBackgroundImagePath() {
+		switch (currentTheme) {
+		case "purple":
+			return "src/BackgroundGamePurple.png";
+		case "red":
+			return "src/BackgroundGameRed.png";
+		case "blue":
+			return "src/BackgroundGameBlue.png";
+		default:
+			return "src/BackgroundGame.png";
+		}
+	}
+
+	public static String getPersonnalisationBackgroundPath() {
+		switch (currentTheme) {
+		case "purple":
+			return "src/BackgroundPersonnalisationPurple.png";
+		case "red":
+			return "src/BackgroundPersonnalisationRed.png";
+		case "blue":
+			return "src/BackgroundPersonnalisationBlue.png";
+		default:
+			return "src/BackgroundPersonnalisation.png";
+		}
+	}
+
+	public static String getColorBackgroundPath() {
+		switch (currentTheme) {
+		case "purple":
+			return "src/BackgroundColorPurple.png";
+		case "red":
+			return "src/BackgroundColorRed.png";
+		case "blue":
+			return "src/BackgroundColorBlue.png";
+		default:
+			return "src/BackgroundOptions.png";
+		}
+	}
+
+	public static String getRulesBackgroundPath() {
+		switch (currentTheme) {
+		case "purple":
+			return "src/rulesPurple.png";
+		case "red":
+			return "src/rulesRed.png";
+		case "blue":
+			return "src/rulesBlue.png";
+		default:
+			return "src/rules.png";
+		}
 	}
 
 }
