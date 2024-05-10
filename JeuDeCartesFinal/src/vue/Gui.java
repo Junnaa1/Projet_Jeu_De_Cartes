@@ -60,6 +60,7 @@ public class Gui extends JFrame {
 	List<Carte> deck = SolitaireController.getDeck();
 
 	public static String currentTheme = "default";
+	public static String currentCardTheme = "default";
 
 	// Parcourir les colonnes d
 	public Gui() {
@@ -367,7 +368,7 @@ public class Gui extends JFrame {
 		panelSolitaire.add(bgLabel);
 
 		// Création et placement des cartes retournées pour les colonnes de départ
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
@@ -515,7 +516,7 @@ public class Gui extends JFrame {
 		panelSolitaire.removeAll();
 		panelSolitaire.setLayout(null); // Assurez-vous que le layout est correctement défini pour le positionnement
 										// manuel.
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
@@ -707,7 +708,7 @@ public class Gui extends JFrame {
 
 	private void creerPioche(JLabel bgLabel) {
 		System.out.println("Taille du deck après initialisation : " + SolitaireController.getDeck().size());
-		ImageIcon cardBackIcon = new ImageIcon("src/cartes/CACHEE_CACHEE.png");
+		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
@@ -869,7 +870,7 @@ public class Gui extends JFrame {
 	}
 
 	private ImageIcon obtenirImageCarte(Carte carte) {
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 		if (carte == null)
@@ -900,7 +901,7 @@ public class Gui extends JFrame {
 		int piocheXStart = 130; // Position de départ pour la première pile vide sur l'axe X
 		int piocheYStart = 30; // Position de départ pour la première pile vide sur l'axe Y
 		int piocheSpacing = 10; // Espace horizontal entre les piles vides
-		ImageIcon cardBackIcon = new ImageIcon("src\\cartes\\CACHEE_CACHEE.png");
+		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
 		int cardHeight = cardBackIcon.getIconHeight();
 
@@ -1064,6 +1065,7 @@ public class Gui extends JFrame {
 		changeCardColorButton.setFocusPainted(false);
 		changeCardColorButton.setFont(new Font("Gotham Black", Font.BOLD, 24));
 		changeCardColorButton.setBounds(230, 280, 500, 50); // Position centrée
+		changeCardColorButton.addActionListener(e -> setPanel(PanelCardOptions()));
 		changeCardColorButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -1077,6 +1079,22 @@ public class Gui extends JFrame {
 		});
 
 		panelOptions.add(changeCardColorButton);
+
+		// Pour le thème de fond
+		String[] backgroundThemeInfo = getBackgroundThemeNameAndColor(currentTheme);
+		JLabel backgroundThemeLabel = new JLabel("Thème actuel du fond : " + backgroundThemeInfo[0]);
+		backgroundThemeLabel.setForeground(Color.WHITE);
+		backgroundThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
+		backgroundThemeLabel.setBounds(230, 230, 500, 30);
+		panelOptions.add(backgroundThemeLabel);
+
+		// Pour le thème des cartes
+		String[] cardThemeInfo = getCardThemeNameAndColor(currentCardTheme);
+		JLabel cardThemeLabel = new JLabel("Thème actuel des cartes : " + cardThemeInfo[0]);
+		cardThemeLabel.setForeground(Color.WHITE);
+		cardThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
+		cardThemeLabel.setBounds(230, 330, 500, 30);
+		panelOptions.add(cardThemeLabel);
 
 		// Bouton Mute/Unmute Music
 		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
@@ -1136,9 +1154,7 @@ public class Gui extends JFrame {
 		boutonVert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentTheme = "default"; // Change le thème
-				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
-				validate();
-				repaint();
+				refreshBackground();
 			}
 		});
 
@@ -1146,9 +1162,7 @@ public class Gui extends JFrame {
 		boutonViolet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentTheme = "purple"; // Change le thème
-				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
-				validate();
-				repaint();
+				refreshBackground();
 			}
 		});
 
@@ -1156,9 +1170,7 @@ public class Gui extends JFrame {
 		boutonRouge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentTheme = "red"; // Change le thème
-				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
-				validate();
-				repaint();
+				refreshBackground();
 			}
 		});
 
@@ -1166,9 +1178,7 @@ public class Gui extends JFrame {
 		boutonBleu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentTheme = "blue"; // Change le thème
-				setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
-				validate();
-				repaint();
+				refreshBackground();
 			}
 		});
 
@@ -1265,6 +1275,154 @@ public class Gui extends JFrame {
 			return "src/rulesBlue.png";
 		default:
 			return "src/rules.png";
+		}
+	}
+
+	public void refreshBackground() {
+		setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
+		validate();
+		repaint();
+	}
+
+	public JPanel PanelCardOptions() {
+		JPanel panelCardOptions = new JPanel();
+		panelCardOptions.setLayout(null);
+
+		// Arrière-plan
+		ImageIcon cardOptionsIcon = new ImageIcon("src\\BackgroundCardColor.png");
+		JLabel cardOptionsLabel = new JLabel(cardOptionsIcon);
+		cardOptionsLabel.setBounds(0, 0, 946, 503);
+		panelCardOptions.add(cardOptionsLabel);
+
+		// Bouton Retour
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		boutonRetour.setBounds(20, 450, 140, 40);
+		boutonRetour.addActionListener(e -> setPanel(PanelOptions())); // Action pour retourner à PanelOptions
+		panelCardOptions.add(boutonRetour);
+
+		JLabel messageLabel = new JLabel("");
+	    messageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+	    messageLabel.setForeground(Color.WHITE);
+	    messageLabel.setBounds(260, 340, 400, 30);
+	    panelCardOptions.add(messageLabel);
+	    
+		// Définir les couleurs pour les boutons
+		Color green = new Color(22, 120, 44);
+		Color purple = new Color(69, 3, 55);
+		Color red = new Color(113, 13, 27);
+		Color blue = new Color(5, 52, 83);
+
+		// Boutons pour choisir la couleur des cartes
+		JButton boutonVert = createButton("Vert", green, 260, 270, 200, 50);
+		boutonVert.addActionListener(e -> {
+			currentCardTheme = "green";
+			refreshCard();
+			String[] themeInfo = getCardThemeNameAndColor(currentCardTheme);
+	        messageLabel.setText("Couleur changée en " + themeInfo[0]);
+		});
+
+		JButton boutonViolet = createButton("Violet", purple, 510, 200, 200, 50);
+		boutonViolet.addActionListener(e -> {
+			currentCardTheme = "purple";
+			refreshCard();
+		});
+
+		JButton boutonRouge = createButton("Rouge", red, 260, 200, 200, 50);
+		boutonRouge.addActionListener(e -> {
+			currentCardTheme = "default";
+			refreshCard();
+		});
+
+		JButton boutonBleu = createButton("Bleu", blue, 510, 270, 200, 50);
+		boutonBleu.addActionListener(e -> {
+			currentCardTheme = "blue";
+			refreshCard();
+		});
+
+		panelCardOptions.add(boutonVert);
+		panelCardOptions.add(boutonViolet);
+		panelCardOptions.add(boutonRouge);
+		panelCardOptions.add(boutonBleu);
+
+		// Bouton Mute/Unmute Music
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted;
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelCardOptions.add(musicControlLabel);
+
+		// Set component Z-order
+		panelCardOptions.setComponentZOrder(cardOptionsLabel, panelCardOptions.getComponentCount() - 1);
+		panelCardOptions.setComponentZOrder(musicControlLabel, 0);
+		panelCardOptions.setComponentZOrder(boutonRetour, 0);
+
+		return panelCardOptions;
+	}
+
+	private String getCardBackImagePath() {
+		switch (currentCardTheme) {
+		case "green":
+			return "src/cartes/CACHEE_CACHEEVERT.png";
+		case "blue":
+			return "src/cartes/CACHEE_CACHEEBLEU.png";
+		case "purple":
+			return "src/cartes/CACHEE_CACHEEVIOLET.png";
+		default:
+			return "src/cartes/CACHEE_CACHEE.png";
+		}
+	}
+
+	public void refreshCard() {
+		setContentPane(PanelCardOptions()); // Reconstruire et afficher le panel principal
+		validate();
+		repaint();
+
+	}
+
+	private String[] getBackgroundThemeNameAndColor(String theme) {
+		switch (theme) {
+		case "default":
+			return new String[] { "Vert (Défaut)", "green" };
+		case "purple":
+			return new String[] { "Violet", "purple" };
+		case "red":
+			return new String[] { "Rouge", "red" };
+		case "blue":
+			return new String[] { "Bleu", "blue" };
+		default:
+			return new String[] { "Non défini", "black" };
+		}
+	}
+
+	private String[] getCardThemeNameAndColor(String theme) {
+		switch (theme) {
+		case "default":
+			return new String[] { "Rouge (Défaut)", "red" };
+		case "purple":
+			return new String[] { "Violet", "purple" };
+		case "green":
+			return new String[] { "Vert", "green" };
+		case "blue":
+			return new String[] { "Bleu", "blue" };
+		default:
+			return new String[] { "Non défini", "black" };
 		}
 	}
 
