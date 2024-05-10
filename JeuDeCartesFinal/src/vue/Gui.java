@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
@@ -72,9 +73,12 @@ public class Gui extends JFrame {
 		setLocationRelativeTo(null); // Centre la fenêtre
 		setIconImage(new ImageIcon("src\\Logo.png").getImage());
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
-		setContentPane(MainPage()); // Utilisation du panel principal comme content pane
+		JPanel mainPanel = MainPage();
+		setContentPane(mainPanel);
 		setVisible(true); // Rendre la fenêtre visible
-
+		SwingUtilities.invokeLater(() -> {
+			System.out.println("Taille de MainPage: " + mainPanel.getSize());
+		});
 	}
 
 	public void setPanel(JPanel panel) {
@@ -141,8 +145,12 @@ public class Gui extends JFrame {
 
 		// Arrière-plan
 		ImageIcon bgIcon = new ImageIcon("src\\Background.png");
-		JLabel bgLabel = new JLabel(bgIcon);
-		bgLabel.setBounds(0, 0, 960, 540);
+		Image image = bgIcon.getImage();
+		Image newimg = image.getScaledInstance(946, 503, Image.SCALE_SMOOTH);
+		ImageIcon newIcon = new ImageIcon(newimg); // Crée un ImageIcon avec l'image redimensionnée
+
+		JLabel bgLabel = new JLabel(newIcon); // Utilise le nouvel ImageIcon pour le JLabel
+		bgLabel.setBounds(0, 0, 946, 503); // Définit la taille du JLabel pour correspondre à celle de l'image
 		panelPrincipal.add(bgLabel);
 
 		ImageIcon particlesIcon = new ImageIcon("src\\particles.gif");
@@ -232,7 +240,7 @@ public class Gui extends JFrame {
 		regles.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				setPanel(PanelRegles()); // Affiche le panel des règles
 			}
 
 			@Override
@@ -942,6 +950,60 @@ public class Gui extends JFrame {
 
 		}
 
+	}
+
+	public JPanel PanelRegles() {
+		JPanel panelRegles = new JPanel();
+		panelRegles.setLayout(null);
+
+		// Arrière-plan
+		ImageIcon rulesIcon = new ImageIcon("src\\rules.png");
+		JLabel rulesLabel = new JLabel(rulesIcon);
+		rulesLabel.setBounds(0, 0, 946, 503);
+		panelRegles.add(rulesLabel);
+
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		panelBoutons.setOpaque(false);
+
+		// Bouton Retour
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		boutonRetour.setBounds(20, 450, 140, 40); // Ajustement des dimensions pour correspondre à celles de
+													// PanelSolitaire
+		panelRegles.add(boutonRetour);
+
+		// Cette ligne est très importante pour s'assurer que le bouton retour est
+		// visible par dessus le background
+		panelRegles.setComponentZOrder(boutonRetour, 0); // Assurez-vous que le bouton est au-dessus
+		panelRegles.setComponentZOrder(rulesLabel, 1); // Le JLabel du fond doit être derrière
+
+		boutonRetour.addActionListener(e -> setPanel(getMainPage())); // Action pour retourner à la page principale
+
+		// Bouton Mute/Unmute Music
+		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		JLabel musicControlLabel = new JLabel(musicControlIcon);
+		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
+		musicControlLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				isMusicMuted = !isMusicMuted; // Inverse l'état
+				if (isMusicMuted) {
+					musicClip.stop();
+					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+				} else {
+					musicClip.start();
+					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+				}
+			}
+		});
+		panelRegles.add(musicControlLabel);
+		rulesLabel.setComponentZOrder(musicControlLabel, 0);
+		return panelRegles;
 	}
 
 }
