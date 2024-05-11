@@ -25,7 +25,7 @@ public class Souris implements ActionListener, MouseListener {
 		} else if ("Solitaire".equals(command)) {
 			gui.setPanel(gui.getPanelSolitaire());
 		} else if ("Retour".equals(command)) {
-			gui.setPanel(gui.getMainPage());
+			gui.overlayLeaveGameImage();
 		}
 	}
 

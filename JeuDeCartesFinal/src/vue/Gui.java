@@ -1441,4 +1441,61 @@ public class Gui extends JFrame {
 		setPanel(PanelSolitaire());
 	}
 
+	public void overlayLeaveGameImage() {
+		// Crée un JPanel qui agira comme un glassPane
+		JPanel glass = new JPanel();
+		glass.setLayout(null); // Aucun layout pour placer les éléments librement
+		glass.setOpaque(false); // Rend le fond transparent
+
+		// Crée un nouveau JLabel pour l'image
+		ImageIcon leaveGameIcon = new ImageIcon("src/leaveGame.png");
+		JLabel leaveGameLabel = new JLabel(leaveGameIcon);
+		leaveGameLabel.setBounds(0, 0, 946, 503);
+
+		glass.add(leaveGameLabel);
+
+		// Création des boutons "Oui" et "Non"
+		JButton btnYes = new JButton("Oui");
+		JButton btnNo = new JButton("Non");
+
+		// Configuration du bouton "Oui"
+		btnYes.setBounds(300, 295, 150, 40); // Placer à une position calculée pour le centrage
+		btnYes.setBackground(new Color(64, 198, 23)); // Vert
+		btnYes.setForeground(Color.WHITE);
+		btnYes.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnYes.setFocusPainted(false);
+		btnYes.addActionListener(e -> {
+			setPanel(getMainPage()); // Change pour la page principale
+			glass.setVisible(false); // Cache le glassPane
+		});
+
+		// Configuration du bouton "Non"
+		btnNo.setBounds(500, 295, 150, 40); // Placer à côté du bouton "Oui"
+		btnNo.setBackground(new Color(198, 23, 23)); // Rouge
+		btnNo.setForeground(Color.WHITE);
+		btnNo.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnNo.setFocusPainted(false);
+		btnNo.addActionListener(e -> {
+			glass.setVisible(false); // Cache le glassPane sans changer de panel
+		});
+
+		// Ajout des boutons au glassPane
+		glass.add(btnYes);
+		glass.add(btnNo);
+
+		glass.setComponentZOrder(leaveGameLabel, 1); // L'image est derrière les boutons
+		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
+		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
+		// Ajoute un MouseAdapter pour bloquer les clics
+		glass.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Empêche les clics de passer à travers le glassPane
+			}
+		});
+
+		setGlassPane(glass); // Définit le nouveau glassPane
+		glass.setVisible(true); // Affiche le glassPane
+	}
+
 }
