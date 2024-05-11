@@ -23,7 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
@@ -70,20 +69,18 @@ public class Gui extends JFrame {
 	}
 
 	private void initGUI() {
-		setTitle("Jeu de cartes");
-		playMusic("src\\testtheme.wav");
+		setTitle("Solitaire");
+		playMusic("src/ressources/Sounds/GameOST.wav");
 		initCustomFonts();
 		setSize(960, 540); // Taille de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null); // Centre la fenêtre
-		setIconImage(new ImageIcon("src\\Logo.png").getImage());
+		setIconImage(new ImageIcon("src/ressources/Images/Logo.png").getImage());
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
 		JPanel mainPanel = MainPage();
 		setContentPane(mainPanel);
 		setVisible(true); // Rendre la fenêtre visible
-		SwingUtilities.invokeLater(() -> {
-			System.out.println("Taille de MainPage: " + mainPanel.getSize());
-		});
+
 	}
 
 	public void setPanel(JPanel panel) {
@@ -98,7 +95,7 @@ public class Gui extends JFrame {
 	private void initCustomFonts() {
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
-			File fontFile = new File("src/vue/Fonts/GOTHICI.ttf");
+			File fontFile = new File("src/ressources/Fonts/GOTHICI.ttf");
 			Font gothici = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -110,7 +107,7 @@ public class Gui extends JFrame {
 		}
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
-			File fontFile = new File("src/vue/Fonts/Gotham-Black.otf");
+			File fontFile = new File("src/ressources/Fonts/Gotham-Black.otf");
 			Font gothamblack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -147,7 +144,7 @@ public class Gui extends JFrame {
 		panelPrincipal.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src/vue/Background/Background.png");
+		ImageIcon bgIcon = new ImageIcon("src/ressources/Background/Background.png");
 		Image image = bgIcon.getImage();
 		Image newimg = image.getScaledInstance(946, 503, Image.SCALE_SMOOTH);
 		ImageIcon newIcon = new ImageIcon(newimg); // Crée un ImageIcon avec l'image redimensionnée
@@ -156,24 +153,24 @@ public class Gui extends JFrame {
 		bgLabel.setBounds(0, 0, 946, 503); // Définit la taille du JLabel pour correspondre à celle de l'image
 		panelPrincipal.add(bgLabel);
 
-		ImageIcon particlesIcon = new ImageIcon("src\\particles.gif");
+		ImageIcon particlesIcon = new ImageIcon("src/ressources/Images/particles.gif");
 		JLabel particlesLabel = new JLabel(particlesIcon);
 		particlesLabel.setBounds(-240, 0, 960, 540);
 		panelPrincipal.add(particlesLabel);
 
-		ImageIcon particlesIcon2 = new ImageIcon("src\\particles.gif");
+		ImageIcon particlesIcon2 = new ImageIcon("src/ressources/Images/particles.gif");
 		JLabel particlesLabel2 = new JLabel(particlesIcon2);
 		particlesLabel2.setBounds(250, 0, 960, 540);
 		panelPrincipal.add(particlesLabel2);
 
-		ImageIcon loadingIconOriginal = new ImageIcon("src\\loading.gif");
+		ImageIcon loadingIconOriginal = new ImageIcon("src/ressources/Images/loading.gif");
 		Image tempLoading = loadingIconOriginal.getImage().getScaledInstance(125, 100, Image.SCALE_DEFAULT);
 		ImageIcon resizedIcon = new ImageIcon(tempLoading);
 		JLabel loadingLabel = new JLabel(resizedIcon);
 		loadingLabel.setBounds(420, 200, 960, 540);
 		panelPrincipal.add(loadingLabel);
 
-		ImageIcon loading2IconOriginal = new ImageIcon("src\\loading.gif");
+		ImageIcon loading2IconOriginal = new ImageIcon("src/ressources/Images/loading.gif");
 		Image tempLoading2 = loading2IconOriginal.getImage().getScaledInstance(125, 100, Image.SCALE_DEFAULT);
 		ImageIcon resizedIcon2 = new ImageIcon(tempLoading2);
 		JLabel loadingLabel2 = new JLabel(resizedIcon2);
@@ -181,7 +178,7 @@ public class Gui extends JFrame {
 		panelPrincipal.add(loadingLabel2);
 
 		// Image sous "Nouvelle partie"
-		ImageIcon imageIcon = new ImageIcon("src\\bouton1.png");
+		ImageIcon imageIcon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel imageLabel = new JLabel(imageIcon);
 		// Assurez-vous que la position est correcte pour que l'image apparaisse sous
 		// "Nouvelle partie"
@@ -190,7 +187,7 @@ public class Gui extends JFrame {
 		bgLabel.add(imageLabel);
 
 		// Image sous "Nouvelle partie"
-		ImageIcon bouton2icon = new ImageIcon("src\\bouton1.png");
+		ImageIcon bouton2icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton2Label = new JLabel(bouton2icon);
 
 		bouton2Label.setBounds(-20, 45, imageIcon.getIconWidth(), imageIcon.getIconHeight());
@@ -198,7 +195,7 @@ public class Gui extends JFrame {
 		bgLabel.add(bouton2Label);
 
 		// Image sous "Nouvelle partie"
-		ImageIcon bouton3icon = new ImageIcon("src\\bouton1.png");
+		ImageIcon bouton3icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton3Label = new JLabel(bouton3icon);
 
 		bouton3Label.setBounds(-20, 105, imageIcon.getIconWidth(), imageIcon.getIconHeight());
@@ -206,7 +203,7 @@ public class Gui extends JFrame {
 		bgLabel.add(bouton3Label);
 
 		// Image sous "Nouvelle partie"
-		ImageIcon bouton4icon = new ImageIcon("src\\bouton1.png");
+		ImageIcon bouton4icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton4Label = new JLabel(bouton4icon);
 
 		bouton4Label.setBounds(-20, 165, imageIcon.getIconWidth(), imageIcon.getIconHeight());
@@ -322,7 +319,8 @@ public class Gui extends JFrame {
 		bgLabel.setComponentZOrder(loadingLabel, 0);
 		bgLabel.setComponentZOrder(loadingLabel2, 0);
 
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -331,11 +329,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -402,7 +400,7 @@ public class Gui extends JFrame {
 					ImageIcon carteImage;
 					// Vérifie si la carte doit être affichée comme visible ou cachée
 					if (carte.estVisible()) {
-						String cardPath = "src\\cartes\\" + carte.getNom().toString() + "_"
+						String cardPath = "src/ressources/Cards/" + carte.getNom().toString() + "_"
 								+ carte.getCouleur().toString() + ".png";
 						carteImage = resizeCardImage(cardPath, cardWidth, cardHeight);
 					} else {
@@ -487,7 +485,8 @@ public class Gui extends JFrame {
 		panelBoutons.setBounds(-130, 450, 420, 60);
 		bgLabel.add(panelBoutons);
 
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -496,11 +495,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -531,7 +530,7 @@ public class Gui extends JFrame {
 			if (colonne.isEmpty()) {
 				final int finalCol = col;
 				// Affiche un JLabel pour une colonne vide
-				JLabel pileVideLabel = new JLabel(new ImageIcon("src\\cartes\\empty_pile.png"));
+				JLabel pileVideLabel = new JLabel(new ImageIcon("src/ressources/Cards/empty_pile.png"));
 				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
 				int y = gamecolumnsyStart; // La position Y reste constante pour la première carte de la colonne
 				pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
@@ -573,8 +572,9 @@ public class Gui extends JFrame {
 					// Utilise l'image de dos de la carte ou l'image de la carte en fonction de
 					// estVisible
 					String imagePath = carte.estVisible()
-							? "src\\cartes\\" + carte.getNom().toString() + "_" + carte.getCouleur().toString() + ".png"
-							: "src\\cartes\\CACHEE_CACHEE.png";
+							? "src/ressources/Cards/" + carte.getNom().toString() + "_" + carte.getCouleur().toString()
+									+ ".png"
+							: "src/ressources/Cards/CACHEE_CACHEE.png";
 					ImageIcon carteImage = resizeCardImage(imagePath, cardWidth, cardHeight);
 					cardLabel = new JLabel(carteImage);
 				}
@@ -680,7 +680,8 @@ public class Gui extends JFrame {
 
 		rendreDernieresCartesVisibles();
 
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -689,11 +690,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -719,7 +720,7 @@ public class Gui extends JFrame {
 		bgLabel.add(piocheLabel);
 
 		if (deck.isEmpty()) {
-			piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+			piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/empty_pile_pioche.png"));
 			doitRemelanger = true;
 		} else {
 			// S'assurer que l'icône de la pioche est réinitialisée correctement si le deck
@@ -753,7 +754,7 @@ public class Gui extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (doitRemelanger) {
-					piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+					piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/empty_pile_pioche.png"));
 					// Initialisez un compteur pour suivre l'image de mélange actuelle
 					final int[] compteur = { 0 };
 
@@ -764,22 +765,22 @@ public class Gui extends JFrame {
 						// En fonction du compteur, changez l'icône
 						switch (compteur[0]) {
 						case 1:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange1.png"));
 							break;
 						case 2:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange2.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange2.png"));
 							break;
 						case 3:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange3.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange3.png"));
 							break;
 						case 4:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange4.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange4.png"));
 							break;
 						case 5:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange5.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange5.png"));
 							break;
 						case 6:
-							piocheLabel.setIcon(new ImageIcon("src\\cartes\\melange1.png"));
+							piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/melange1.png"));
 							remelangerPiocheDansDeck(colonnesDeDepart);
 							doitRemelanger = false;
 							piocheLabel.setIcon(cardBackIcon);
@@ -797,7 +798,7 @@ public class Gui extends JFrame {
 					// S'il n'y a pas de cartes dans le deck et qu'on ne doit pas encore remélanger,
 					// on affiche l'icône indiquant que la pioche est vide et on se prépare au
 					// remélange
-					piocheLabel.setIcon(new ImageIcon("src\\cartes\\empty_pile_pioche.png"));
+					piocheLabel.setIcon(new ImageIcon("src/ressources/Cards/empty_pile_pioche.png"));
 					doitRemelanger = true;
 				} else {
 					Carte carteTiree = deck.remove(deck.size() - 1); // Retire la dernière carte du deck
@@ -863,7 +864,7 @@ public class Gui extends JFrame {
 	private ImageIcon carteToImageIcon(Carte carte) {
 		String nom = carte.getNom().toString();
 		String couleur = carte.getCouleur().toString();
-		String cheminImage = "src/cartes/" + nom + "_" + couleur + ".png";
+		String cheminImage = "src/ressources/Cards/" + nom + "_" + couleur + ".png";
 		return new ImageIcon(cheminImage);
 	}
 
@@ -873,7 +874,7 @@ public class Gui extends JFrame {
 		int cardHeight = cardBackIcon.getIconHeight();
 		if (carte == null)
 			return null;
-		String chemin = "src\\cartes\\" + carte.getNom() + "_" + carte.getCouleur() + ".png";
+		String chemin = "src/ressources/Cards/" + carte.getNom() + "_" + carte.getCouleur() + ".png";
 		return resizeCardImage(chemin, cardWidth, cardHeight); // Utilisez la méthode existante pour redimensionner
 																// l'image
 	}
@@ -913,7 +914,7 @@ public class Gui extends JFrame {
 
 		// Création des quatre colonnes finales
 		for (int i = 0; i < 4; i++) {
-			ImageIcon pileVideIcon = new ImageIcon("src\\cartes\\empty_pile.png"); // Image d'une pile vide
+			ImageIcon pileVideIcon = new ImageIcon("src/ressources/Cards/empty_pile.png"); // Image d'une pile vide
 			JLabel pileVideLabel = new JLabel(pileVideIcon);
 			int x = piocheXStart + (cardWidth + piocheSpacing) * i;
 			int y = piocheYStart;
@@ -987,7 +988,8 @@ public class Gui extends JFrame {
 		boutonRetour.addActionListener(e -> setPanel(getMainPage())); // Action pour retourner à la page principale
 
 		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -996,11 +998,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -1095,7 +1097,8 @@ public class Gui extends JFrame {
 		panelOptions.add(cardThemeLabel);
 
 		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -1104,11 +1107,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -1186,7 +1189,8 @@ public class Gui extends JFrame {
 		panelBackgroundOptions.add(boutonBleu);
 
 		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -1195,11 +1199,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted; // Inverse l'état
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -1227,65 +1231,65 @@ public class Gui extends JFrame {
 	public static String getBackgroundImagePath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/vue/Background/BackgroundGamePurple.png";
+			return "src/ressources/Background/BackgroundGamePurple.png";
 		case "red":
-			return "src/vue/Background/BackgroundGameRed.png";
+			return "src/ressources/Background/BackgroundGameRed.png";
 		case "blue":
-			return "src/vue/Background/BackgroundGameBlue.png";
+			return "src/ressources/Background/BackgroundGameBlue.png";
 		default:
-			return "src/vue/Background/BackgroundGame.png";
+			return "src/ressources/Background/BackgroundGame.png";
 		}
 	}
 
 	public static String getPersonnalisationBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/vue/Background/BackgroundPersonnalisationPurple.png";
+			return "src/ressources/Background/BackgroundPersonnalisationPurple.png";
 		case "red":
-			return "src/vue/Background/BackgroundPersonnalisationRed.png";
+			return "src/ressources/Background/BackgroundPersonnalisationRed.png";
 		case "blue":
-			return "src/vue/Background/BackgroundPersonnalisationBlue.png";
+			return "src/ressources/Background/BackgroundPersonnalisationBlue.png";
 		default:
-			return "src/vue/Background/BackgroundPersonnalisation.png";
+			return "src/ressources/Background/BackgroundPersonnalisation.png";
 		}
 	}
 
 	public static String getColorBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/vue/Background/BackgroundColorPurple.png";
+			return "src/ressources/Background/BackgroundColorPurple.png";
 		case "red":
-			return "src/vue/Background/BackgroundColorRed.png";
+			return "src/ressources/Background/BackgroundColorRed.png";
 		case "blue":
-			return "src/vue/Background/BackgroundColorBlue.png";
+			return "src/ressources/Background/BackgroundColorBlue.png";
 		default:
-			return "src/vue/Background/BackgroundColor.png";
+			return "src/ressources/Background/BackgroundColor.png";
 		}
 	}
 
 	public static String getColorCardBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/vue/Background/BackgroundCardColorPurple.png";
+			return "src/ressources/Background/BackgroundCardColorPurple.png";
 		case "red":
-			return "src/vue/Background/BackgroundCardColorRed.png";
+			return "src/ressources/Background/BackgroundCardColorRed.png";
 		case "blue":
-			return "src/vue/Background/BackgroundCardColorBlue.png";
+			return "src/ressources/Background/BackgroundCardColorBlue.png";
 		default:
-			return "src/vue/Background/BackgroundCardColor.png";
+			return "src/ressources/Background/BackgroundCardColor.png";
 		}
 	}
 
 	public static String getRulesBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/vue/Background/rulesPurple.png";
+			return "src/ressources/Background/rulesPurple.png";
 		case "red":
-			return "src/vue/Background/rulesRed.png";
+			return "src/ressources/Background/rulesRed.png";
 		case "blue":
-			return "src/vue/Background/rulesBlue.png";
+			return "src/ressources/Background/rulesBlue.png";
 		default:
-			return "src/vue/Background/rules.png";
+			return "src/ressources/Background/rules.png";
 		}
 	}
 
@@ -1360,7 +1364,8 @@ public class Gui extends JFrame {
 		panelCardOptions.add(boutonBleu);
 
 		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(isMusicMuted ? "src\\unmute.png" : "src\\mute.png");
+		ImageIcon musicControlIcon = new ImageIcon(
+				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
 		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
 		musicControlLabel.addMouseListener(new MouseAdapter() {
@@ -1369,11 +1374,11 @@ public class Gui extends JFrame {
 				isMusicMuted = !isMusicMuted;
 				if (isMusicMuted) {
 					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src\\unmute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
 				} else {
 					musicClip.start();
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src\\mute.png"));
+					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
 				}
 			}
 		});
@@ -1390,13 +1395,13 @@ public class Gui extends JFrame {
 	private String getCardBackImagePath() {
 		switch (currentCardTheme) {
 		case "green":
-			return "src/cartes/CACHEE_CACHEEVERT.png";
+			return "src/ressources/Cards/CACHEE_CACHEEVERT.png";
 		case "blue":
-			return "src/cartes/CACHEE_CACHEEBLEU.png";
+			return "src/ressources/Cards/CACHEE_CACHEEBLEU.png";
 		case "purple":
-			return "src/cartes/CACHEE_CACHEEVIOLET.png";
+			return "src/ressources/Cards/CACHEE_CACHEEVIOLET.png";
 		default:
-			return "src/cartes/CACHEE_CACHEE.png";
+			return "src/ressources/Cards/CACHEE_CACHEE.png";
 		}
 	}
 
@@ -1459,7 +1464,7 @@ public class Gui extends JFrame {
 		glass.setOpaque(false); // Rend le fond transparent
 
 		// Crée un nouveau JLabel pour l'image
-		ImageIcon leaveGameIcon = new ImageIcon("src/leaveGame.png");
+		ImageIcon leaveGameIcon = new ImageIcon("src/ressources/Background/leaveGame.png");
 		JLabel leaveGameLabel = new JLabel(leaveGameIcon);
 		leaveGameLabel.setBounds(0, 0, 946, 503);
 
