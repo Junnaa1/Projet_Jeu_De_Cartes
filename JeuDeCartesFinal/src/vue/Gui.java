@@ -149,7 +149,7 @@ public class Gui extends JFrame {
 		panelPrincipal.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon bgIcon = new ImageIcon("src/Background.png");
+		ImageIcon bgIcon = new ImageIcon("src/vue/Background/Background.png");
 		Image image = bgIcon.getImage();
 		Image newimg = image.getScaledInstance(946, 503, Image.SCALE_SMOOTH);
 		ImageIcon newIcon = new ImageIcon(newimg); // Crée un ImageIcon avec l'image redimensionnée
@@ -1229,52 +1229,65 @@ public class Gui extends JFrame {
 	public static String getBackgroundImagePath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/BackgroundGamePurple.png";
+			return "src/vue/Background/BackgroundGamePurple.png";
 		case "red":
-			return "src/BackgroundGameRed.png";
+			return "src/vue/Background/BackgroundGameRed.png";
 		case "blue":
-			return "src/BackgroundGameBlue.png";
+			return "src/vue/Background/BackgroundGameBlue.png";
 		default:
-			return "src/BackgroundGame.png";
+			return "src/vue/Background/BackgroundGame.png";
 		}
 	}
 
 	public static String getPersonnalisationBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/BackgroundPersonnalisationPurple.png";
+			return "src/vue/Background/BackgroundPersonnalisationPurple.png";
 		case "red":
-			return "src/BackgroundPersonnalisationRed.png";
+			return "src/vue/Background/BackgroundPersonnalisationRed.png";
 		case "blue":
-			return "src/BackgroundPersonnalisationBlue.png";
+			return "src/vue/Background/BackgroundPersonnalisationBlue.png";
 		default:
-			return "src/BackgroundPersonnalisation.png";
+			return "src/vue/Background/BackgroundPersonnalisation.png";
 		}
 	}
 
 	public static String getColorBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/BackgroundColorPurple.png";
+			return "src/vue/Background/BackgroundColorPurple.png";
 		case "red":
-			return "src/BackgroundColorRed.png";
+			return "src/vue/Background/BackgroundColorRed.png";
 		case "blue":
-			return "src/BackgroundColorBlue.png";
+			return "src/vue/Background/BackgroundColorBlue.png";
 		default:
-			return "src/BackgroundOptions.png";
+			return "src/vue/Background/BackgroundColor.png";
+		}
+	}
+
+	public static String getColorCardBackgroundPath() {
+		switch (currentTheme) {
+		case "purple":
+			return "src/vue/Background/BackgroundCardColorPurple.png";
+		case "red":
+			return "src/vue/Background/BackgroundCardColorRed.png";
+		case "blue":
+			return "src/vue/Background/BackgroundCardColorBlue.png";
+		default:
+			return "src/vue/Background/BackgroundCardColor.png";
 		}
 	}
 
 	public static String getRulesBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
-			return "src/rulesPurple.png";
+			return "src/vue/Background/rulesPurple.png";
 		case "red":
-			return "src/rulesRed.png";
+			return "src/vue/Background/rulesRed.png";
 		case "blue":
-			return "src/rulesBlue.png";
+			return "src/vue/Background/rulesBlue.png";
 		default:
-			return "src/rules.png";
+			return "src/vue/Background/rules.png";
 		}
 	}
 
@@ -1289,7 +1302,7 @@ public class Gui extends JFrame {
 		panelCardOptions.setLayout(null);
 
 		// Arrière-plan
-		ImageIcon cardOptionsIcon = new ImageIcon("src\\BackgroundCardColor.png");
+		ImageIcon cardOptionsIcon = new ImageIcon(getColorCardBackgroundPath());
 		JLabel cardOptionsLabel = new JLabel(cardOptionsIcon);
 		cardOptionsLabel.setBounds(0, 0, 946, 503);
 		panelCardOptions.add(cardOptionsLabel);
