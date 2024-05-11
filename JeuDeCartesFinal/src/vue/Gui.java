@@ -98,9 +98,8 @@ public class Gui extends JFrame {
 	private void initCustomFonts() {
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
-			File fontFile = new File("src\\GOTHICI.ttf");
+			File fontFile = new File("src/vue/Fonts/GOTHICI.ttf");
 			Font gothici = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
-			System.out.println("Nom de la police chargée: " + gothici.getFontName());
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			// Enregistre la police
@@ -111,9 +110,8 @@ public class Gui extends JFrame {
 		}
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
-			File fontFile = new File("src\\Gotham-Black.otf");
+			File fontFile = new File("src/vue/Fonts/Gotham-Black.otf");
 			Font gothamblack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
-			System.out.println("Nom de la police chargée: " + gothamblack.getFontName());
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			// Enregistre la police
