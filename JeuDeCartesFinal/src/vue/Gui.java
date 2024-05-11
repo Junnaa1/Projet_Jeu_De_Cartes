@@ -223,7 +223,7 @@ public class Gui extends JFrame {
 		nouvellepartie.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setPanel(getPanelSolitaire()); // Change le panel pour afficher le jeu Solitaire
+				nouvellePartie();
 			}
 
 			@Override
@@ -1305,11 +1305,11 @@ public class Gui extends JFrame {
 		panelCardOptions.add(boutonRetour);
 
 		JLabel messageLabel = new JLabel("");
-	    messageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    messageLabel.setForeground(Color.WHITE);
-	    messageLabel.setBounds(260, 340, 400, 30);
-	    panelCardOptions.add(messageLabel);
-	    
+		messageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+		messageLabel.setForeground(Color.WHITE);
+		messageLabel.setBounds(260, 340, 400, 30);
+		panelCardOptions.add(messageLabel);
+
 		// Définir les couleurs pour les boutons
 		Color green = new Color(22, 120, 44);
 		Color purple = new Color(69, 3, 55);
@@ -1322,7 +1322,7 @@ public class Gui extends JFrame {
 			currentCardTheme = "green";
 			refreshCard();
 			String[] themeInfo = getCardThemeNameAndColor(currentCardTheme);
-	        messageLabel.setText("Couleur changée en " + themeInfo[0]);
+			messageLabel.setText("Couleur changée en " + themeInfo[0]);
 		});
 
 		JButton boutonViolet = createButton("Violet", purple, 510, 200, 200, 50);
@@ -1424,6 +1424,21 @@ public class Gui extends JFrame {
 		default:
 			return new String[] { "Non défini", "black" };
 		}
+	}
+
+	public void nouvellePartie() {
+		// Réinitialiser le deck et les colonnes
+		colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
+		deck = SolitaireController.getDeck();
+
+		// Réinitialiser l'état du GUI
+		carteSelectionnee = null;
+		colonneSourceSelectionnee = -1;
+		positionCarteDansColonne = -1;
+		isPileVideLabelSelected = false;
+
+		// Réinitialiser l'affichage
+		setPanel(PanelSolitaire());
 	}
 
 }
