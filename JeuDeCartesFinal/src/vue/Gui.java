@@ -1078,7 +1078,44 @@ public class Gui extends JFrame {
 			}
 		});
 
+		JLabel deckModeLabel = new JLabel();
+		deckModeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
+		deckModeLabel.setForeground(Color.WHITE);
+		deckModeLabel.setBounds(230, 440, 500, 30);
+		deckModeLabel.setText("Mode actuel: "
+				+ (SolitaireController.getDeckType() == SolitaireController.DeckType.DECK_52 ? "52 cartes"
+						: "32 cartes"));
+		panelOptions.add(deckModeLabel);
+
 		panelOptions.add(changeCardColorButton);
+
+		JButton change52cards = new JButton("Mode 52 cartes");
+		change52cards.setBackground(new Color(32, 60, 182));
+		change52cards.setForeground(Color.WHITE);
+		change52cards.setFocusPainted(false);
+		change52cards.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		change52cards.setBounds(230, 380, 230, 50);
+		change52cards.addActionListener(e -> {
+			SolitaireController.setDeckType(SolitaireController.DeckType.DECK_52);
+			SolitaireController.adjustCardValuesForDeckType();
+			deckModeLabel.setText("Mode actuel: 52 cartes");
+
+		});
+		panelOptions.add(change52cards);
+
+		JButton change32cards = new JButton("Mode 32 cartes");
+		change32cards.setBackground(new Color(223, 195, 73));
+		change32cards.setForeground(Color.WHITE);
+		change32cards.setFocusPainted(false);
+		change32cards.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		change32cards.setBounds(500, 380, 230, 50);
+		change32cards.addActionListener(e -> {
+			SolitaireController.setDeckType(SolitaireController.DeckType.DECK_32);
+			SolitaireController.adjustCardValuesForDeckType();
+			deckModeLabel.setText("Mode actuel: 32 cartes");
+
+		});
+		panelOptions.add(change32cards);
 
 		// Pour le thème de fond
 		String[] backgroundThemeInfo = getBackgroundThemeNameAndColor(currentTheme);

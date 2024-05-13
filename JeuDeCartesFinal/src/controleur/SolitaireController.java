@@ -12,8 +12,29 @@ import vue.Gui;
 
 public class SolitaireController {
 	private static List<Carte> deck = initDeck();
+	private static DeckType deckType = DeckType.DECK_52;
 
 	public static final int INDEX_COLONNE_PIOCHE = creerColonnesDeDepart().size() - 1;
+
+	public enum DeckType {
+		DECK_52, DECK_32
+	}
+
+	public static void setDeckType(DeckType type) {
+		deckType = type;
+	}
+
+	public static DeckType getDeckType() {
+		return deckType;
+	}
+
+	public static void adjustCardValuesForDeckType() {
+		if (deckType == DeckType.DECK_32) {
+			NomCarte.AS.setPoints(6);
+		} else {
+			NomCarte.AS.setPoints(1);
+		}
+	}
 
 	// Creation d'un jeu de cartes de 52 cartes
 	public List<Carte> createJeu52Cartes() {
@@ -27,17 +48,20 @@ public class SolitaireController {
 	}
 
 	public static List<Carte> initDeck() {
-		List<Carte> deck = new ArrayList<>();
+		List<Carte> listeCartes = new ArrayList<>();
 		for (CouleurCarte couleur : CouleurCarte.values()) {
 			for (NomCarte nom : NomCarte.values()) {
-				// Skip la création de cartes avec la couleur ou le nom CACHEE
 				if (couleur != CouleurCarte.CACHEE && nom != NomCarte.CACHEE) {
-					deck.add(new Carte(nom, couleur));
+					if (deckType == DeckType.DECK_52) {
+						listeCartes.add(new Carte(nom, couleur));
+					} else if (deckType == DeckType.DECK_32 && (nom == NomCarte.AS || nom.getPoints() >= 7)) {
+						listeCartes.add(new Carte(nom, couleur));
+					}
 				}
 			}
 		}
-		Collections.shuffle(deck);
-		return deck;
+		Collections.shuffle(listeCartes);
+		return listeCartes;
 	}
 
 	public static List<List<Carte>> creerColonnesDeDepart() {
