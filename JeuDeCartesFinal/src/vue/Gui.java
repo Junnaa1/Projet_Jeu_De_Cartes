@@ -574,7 +574,7 @@ public class Gui extends JFrame {
 					String imagePath = carte.estVisible()
 							? "src/ressources/Cards/" + carte.getNom().toString() + "_" + carte.getCouleur().toString()
 									+ ".png"
-							: "src/ressources/Cards/CACHEE_CACHEE.png";
+							: getCardBackImagePath();
 					ImageIcon carteImage = resizeCardImage(imagePath, cardWidth, cardHeight);
 					cardLabel = new JLabel(carteImage);
 				}
