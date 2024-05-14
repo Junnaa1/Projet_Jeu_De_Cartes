@@ -288,10 +288,10 @@ public class SolitaireController {
 		return false;
 	}
 
-	public boolean aGagner(List<List<Carte>> colonnes) {
+	public static boolean aGagner(List<List<Carte>> colonnes) {
 		// Vérifier si toutes les colonnes de destination contiennent 13 cartes
 		for (int i = 7; i < 11; i++) {
-			if (colonnes.get(i).size() != 13) {
+			if (colonnes.get(i).size() != 13 && deckType == DeckType.DECK_52 || colonnes.get(i).size() != 8 && deckType == DeckType.DECK_32) {
 				return false;
 			}
 		}

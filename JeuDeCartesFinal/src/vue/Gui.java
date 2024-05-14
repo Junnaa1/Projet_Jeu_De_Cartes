@@ -435,6 +435,9 @@ public class Gui extends JFrame {
 											derniereCartePiochee = null;
 											pileVideLabel.setIcon(null);
 											reconstruireAffichageColonnes();
+											if (SolitaireController.aGagner(colonnesDeDepart)) {
+												// Que fait on en cas de victoire
+											}
 										} else {
 											System.out.println("Déplacement échoué");
 											reconstruireAffichageColonnes();
@@ -606,6 +609,9 @@ public class Gui extends JFrame {
 										derniereCartePiochee = null;
 										pileVideLabel.setIcon(null);
 										reconstruireAffichageColonnes();
+										if (SolitaireController.aGagner(colonnesDeDepart)) {
+											// Que fait on en cas de victoire
+										}
 									} else {
 										System.out.println("Déplacement échoué");
 										reconstruireAffichageColonnes();
