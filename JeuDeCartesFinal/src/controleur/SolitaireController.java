@@ -289,12 +289,7 @@ public class SolitaireController {
 	}
 
 	public static boolean aGagner(List<List<Carte>> colonnes) {
-		// Vérifier si toutes les colonnes de destination contiennent 13 cartes
-		for (int i = 7; i < 11; i++) {
-			if (colonnes.get(i).size() != 13 && deckType == DeckType.DECK_52 || colonnes.get(i).size() != 8 && deckType == DeckType.DECK_32) {
-				return false;
-			}
-		}
+
 		return true;
 	}
 
@@ -405,6 +400,7 @@ public class SolitaireController {
 			if (estDeplacementDepuisPiocheValide(colonnePioche, destination)) {
 				System.out.println("Déplacement de la pioche vers la colonne destination: " + colonneDestination); // Ajouté
 				destination.add(cartePioche);
+
 				colonnePioche.remove(colonnePioche.size() - 1);// Ajoutez la carte à la colonne de destination
 				return true;
 			} else {
@@ -443,6 +439,7 @@ public class SolitaireController {
 			// Ajoutez la carte à la colonne de destination et retirez-la de la source
 			destination.add(carteADeplacer);
 			source.remove(source.size() - 1);
+
 			return true;
 		}
 	}

@@ -435,9 +435,7 @@ public class Gui extends JFrame {
 											derniereCartePiochee = null;
 											pileVideLabel.setIcon(null);
 											reconstruireAffichageColonnes();
-											if (SolitaireController.aGagner(colonnesDeDepart)) {
-												// Que fait on en cas de victoire
-											}
+
 										} else {
 											System.out.println("Déplacement échoué");
 											reconstruireAffichageColonnes();
@@ -609,9 +607,7 @@ public class Gui extends JFrame {
 										derniereCartePiochee = null;
 										pileVideLabel.setIcon(null);
 										reconstruireAffichageColonnes();
-										if (SolitaireController.aGagner(colonnesDeDepart)) {
-											// Que fait on en cas de victoire
-										}
+
 									} else {
 										System.out.println("Déplacement échoué");
 										reconstruireAffichageColonnes();
@@ -940,7 +936,9 @@ public class Gui extends JFrame {
 							// Ajouter la carte à la pile finale
 							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 7);
 							pileFinale.add(carteSelectionnee);
-
+							if (SolitaireController.aGagner(colonnesDeDepart)) {
+								overlayWin();
+							}
 							// Supprimer la carte de son emplacement précédent (colonne source)
 							if (colonneSourceSelectionnee != -1) {
 								List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
@@ -1543,6 +1541,67 @@ public class Gui extends JFrame {
 		glass.add(btnNo);
 
 		glass.setComponentZOrder(leaveGameLabel, 1); // L'image est derrière les boutons
+		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
+		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
+		// Ajoute un MouseAdapter pour bloquer les clics
+		glass.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Empêche les clics de passer à travers le glassPane
+			}
+		});
+
+		setGlassPane(glass); // Définit le nouveau glassPane
+		glass.setVisible(true); // Affiche le glassPane
+	}
+
+	public void overlayWin() {
+		// Crée un JPanel qui agira comme un glassPane
+
+		System.out.println("win");
+		JPanel glass = new JPanel();
+		glass.setLayout(null); // Aucun layout pour placer les éléments librement
+		glass.setOpaque(false); // Rend le fond transparent
+
+		// Crée un nouveau JLabel pour l'image
+		ImageIcon winGameIcon = new ImageIcon("src/ressources/Background/winGame.png");
+		JLabel winGameLabel = new JLabel(winGameIcon);
+		winGameLabel.setBounds(0, 0, 946, 503);
+
+		glass.add(winGameLabel);
+
+		// Création des boutons "Oui" et "Non"
+		JButton btnYes = new JButton("Oui");
+		JButton btnNo = new JButton("Non");
+
+		// Configuration du bouton "Oui"
+		btnYes.setBounds(330, 385, 150, 30); // Placer à une position calculée pour le centrage
+		btnYes.setBackground(new Color(64, 198, 23)); // Vert
+		btnYes.setForeground(Color.WHITE);
+		btnYes.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnYes.setFocusPainted(false);
+		btnYes.addActionListener(e -> {
+			nouvellePartie();
+
+			glass.setVisible(false); // Cache le glassPane
+		});
+
+		// Configuration du bouton "Non"
+		btnNo.setBounds(510, 385, 150, 30); // Placer à côté du bouton "Oui"
+		btnNo.setBackground(new Color(198, 23, 23)); // Rouge
+		btnNo.setForeground(Color.WHITE);
+		btnNo.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnNo.setFocusPainted(false);
+		btnNo.addActionListener(e -> {
+			setPanel(getMainPage());
+			glass.setVisible(false); // Cache le glassPane sans changer de panel
+		});
+
+		// Ajout des boutons au glassPane
+		glass.add(btnYes);
+		glass.add(btnNo);
+
+		glass.setComponentZOrder(winGameLabel, 1); // L'image est derrière les boutons
 		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
 		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
 		// Ajoute un MouseAdapter pour bloquer les clics
