@@ -29,6 +29,7 @@ import javax.swing.border.LineBorder;
 import controleur.SolitaireController;
 import controleur.Souris;
 import modele.Carte;
+import modele.NomCarte;
 
 public class Gui extends JFrame {
 
@@ -414,16 +415,16 @@ public class Gui extends JFrame {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							if (carte.estVisible()) {
-								if (colonneSourceSelectionnee == -1) {
-									colonneSourceSelectionnee = finalCol;
-									positionCarteDansColonne = finalCardIndex;
-									carteSelectionnee = carte;
-									System.out.println("Carte sélectionnée : " + carte);
-									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
-																							// une
-																							// bordure verte
-									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
-											+ ", position: " + finalCardIndex);
+							    if (colonneSourceSelectionnee == -1) {
+							        colonneSourceSelectionnee = finalCol;
+							        positionCarteDansColonne = finalCardIndex;
+							        carteSelectionnee = carte;
+							        System.out.println("Carte sélectionnée : " + carte);
+							        cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une bordure verte
+							        System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: " + finalCardIndex);
+							        
+							        // Vérifier si la carte sélectionnée est un roi
+							       
 								} else {
 									// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 									if (finalCol != colonneSourceSelectionnee) {
@@ -434,10 +435,11 @@ public class Gui extends JFrame {
 													+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
 											derniereCartePiochee = null;
 											pileVideLabel.setIcon(null);
-											reconstruireAffichageColonnes();
 											if (SolitaireController.aGagner(colonnesDeDepart)) {
-												// Que fait on en cas de victoire
+												System.out.println("Youhou");
 											}
+											reconstruireAffichageColonnes();
+											
 										} else {
 											System.out.println("Déplacement échoué");
 											reconstruireAffichageColonnes();
@@ -539,15 +541,15 @@ public class Gui extends JFrame {
 				pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
 				bgLabel.add(pileVideLabel);
 				bgLabel.setComponentZOrder(pileVideLabel, 0);
-
 				pileVideLabel.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						if (carteSelectionnee != null) {
+						if (carteSelectionnee != null && carteSelectionnee.getNom() == NomCarte.ROI) {
 							// Ajoute la carte sélectionnée à la colonne vide
 							colonnesDeDepart.get(finalCol).add(carteSelectionnee);
 							// Supprime la carte de sa colonne source
 							colonnesDeDepart.get(colonneSourceSelectionnee).remove(carteSelectionnee);
+							colonnesDeDepart.get(colonneSourceSelectionnee).get(colonnesDeDepart.get(colonneSourceSelectionnee).size()-1).setVisible(true);
 							// Réinitialise les variables de sélection
 							carteSelectionnee = null;
 							colonneSourceSelectionnee = -1;
@@ -608,10 +610,9 @@ public class Gui extends JFrame {
 												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
 										derniereCartePiochee = null;
 										pileVideLabel.setIcon(null);
+										
 										reconstruireAffichageColonnes();
-										if (SolitaireController.aGagner(colonnesDeDepart)) {
-											// Que fait on en cas de victoire
-										}
+										
 									} else {
 										System.out.println("Déplacement échoué");
 										reconstruireAffichageColonnes();
@@ -929,14 +930,14 @@ public class Gui extends JFrame {
 
 			// Ajouter un MouseAdapter à chaque pile finale
 			final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
-			List<Carte> colonne = colonnesDeDepart.get(finalI + 7);
+			//List<Carte> colonne = colonnesDeDepart.get(finalI + 7);
 			pileVideLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					// Vérifier s'il y a une carte sélectionnée dans une colonne source
 					if (carteSelectionnee != null) {
 						// Vérifier si la carte peut être déplacée vers cette pile finale
-						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, colonne)) {
+						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, finalI + 7, colonnesDeDepart)) {
 							// Ajouter la carte à la pile finale
 							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 7);
 							pileFinale.add(carteSelectionnee);
@@ -946,6 +947,10 @@ public class Gui extends JFrame {
 								List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
 								colonneSource.remove(carteSelectionnee);
 							}
+							if (SolitaireController.aGagner(colonnesDeDepart)) {
+								System.out.println("Youhou");
+							}
+
 
 							// Mettre à jour l'affichage
 							reconstruireAffichageColonnes();
