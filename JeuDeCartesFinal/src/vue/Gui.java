@@ -34,35 +34,39 @@ import modele.NomCarte;
 public class Gui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private Souris souris;
-	JPanel panelSolitaire = new JPanel();
-	List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
 
-	private boolean isPileVideLabelSelected = false;
+	// Constantes Layout
+	private static final int GAME_COLUMNS_X_START = 130;
+	private static final int GAME_COLUMNS_Y_START = 190;
+	private static final int GAME_COLUMNS_X_SPACING = 10;
+	private static final int GAME_COLUMNS_Y_SPACING = 20;
 
-	int gamecolumnsxStart = 130; // Position de départ pour la première carte sur l'axe X
-	int gamecolumnsyStart = 190; // Position de départ pour la première carte sur l'axe Y
-	int gamecolumnsxSpacing = 10; // Espace horizontal entre les cartes
-	int gamecolumnsySpacing = 20; // Espace vertical entre les cartes pour l'effet empilé
-
-	public Carte carteSelectionnee = null;
+	// Variables de jeu
+	private List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
+	private List<Carte> deck = SolitaireController.getDeck();
+	private Carte carteSelectionnee = null;
+	private Carte derniereCartePiochee = null;
+	private Carte cartePiochee = null;
 	private int colonneSourceSelectionnee = -1;
 	private int positionCarteDansColonne;
-
-	private Clip musicClip;
-	private static boolean isMusicMuted = true;
-
-	public Carte cartePiochee = null;
-	private Carte derniereCartePiochee = null;
-	private JLabel pileVideLabel;
 	private boolean doitRemelanger = false;
+	private boolean isPileVideLabelSelected = false;
 
-	List<Carte> deck = SolitaireController.getDeck();
+	// Composants GUI
+	private JPanel panelSolitaire = new JPanel();
+	private JLabel pileVideLabel;
+	private Clip musicClip;
 
+	// Thèmes
 	public static String currentTheme = "default";
 	public static String currentCardTheme = "default";
 
-	// Parcourir les colonnes d
+	// Contrôle audio
+	private static boolean isMusicMuted = true;
+
+	// Contrôle souris
+	private Souris souris;
+
 	public Gui() {
 		this.souris = new Souris(this);
 		initGUI();
@@ -70,29 +74,31 @@ public class Gui extends JFrame {
 	}
 
 	private void initGUI() {
-		setTitle("Solitaire");
-		playMusic("src/ressources/Sounds/GameOST.wav");
-		initCustomFonts();
+		setTitle("Solitaire"); // Titre de l'application
+		playMusic("src/ressources/Sounds/GameOST.wav"); // Choix de la musique
+		initCustomFonts(); // Chargement fonts globalisé
 		setSize(960, 540); // Taille de la fenêtre
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Leave
 		setLocationRelativeTo(null); // Centre la fenêtre
-		setIconImage(new ImageIcon("src/ressources/Images/Logo.png").getImage());
+		setIconImage(new ImageIcon("src/ressources/Images/Logo.png").getImage()); // Logo
 		setResizable(false); // Empêche le redimensionnement de la fenêtre
-		JPanel mainPanel = MainPage();
+		JPanel mainPanel = MainPage(); // Lancement de la page
 		setContentPane(mainPanel);
 		setVisible(true); // Rendre la fenêtre visible
 
 	}
 
+	// Définition du panel général
 	public void setPanel(JPanel panel) {
-		setContentPane(panel); // Définit le panel spécifié comme le content pane
+		setContentPane(panel);
 		if (panel instanceof JPanel) {
-			panelSolitaire = panel; // Assurez-vous que panelSolitaire référence le panel actuel si nécessaire
+			panelSolitaire = panel;
 		}
 		revalidate();
 		repaint();
 	}
 
+	// Chargements des polices globalisés
 	private void initCustomFonts() {
 		try {
 			// Chemin relatif au fichier de police dans le dossier des ressources
@@ -104,23 +110,21 @@ public class Gui extends JFrame {
 			ge.registerFont(gothici);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
-			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
 		}
 		try {
-			// Chemin relatif au fichier de police dans le dossier des ressources
 			File fontFile = new File("src/ressources/Fonts/Gotham-Black.otf");
 			Font gothamblack = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(12f);
 
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			// Enregistre la police
 			ge.registerFont(gothamblack);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
-			// Gérez l'erreur ici (par exemple, en utilisant une police par défaut)
 		}
 	}
 
+	// Lancement de la musique
 	public void playMusic(String filepath) {
+		// Si musique, lancement en boucle
 		try {
 			File musicPath = new File(filepath);
 			if (musicPath.exists()) {
@@ -132,28 +136,30 @@ public class Gui extends JFrame {
 					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
 				}
 			} else {
-				System.out.println("Can't find file");
+				System.out.println("No file");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	// Page principale
 	public JPanel MainPage() {
 
+		// Configuration initiale du JPanel principal
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setLayout(null);
 
-		// Arrière-plan
+		// Arrière-plan : chargement et mise en place de l'image de fond
 		ImageIcon bgIcon = new ImageIcon("src/ressources/Background/Background.png");
 		Image image = bgIcon.getImage();
 		Image newimg = image.getScaledInstance(946, 503, Image.SCALE_SMOOTH);
-		ImageIcon newIcon = new ImageIcon(newimg); // Crée un ImageIcon avec l'image redimensionnée
-
-		JLabel bgLabel = new JLabel(newIcon); // Utilise le nouvel ImageIcon pour le JLabel
-		bgLabel.setBounds(0, 0, 946, 503); // Définit la taille du JLabel pour correspondre à celle de l'image
+		ImageIcon newIcon = new ImageIcon(newimg);
+		JLabel bgLabel = new JLabel(newIcon);
+		bgLabel.setBounds(0, 0, 946, 503);
 		panelPrincipal.add(bgLabel);
 
+		// Particules d'arrière-plan
 		ImageIcon particlesIcon = new ImageIcon("src/ressources/Images/particles.gif");
 		JLabel particlesLabel = new JLabel(particlesIcon);
 		particlesLabel.setBounds(-240, 0, 960, 540);
@@ -164,6 +170,7 @@ public class Gui extends JFrame {
 		particlesLabel2.setBounds(250, 0, 960, 540);
 		panelPrincipal.add(particlesLabel2);
 
+		// Icônes de chargement animé
 		ImageIcon loadingIconOriginal = new ImageIcon("src/ressources/Images/loading.gif");
 		Image tempLoading = loadingIconOriginal.getImage().getScaledInstance(125, 100, Image.SCALE_DEFAULT);
 		ImageIcon resizedIcon = new ImageIcon(tempLoading);
@@ -178,40 +185,32 @@ public class Gui extends JFrame {
 		loadingLabel2.setBounds(-430, 200, 960, 540);
 		panelPrincipal.add(loadingLabel2);
 
-		// Image sous "Nouvelle partie"
+		// Configuration des étiquettes sous les boutons
 		ImageIcon imageIcon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel imageLabel = new JLabel(imageIcon);
-		// Assurez-vous que la position est correcte pour que l'image apparaisse sous
-		// "Nouvelle partie"
 		imageLabel.setBounds(-20, -15, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-		imageLabel.setVisible(false); // Invisible par défaut
+		imageLabel.setVisible(false);
 		bgLabel.add(imageLabel);
 
-		// Image sous "Nouvelle partie"
 		ImageIcon bouton2icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton2Label = new JLabel(bouton2icon);
-
-		bouton2Label.setBounds(-20, 45, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-		bouton2Label.setVisible(false); // Invisible par défaut
+		bouton2Label.setBounds(-20, 45, bouton2icon.getIconWidth(), bouton2icon.getIconHeight());
+		bouton2Label.setVisible(false);
 		bgLabel.add(bouton2Label);
 
-		// Image sous "Nouvelle partie"
 		ImageIcon bouton3icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton3Label = new JLabel(bouton3icon);
-
-		bouton3Label.setBounds(-20, 105, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-		bouton3Label.setVisible(false); // Invisible par défaut
+		bouton3Label.setBounds(-20, 105, bouton3icon.getIconWidth(), bouton3icon.getIconHeight());
+		bouton3Label.setVisible(false);
 		bgLabel.add(bouton3Label);
 
-		// Image sous "Nouvelle partie"
 		ImageIcon bouton4icon = new ImageIcon("src/ressources/Images/BackgroundButton.png");
 		JLabel bouton4Label = new JLabel(bouton4icon);
-
-		bouton4Label.setBounds(-20, 165, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-		bouton4Label.setVisible(false); // Invisible par défaut
+		bouton4Label.setBounds(-20, 165, bouton4icon.getIconWidth(), bouton4icon.getIconHeight());
+		bouton4Label.setVisible(false);
 		bgLabel.add(bouton4Label);
 
-		// "Nouvelle partie"
+		// Configuration des boutons interactifs avec MouseListeners simplifiés
 		JLabel nouvellepartie = new JLabel("Nouvelle partie");
 		nouvellepartie.setFont(new Font("Century Gothic Italic", Font.PLAIN, 30));
 		nouvellepartie.setForeground(Color.WHITE);
@@ -241,7 +240,7 @@ public class Gui extends JFrame {
 		regles.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setPanel(PanelRegles()); // Affiche le panel des règles
+				setPanel(PanelRegles());
 			}
 
 			@Override
@@ -300,26 +299,7 @@ public class Gui extends JFrame {
 		});
 		bgLabel.add(quitter);
 
-		// En arrière-plan, donc c'est l'index le plus élevé.
-		bgLabel.setComponentZOrder(particlesLabel, bgLabel.getComponentCount() - 1);
-		bgLabel.setComponentZOrder(particlesLabel2, bgLabel.getComponentCount() - 1);
-
-		// Les images de bouton viennent au-dessus des particules
-		bgLabel.setComponentZOrder(imageLabel, 0);
-		bgLabel.setComponentZOrder(bouton2Label, 0);
-		bgLabel.setComponentZOrder(bouton3Label, 0);
-		bgLabel.setComponentZOrder(bouton4Label, 0);
-
-		// Les labels de texte viennent au-dessus des images de bouton
-		bgLabel.setComponentZOrder(nouvellepartie, 0);
-		bgLabel.setComponentZOrder(regles, 0);
-		bgLabel.setComponentZOrder(options, 0);
-		bgLabel.setComponentZOrder(quitter, 0);
-
-		// Le gif de chargement vient tout en haut
-		bgLabel.setComponentZOrder(loadingLabel, 0);
-		bgLabel.setComponentZOrder(loadingLabel2, 0);
-
+		// Contrôle de la musique de fond avec MouseListener
 		ImageIcon musicControlIcon = new ImageIcon(
 				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
 		JLabel musicControlLabel = new JLabel(musicControlIcon);
@@ -340,6 +320,24 @@ public class Gui extends JFrame {
 		});
 		panelPrincipal.add(musicControlLabel);
 		bgLabel.setComponentZOrder(musicControlLabel, 0);
+
+		// Gestion des ordres d'affichage par couche
+
+		bgLabel.setComponentZOrder(particlesLabel, bgLabel.getComponentCount() - 1);
+		bgLabel.setComponentZOrder(particlesLabel2, bgLabel.getComponentCount() - 1);
+
+		bgLabel.setComponentZOrder(imageLabel, 0);
+		bgLabel.setComponentZOrder(bouton2Label, 0);
+		bgLabel.setComponentZOrder(bouton3Label, 0);
+		bgLabel.setComponentZOrder(bouton4Label, 0);
+
+		bgLabel.setComponentZOrder(nouvellepartie, 0);
+		bgLabel.setComponentZOrder(regles, 0);
+		bgLabel.setComponentZOrder(options, 0);
+		bgLabel.setComponentZOrder(quitter, 0);
+
+		bgLabel.setComponentZOrder(loadingLabel2, 0);
+		bgLabel.setComponentZOrder(loadingLabel, 0);
 
 		return panelPrincipal;
 	}
@@ -415,16 +413,18 @@ public class Gui extends JFrame {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							if (carte.estVisible()) {
-							    if (colonneSourceSelectionnee == -1) {
-							        colonneSourceSelectionnee = finalCol;
-							        positionCarteDansColonne = finalCardIndex;
-							        carteSelectionnee = carte;
-							        System.out.println("Carte sélectionnée : " + carte);
-							        cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec une bordure verte
-							        System.out.println("Carte sélectionnée dans la colonne: " + finalCol + ", position: " + finalCardIndex);
-							        
-							        // Vérifier si la carte sélectionnée est un roi
-							       
+								if (colonneSourceSelectionnee == -1) {
+									colonneSourceSelectionnee = finalCol;
+									positionCarteDansColonne = finalCardIndex;
+									carteSelectionnee = carte;
+									System.out.println("Carte sélectionnée : " + carte);
+									cardLabel.setBorder(new LineBorder(Color.GREEN, 3)); // Marquez la sélection avec
+																							// une bordure verte
+									System.out.println("Carte sélectionnée dans la colonne: " + finalCol
+											+ ", position: " + finalCardIndex);
+
+									// Vérifier si la carte sélectionnée est un roi
+
 								} else {
 									// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 									if (finalCol != colonneSourceSelectionnee) {
@@ -439,7 +439,7 @@ public class Gui extends JFrame {
 												System.out.println("Youhou");
 											}
 											reconstruireAffichageColonnes();
-											
+
 										} else {
 											System.out.println("Déplacement échoué");
 											reconstruireAffichageColonnes();
@@ -536,8 +536,8 @@ public class Gui extends JFrame {
 				final int finalCol = col;
 				// Affiche un JLabel pour une colonne vide
 				JLabel pileVideLabel = new JLabel(new ImageIcon("src/ressources/Cards/empty_pile.png"));
-				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
-				int y = gamecolumnsyStart; // La position Y reste constante pour la première carte de la colonne
+				int x = GAME_COLUMNS_X_START + (cardWidth + GAME_COLUMNS_X_SPACING) * col;
+				int y = GAME_COLUMNS_Y_START; // La position Y reste constante pour la première carte de la colonne
 				pileVideLabel.setBounds(x, y, cardWidth, cardHeight);
 				bgLabel.add(pileVideLabel);
 				bgLabel.setComponentZOrder(pileVideLabel, 0);
@@ -549,7 +549,8 @@ public class Gui extends JFrame {
 							colonnesDeDepart.get(finalCol).add(carteSelectionnee);
 							// Supprime la carte de sa colonne source
 							colonnesDeDepart.get(colonneSourceSelectionnee).remove(carteSelectionnee);
-							colonnesDeDepart.get(colonneSourceSelectionnee).get(colonnesDeDepart.get(colonneSourceSelectionnee).size()-1).setVisible(true);
+							colonnesDeDepart.get(colonneSourceSelectionnee)
+									.get(colonnesDeDepart.get(colonneSourceSelectionnee).size() - 1).setVisible(true);
 							// Réinitialise les variables de sélection
 							carteSelectionnee = null;
 							colonneSourceSelectionnee = -1;
@@ -564,8 +565,8 @@ public class Gui extends JFrame {
 
 				Carte carte = colonne.get(cardIndex);
 				JLabel cardLabel;
-				int x = gamecolumnsxStart + (cardWidth + gamecolumnsxSpacing) * col;
-				int y = gamecolumnsyStart + gamecolumnsySpacing * cardIndex;
+				int x = GAME_COLUMNS_X_START + (cardWidth + GAME_COLUMNS_X_SPACING) * col;
+				int y = GAME_COLUMNS_Y_START + GAME_COLUMNS_Y_SPACING * cardIndex;
 				final int finalCardIndex = cardIndex;
 				final int finalCol = col;
 				// Si nous sommes à la dernière carte de la colonne source, utilisez une carte
@@ -610,9 +611,9 @@ public class Gui extends JFrame {
 												+ colonneSourceSelectionnee + " vers la colonne " + finalCol);
 										derniereCartePiochee = null;
 										pileVideLabel.setIcon(null);
-										
+
 										reconstruireAffichageColonnes();
-										
+
 									} else {
 										System.out.println("Déplacement échoué");
 										reconstruireAffichageColonnes();
@@ -636,9 +637,11 @@ public class Gui extends JFrame {
 				for (int i = 7; i <= 10; i++) { // Parcourir les colonnes finales
 					List<Carte> colonneFinale = colonnesDeDepart.get(i);
 					int y2 = 30; // Position y fixe pour les cartes dans les colonnes finales
-					int x2 = xStartFinale + ((i - 7) * (cardWidth + gamecolumnsxSpacing)); // Calculer la position x en
-																							// fonction de l'indice de
-																							// la
+					int x2 = xStartFinale + ((i - 7) * (cardWidth + GAME_COLUMNS_X_SPACING)); // Calculer la position x
+																								// en
+																								// fonction de l'indice
+																								// de
+																								// la
 					// colonne finale
 
 					for (Carte carte2 : colonneFinale) {
@@ -930,18 +933,22 @@ public class Gui extends JFrame {
 
 			// Ajouter un MouseAdapter à chaque pile finale
 			final int finalI = i; // Stocker l'indice final pour accéder à l'intérieur de la classe anonyme
-			//List<Carte> colonne = colonnesDeDepart.get(finalI + 7);
+			// List<Carte> colonne = colonnesDeDepart.get(finalI + 7);
 			pileVideLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					// Vérifier s'il y a une carte sélectionnée dans une colonne source
 					if (carteSelectionnee != null) {
 						// Vérifier si la carte peut être déplacée vers cette pile finale
-						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, finalI + 7, colonnesDeDepart)) {
+						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, finalI + 7,
+								colonnesDeDepart)) {
 							// Ajouter la carte à la pile finale
 							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 7);
 							pileFinale.add(carteSelectionnee);
 
+							if (SolitaireController.aGagner(colonnesDeDepart)) {
+								overlayWin();
+							}
 							// Supprimer la carte de son emplacement précédent (colonne source)
 							if (colonneSourceSelectionnee != -1) {
 								List<Carte> colonneSource = colonnesDeDepart.get(colonneSourceSelectionnee);
@@ -950,7 +957,6 @@ public class Gui extends JFrame {
 							if (SolitaireController.aGagner(colonnesDeDepart)) {
 								System.out.println("Youhou");
 							}
-
 
 							// Mettre à jour l'affichage
 							reconstruireAffichageColonnes();
@@ -1562,4 +1568,64 @@ public class Gui extends JFrame {
 		glass.setVisible(true); // Affiche le glassPane
 	}
 
+	public void overlayWin() {
+		// Crée un JPanel qui agira comme un glassPane
+
+		System.out.println("win");
+		JPanel glass = new JPanel();
+		glass.setLayout(null); // Aucun layout pour placer les éléments librement
+		glass.setOpaque(false); // Rend le fond transparent
+
+		// Crée un nouveau JLabel pour l'image
+		ImageIcon winGameIcon = new ImageIcon("src/ressources/Background/winGame.png");
+		JLabel winGameLabel = new JLabel(winGameIcon);
+		winGameLabel.setBounds(0, 0, 946, 503);
+
+		glass.add(winGameLabel);
+
+		// Création des boutons "Oui" et "Non"
+		JButton btnYes = new JButton("Oui");
+		JButton btnNo = new JButton("Non");
+
+		// Configuration du bouton "Oui"
+		btnYes.setBounds(330, 385, 150, 30); // Placer à une position calculée pour le centrage
+		btnYes.setBackground(new Color(64, 198, 23)); // Vert
+		btnYes.setForeground(Color.WHITE);
+		btnYes.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnYes.setFocusPainted(false);
+		btnYes.addActionListener(e -> {
+			nouvellePartie();
+
+			glass.setVisible(false); // Cache le glassPane
+		});
+
+		// Configuration du bouton "Non"
+		btnNo.setBounds(510, 385, 150, 30); // Placer à côté du bouton "Oui"
+		btnNo.setBackground(new Color(198, 23, 23)); // Rouge
+		btnNo.setForeground(Color.WHITE);
+		btnNo.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		btnNo.setFocusPainted(false);
+		btnNo.addActionListener(e -> {
+			setPanel(getMainPage());
+			glass.setVisible(false); // Cache le glassPane sans changer de panel
+		});
+
+		// Ajout des boutons au glassPane
+		glass.add(btnYes);
+		glass.add(btnNo);
+
+		glass.setComponentZOrder(winGameLabel, 1); // L'image est derrière les boutons
+		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
+		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
+		// Ajoute un MouseAdapter pour bloquer les clics
+		glass.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Empêche les clics de passer à travers le glassPane
+			}
+		});
+
+		setGlassPane(glass); // Définit le nouveau glassPane
+		glass.setVisible(true); // Affiche le glassPane
+	}
 }

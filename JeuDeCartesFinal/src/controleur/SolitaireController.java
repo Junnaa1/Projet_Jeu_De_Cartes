@@ -100,8 +100,6 @@ public class SolitaireController {
 		return colonnes;
 	}
 
-
-
 	// Fonction pour afficher les colonnes du solitaire (pour le test)
 	public static void afficherColonnes(List<List<Carte>> colonnes) {
 		for (int i = 0; i < colonnes.size(); i++) {
@@ -143,8 +141,6 @@ public class SolitaireController {
 	 * @param destinationColonne
 	 */
 	// Fonction pour déplacer une carte d'une colonne à une autre
-
-	
 
 	// Méthode pour vérifier si le déplacement d'une carte depuis la pioche vers une
 	// colonne est valide
@@ -205,7 +201,13 @@ public class SolitaireController {
 	}
 
 	public static boolean aGagner(List<List<Carte>> colonnes) {
-
+		// Vérifier si toutes les colonnes de destination contiennent 13 cartes
+		for (int i = 7; i < 11; i++) {
+			if (colonnes.get(i).size() != 13 && deckType == DeckType.DECK_52
+					|| colonnes.get(i).size() != 8 && deckType == DeckType.DECK_32) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -249,7 +251,6 @@ public class SolitaireController {
 	public static List<Carte> getDeck() {
 		return deck; // Assurez-vous que ce deck est le deck unique utilisé partout
 	}
-
 
 	public static boolean deplacerCarteTest(List<List<Carte>> colonnes, int colonneSource, int colonneDestination) {
 		// Cas spécial pour la pioche
@@ -338,7 +339,8 @@ public class SolitaireController {
 				&& ((carteADeplacer.getCouleur().getPoints() < 3) != (carteDestination.getCouleur().getPoints() < 3));
 	}
 
-	public static boolean deplacementVersPileFinale(Carte carteADeplacer, int colonneDestination, List<List<Carte>> colonnes) {
+	public static boolean deplacementVersPileFinale(Carte carteADeplacer, int colonneDestination,
+			List<List<Carte>> colonnes) {
 		if (carteADeplacer == null) {
 			// La carte à déplacer ne peut pas être nulle
 			return false;
@@ -347,15 +349,18 @@ public class SolitaireController {
 		if (destination.isEmpty() && colonneDestination >= 7) {
 			// Seule une carte AS peut être déplacée vers une pile finale vide
 			return carteADeplacer.getNom() == NomCarte.AS;
-		} else if (destination.isEmpty() && colonneDestination < 7){
+		} else if (destination.isEmpty() && colonneDestination < 7) {
 			return carteADeplacer.getNom() == NomCarte.ROI;
 		} else {
-			
+
 			Carte derniereCartePileFinale = destination.get(destination.size() - 1);
 			// Vérifier si la carte à déplacer peut être placée sur la pile finale selon les
 			// règles du solitaire
-			
-			return (carteADeplacer.getValeur() == derniereCartePileFinale.getValeur() + 1) && // La carte à déplacer doit avoir une valeur supérieure d'une unité
+
+			return (carteADeplacer.getValeur() == derniereCartePileFinale.getValeur() + 1) && // La carte à déplacer
+																								// doit avoir une valeur
+																								// supérieure d'une
+																								// unité
 					(carteADeplacer.getCouleur() == derniereCartePileFinale.getCouleur()); // Les couleurs doivent être
 																							// différentes
 		}
