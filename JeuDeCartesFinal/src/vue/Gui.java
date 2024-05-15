@@ -67,12 +67,18 @@ public class Gui extends JFrame {
 	// Contrôle souris
 	private Souris souris;
 
+	//////////////////////////////////////
+	// INITIALISATION BACK DU JEU ////////
+	//////////////////////////////////////
+
+	// Gui
 	public Gui() {
 		this.souris = new Souris(this);
 		initGUI();
 		rendreDernieresCartesVisibles();
 	}
 
+	// Initialisation du GUI
 	private void initGUI() {
 		setTitle("Solitaire"); // Titre de l'application
 		playMusic("src/ressources/Sounds/GameOST.wav"); // Choix de la musique
@@ -143,7 +149,11 @@ public class Gui extends JFrame {
 		}
 	}
 
-	// Page principale
+	///////////////////////////
+	// PAGE D'ACCUEIL DU JEU //
+	///////////////////////////
+
+	// Page principale du jeu
 	public JPanel MainPage() {
 
 		// Configuration initiale du JPanel principal
@@ -324,6 +334,11 @@ public class Gui extends JFrame {
 		return panelPrincipal;
 	}
 
+	////////////////////////////
+	// FONCTIONNEMENT DU JEU //
+	////////////////////////////
+
+	// Panel du solitaire d'initialisation
 	public JPanel PanelSolitaire() {
 		JPanel panelSolitaire = new JPanel();
 		panelSolitaire.setLayout(null);
@@ -434,6 +449,7 @@ public class Gui extends JFrame {
 		return panelSolitaire;
 	}
 
+	// Recréation des colonnes en fonction du jeu
 	private void reconstruireAffichageColonnes() {
 
 		// Suppression des composants existants pour une réinitialisation de l'affichage
@@ -597,6 +613,7 @@ public class Gui extends JFrame {
 		panelSolitaire.repaint();
 	}
 
+	// Création de la pioche
 	private void creerPioche(JLabel bgLabel) {
 
 		// Chargement de l'icône de dos
@@ -735,6 +752,7 @@ public class Gui extends JFrame {
 		});
 	}
 
+	// Gestion des colonnes finales
 	private void creerColonneFinale(JLabel bgLabel) {
 
 		// Positions de départ
@@ -791,6 +809,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Mélange de la pioche
 	public static void remelangerPiocheDansDeck(List<List<Carte>> colonnesDeDepart) {
 		List<Carte> pioche = colonnesDeDepart.get(11); // Obtient la liste des cartes piochées (11 = pioche)
 		SolitaireController.getDeck().addAll(pioche); // Ajoute toutes les cartes de la pioche au deck
@@ -798,6 +817,7 @@ public class Gui extends JFrame {
 		Collections.shuffle(SolitaireController.getDeck()); // Mélange le deck
 	}
 
+	// Conversion nécessaire
 	private ImageIcon carteToImageIcon(Carte carte) {
 		// Conversion de format
 		String nom = carte.getNom().toString();
@@ -806,6 +826,7 @@ public class Gui extends JFrame {
 		return new ImageIcon(cheminImage);
 	}
 
+	// Récupérer image de la carte nécessaire
 	private ImageIcon obtenirImageCarte(Carte carte) {
 		ImageIcon cardBackIcon = new ImageIcon(getCardBackImagePath());
 		int cardWidth = cardBackIcon.getIconWidth();
@@ -816,6 +837,7 @@ public class Gui extends JFrame {
 		return resizeCardImage(chemin, cardWidth, cardHeight); // Redimension
 	}
 
+	// Rendre les dernières cartes visibles à chaque action
 	private void rendreDernieresCartesVisibles() {
 		// Pour éviter problèmes de cartes non cliquables, tout retourner
 		for (List<Carte> colonne : colonnesDeDepart) {
@@ -826,86 +848,76 @@ public class Gui extends JFrame {
 		}
 	}
 
+	/////////////////////////
+	// ONGLETS SECONDAIRES //
+	/////////////////////////
+
+	// Panel des règles
 	public JPanel PanelRegles() {
+
+		// Création et configuration du JPanel
 		JPanel panelRegles = new JPanel();
 		panelRegles.setLayout(null);
 
-		// Arrière-plan
+		// Configuration et ajout de l'arrière-plan
 		ImageIcon rulesIcon = new ImageIcon(getRulesBackgroundPath());
 		JLabel rulesLabel = new JLabel(rulesIcon);
 		rulesLabel.setBounds(0, 0, 946, 503);
 		panelRegles.add(rulesLabel);
 
+		// Création et configuration du JPanel pour les boutons
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		panelBoutons.setOpaque(false);
 
-		// Bouton Retour
-		JButton boutonRetour = new JButton("Retour");
-		boutonRetour.setBackground(new Color(91, 4, 75));
-		boutonRetour.setForeground(Color.WHITE);
-		boutonRetour.setFocusPainted(false);
-		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
-		boutonRetour.setBounds(20, 450, 140, 40); // Ajustement des dimensions pour correspondre à celles de
-													// PanelSolitaire
-		panelRegles.add(boutonRetour);
-
-		// Cette ligne est très importante pour s'assurer que le bouton retour est
-		// visible par dessus le background
-		panelRegles.setComponentZOrder(boutonRetour, 0); // Assurez-vous que le bouton est au-dessus
-		panelRegles.setComponentZOrder(rulesLabel, 1); // Le JLabel du fond doit être derrière
-
-		boutonRetour.addActionListener(e -> setPanel(getMainPage())); // Action pour retourner à la page principale
-
-		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(
-				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
-		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
-		musicControlLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				isMusicMuted = !isMusicMuted; // Inverse l'état
-				if (isMusicMuted) {
-					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
-				} else {
-					musicClip.start();
-					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
-				}
-			}
-		});
-		panelRegles.add(musicControlLabel);
-		rulesLabel.setComponentZOrder(musicControlLabel, 0);
-		return panelRegles;
-	}
-
-	public JPanel PanelOptions() {
-		JPanel panelOptions = new JPanel();
-		panelOptions.setLayout(null);
-
-		// Arrière-plan
-		ImageIcon optionsIcon = new ImageIcon(getPersonnalisationBackgroundPath());
-		JLabel optionsLabel = new JLabel(optionsIcon);
-		optionsLabel.setBounds(0, 0, 946, 503);
-		panelOptions.add(optionsLabel);
-
-		JPanel panelBoutons = new JPanel();
-		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		panelBoutons.setOpaque(false);
-
-		// Bouton Retour
+		// Configuration et ajout du bouton de retour
 		JButton boutonRetour = new JButton("Retour");
 		boutonRetour.setBackground(new Color(91, 4, 75));
 		boutonRetour.setForeground(Color.WHITE);
 		boutonRetour.setFocusPainted(false);
 		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
 		boutonRetour.setBounds(20, 450, 140, 40);
+		panelRegles.add(boutonRetour);
 
-		panelOptions.add(boutonRetour);
-
+		// Ordre superposition
+		panelRegles.setComponentZOrder(boutonRetour, 0);
+		panelRegles.setComponentZOrder(rulesLabel, 1);
 		boutonRetour.addActionListener(e -> setPanel(getMainPage())); // Action pour retourner à la page principale
+
+		// Ajout du contrôle de la musique
+		panelRegles.add(musicIcon());
+		rulesLabel.setComponentZOrder(musicIcon(), 0);
+
+		return panelRegles;
+	}
+
+	// Panel d'options général
+	public JPanel PanelOptions() {
+
+		// Création du panel
+		JPanel panelOptions = new JPanel();
+		panelOptions.setLayout(null);
+
+		// Arrière plan
+		ImageIcon optionsIcon = new ImageIcon(getPersonnalisationBackgroundPath());
+		JLabel optionsLabel = new JLabel(optionsIcon);
+		optionsLabel.setBounds(0, 0, 946, 503);
+		panelOptions.add(optionsLabel);
+
+		// Panel de boutons
+		JPanel panelBoutons = new JPanel();
+		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		panelBoutons.setOpaque(false);
+
+		// Bouton de retour
+		JButton boutonRetour = new JButton("Retour");
+		boutonRetour.setBackground(new Color(91, 4, 75));
+		boutonRetour.setForeground(Color.WHITE);
+		boutonRetour.setFocusPainted(false);
+		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
+		boutonRetour.setBounds(20, 450, 140, 40);
+		boutonRetour.addActionListener(e -> setPanel(getMainPage()));
+		panelOptions.add(boutonRetour);
 
 		// Bouton pour changer la couleur du fond
 		JButton changeBackgroundButton = new JButton("Changer couleur du fond");
@@ -948,6 +960,25 @@ public class Gui extends JFrame {
 			}
 		});
 
+		// Statut actuel des thèmes
+		// Pour le thème de fond
+		String[] backgroundThemeInfo = getBackgroundThemeNameAndColor(currentTheme);
+		JLabel backgroundThemeLabel = new JLabel("Thème actuel du fond : " + backgroundThemeInfo[0]);
+		backgroundThemeLabel.setForeground(Color.WHITE);
+		backgroundThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
+		backgroundThemeLabel.setBounds(230, 230, 500, 30);
+		panelOptions.add(backgroundThemeLabel);
+
+		// Pour le thème des cartes
+		String[] cardThemeInfo = getCardThemeNameAndColor(currentCardTheme);
+		JLabel cardThemeLabel = new JLabel("Thème actuel des cartes : " + cardThemeInfo[0]);
+		cardThemeLabel.setForeground(Color.WHITE);
+		cardThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
+		cardThemeLabel.setBounds(230, 330, 500, 30);
+		panelOptions.add(cardThemeLabel);
+
+		// Changement du mode de jeu (52/32)
+		// Création des boutons et du statut
 		JLabel deckModeLabel = new JLabel();
 		deckModeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
 		deckModeLabel.setForeground(Color.WHITE);
@@ -956,7 +987,6 @@ public class Gui extends JFrame {
 				+ (SolitaireController.getDeckType() == SolitaireController.DeckType.DECK_52 ? "52 cartes"
 						: "32 cartes"));
 		panelOptions.add(deckModeLabel);
-
 		panelOptions.add(changeCardColorButton);
 
 		JButton change52cards = new JButton("Mode 52 cartes");
@@ -987,45 +1017,12 @@ public class Gui extends JFrame {
 		});
 		panelOptions.add(change32cards);
 
-		// Pour le thème de fond
-		String[] backgroundThemeInfo = getBackgroundThemeNameAndColor(currentTheme);
-		JLabel backgroundThemeLabel = new JLabel("Thème actuel du fond : " + backgroundThemeInfo[0]);
-		backgroundThemeLabel.setForeground(Color.WHITE);
-		backgroundThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
-		backgroundThemeLabel.setBounds(230, 230, 500, 30);
-		panelOptions.add(backgroundThemeLabel);
+		// Ajout du contrôle de la musique
+		panelOptions.add(musicIcon());
+		optionsLabel.setComponentZOrder(musicIcon(), 0);
 
-		// Pour le thème des cartes
-		String[] cardThemeInfo = getCardThemeNameAndColor(currentCardTheme);
-		JLabel cardThemeLabel = new JLabel("Thème actuel des cartes : " + cardThemeInfo[0]);
-		cardThemeLabel.setForeground(Color.WHITE);
-		cardThemeLabel.setFont(new Font("Gotham Black", Font.BOLD, 18));
-		cardThemeLabel.setBounds(230, 330, 500, 30);
-		panelOptions.add(cardThemeLabel);
-
-		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(
-				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
-		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
-		musicControlLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				isMusicMuted = !isMusicMuted; // Inverse l'état
-				if (isMusicMuted) {
-					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
-				} else {
-					musicClip.start();
-					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
-				}
-			}
-		});
-		panelOptions.add(musicControlLabel);
-
+		// Ordre superposition
 		panelOptions.setComponentZOrder(optionsLabel, panelOptions.getComponentCount() - 1);
-		panelOptions.setComponentZOrder(musicControlLabel, 0);
 		panelOptions.setComponentZOrder(changeCardColorButton, 0);
 		panelOptions.setComponentZOrder(changeBackgroundButton, 0);
 		panelOptions.setComponentZOrder(boutonRetour, 0);
@@ -1033,31 +1030,37 @@ public class Gui extends JFrame {
 		return panelOptions;
 	}
 
+	// Panel d'options du fond
 	public JPanel PanelBackgroundOptions() {
+
+		// Configuration du panel pour les options d'arrière-plan.
 		JPanel panelBackgroundOptions = new JPanel();
 		panelBackgroundOptions.setLayout(null);
 
-		// Arrière-plan
+		// Ajout de l'image d'arrière-plan au panel.
 		ImageIcon backgroundOptionsIcon = new ImageIcon(getColorBackgroundPath());
 		JLabel backgroundOptionsLabel = new JLabel(backgroundOptionsIcon);
 		backgroundOptionsLabel.setBounds(0, 0, 946, 503);
 		panelBackgroundOptions.add(backgroundOptionsLabel);
 
-		// Bouton Retour
+		// Création et ajout du bouton de retour avec action pour revenir aux options
+		// principales.
 		JButton boutonRetour = new JButton("Retour");
 		boutonRetour.setBackground(new Color(91, 4, 75));
 		boutonRetour.setForeground(Color.WHITE);
 		boutonRetour.setFocusPainted(false);
 		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
 		boutonRetour.setBounds(20, 450, 140, 40);
-		boutonRetour.addActionListener(e -> setPanel(PanelOptions())); // Action pour retourner à PanelOptions
+		boutonRetour.addActionListener(e -> setPanel(PanelOptions()));
 		panelBackgroundOptions.add(boutonRetour);
 
+		// Couleurs des boutons
 		Color green = new Color(22, 120, 44);
 		Color purple = new Color(69, 3, 55);
 		Color red = new Color(113, 13, 27);
 		Color blue = new Color(5, 52, 83);
 
+		// Création des boutons + refresh du background en temps réel
 		JButton boutonVert = createButton("Vert", green, 260, 200, 200, 50);
 		boutonVert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1095,36 +1098,19 @@ public class Gui extends JFrame {
 		panelBackgroundOptions.add(boutonRouge);
 		panelBackgroundOptions.add(boutonBleu);
 
-		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(
-				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
-		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
-		musicControlLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				isMusicMuted = !isMusicMuted; // Inverse l'état
-				if (isMusicMuted) {
-					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
-				} else {
-					musicClip.start();
-					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
-				}
-			}
-		});
-		panelBackgroundOptions.add(musicControlLabel);
+		// Ajout du contrôle de la musique
+		panelBackgroundOptions.add(musicIcon());
+		backgroundOptionsLabel.setComponentZOrder(musicIcon(), 0);
 
-		// Set component Z-order
+		// Ordre
 		panelBackgroundOptions.setComponentZOrder(backgroundOptionsLabel,
 				panelBackgroundOptions.getComponentCount() - 1);
 		panelBackgroundOptions.setComponentZOrder(boutonRetour, 0);
-		panelBackgroundOptions.setComponentZOrder(musicControlLabel, 0);
 
 		return panelBackgroundOptions;
 	}
 
+	// Méthode de bouton générique
 	private JButton createButton(String text, Color backgroundColor, int x, int y, int width, int height) {
 		JButton button = new JButton(text);
 		button.setBackground(backgroundColor);
@@ -1135,6 +1121,8 @@ public class Gui extends JFrame {
 		return button;
 	}
 
+	// Méthodes pour les changements de thème //
+	// Récupérer la couleur en fonction du thème
 	public static String getBackgroundImagePath() {
 		switch (currentTheme) {
 		case "purple":
@@ -1148,6 +1136,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Récupérer la couleur en fonction du thème
 	public static String getPersonnalisationBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
@@ -1161,6 +1150,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Récupérer la couleur en fonction du thème
 	public static String getColorBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
@@ -1174,6 +1164,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Récupérer la couleur en fonction du thème
 	public static String getColorCardBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
@@ -1187,6 +1178,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Récupérer la couleur en fonction du thème
 	public static String getRulesBackgroundPath() {
 		switch (currentTheme) {
 		case "purple":
@@ -1200,37 +1192,35 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Rafraichir l'affichage du fond
 	public void refreshBackground() {
 		setContentPane(PanelBackgroundOptions()); // Reconstruire et afficher le panel principal
 		validate();
 		repaint();
 	}
 
+	// Panel du choix de couleur de cartes
 	public JPanel PanelCardOptions() {
+
+		// Panel
 		JPanel panelCardOptions = new JPanel();
 		panelCardOptions.setLayout(null);
 
-		// Arrière-plan
+		// Arrière plan
 		ImageIcon cardOptionsIcon = new ImageIcon(getColorCardBackgroundPath());
 		JLabel cardOptionsLabel = new JLabel(cardOptionsIcon);
 		cardOptionsLabel.setBounds(0, 0, 946, 503);
 		panelCardOptions.add(cardOptionsLabel);
 
-		// Bouton Retour
+		// Bouton retour
 		JButton boutonRetour = new JButton("Retour");
 		boutonRetour.setBackground(new Color(91, 4, 75));
 		boutonRetour.setForeground(Color.WHITE);
 		boutonRetour.setFocusPainted(false);
 		boutonRetour.setFont(new Font("Gotham Black", Font.BOLD, 24));
 		boutonRetour.setBounds(20, 450, 140, 40);
-		boutonRetour.addActionListener(e -> setPanel(PanelOptions())); // Action pour retourner à PanelOptions
+		boutonRetour.addActionListener(e -> setPanel(PanelOptions()));
 		panelCardOptions.add(boutonRetour);
-
-		JLabel messageLabel = new JLabel("");
-		messageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-		messageLabel.setForeground(Color.WHITE);
-		messageLabel.setBounds(260, 340, 400, 30);
-		panelCardOptions.add(messageLabel);
 
 		// Définir les couleurs pour les boutons
 		Color green = new Color(22, 120, 44);
@@ -1243,8 +1233,6 @@ public class Gui extends JFrame {
 		boutonVert.addActionListener(e -> {
 			currentCardTheme = "green";
 			refreshCard();
-			String[] themeInfo = getCardThemeNameAndColor(currentCardTheme);
-			messageLabel.setText("Couleur changée en " + themeInfo[0]);
 		});
 
 		JButton boutonViolet = createButton("Violet", purple, 510, 200, 200, 50);
@@ -1270,35 +1258,19 @@ public class Gui extends JFrame {
 		panelCardOptions.add(boutonRouge);
 		panelCardOptions.add(boutonBleu);
 
-		// Bouton Mute/Unmute Music
-		ImageIcon musicControlIcon = new ImageIcon(
-				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
-		JLabel musicControlLabel = new JLabel(musicControlIcon);
-		musicControlLabel.setBounds(895, 10, musicControlIcon.getIconWidth(), musicControlIcon.getIconHeight());
-		musicControlLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				isMusicMuted = !isMusicMuted;
-				if (isMusicMuted) {
-					musicClip.stop();
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/unmute.png"));
-				} else {
-					musicClip.start();
-					musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-					musicControlLabel.setIcon(new ImageIcon("src/ressources/Images/mute.png"));
-				}
-			}
-		});
-		panelCardOptions.add(musicControlLabel);
+		// Ajout du contrôle de la musique
+		panelCardOptions.add(musicIcon());
+		cardOptionsLabel.setComponentZOrder(musicIcon(), 0);
+		panelCardOptions.add(cardOptionsLabel);
 
-		// Set component Z-order
+		// Ordre
 		panelCardOptions.setComponentZOrder(cardOptionsLabel, panelCardOptions.getComponentCount() - 1);
-		panelCardOptions.setComponentZOrder(musicControlLabel, 0);
 		panelCardOptions.setComponentZOrder(boutonRetour, 0);
 
 		return panelCardOptions;
 	}
 
+	// Récupérer la couleur en fonction du thème
 	private String getCardBackImagePath() {
 		switch (currentCardTheme) {
 		case "green":
@@ -1312,13 +1284,14 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Rafraichir l'affichage des cartes
 	public void refreshCard() {
 		setContentPane(PanelCardOptions()); // Reconstruire et afficher le panel principal
 		validate();
 		repaint();
-
 	}
 
+	// Récupérer thème actuel du fond
 	private String[] getBackgroundThemeNameAndColor(String theme) {
 		switch (theme) {
 		case "default":
@@ -1334,6 +1307,7 @@ public class Gui extends JFrame {
 		}
 	}
 
+	// Récupérer thème actuel des cartes
 	private String[] getCardThemeNameAndColor(String theme) {
 		switch (theme) {
 		case "default":
@@ -1349,6 +1323,11 @@ public class Gui extends JFrame {
 		}
 	}
 
+	/////////////////////
+	// MÉTHODES AUTRES //
+	/////////////////////
+
+	// Réintialisation des variables
 	public void nouvellePartie() {
 		// Réinitialiser le deck et les colonnes
 		colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
@@ -1364,25 +1343,23 @@ public class Gui extends JFrame {
 		setPanel(PanelSolitaire());
 	}
 
+	// Overlay pour quitter la partie
 	public void overlayLeaveGameImage() {
-		// Crée un JPanel qui agira comme un glassPane
+		// JPanel sous forme de glass pour s'afficher au dessus et pouvoir revenir
 		JPanel glass = new JPanel();
-		glass.setLayout(null); // Aucun layout pour placer les éléments librement
-		glass.setOpaque(false); // Rend le fond transparent
+		glass.setLayout(null);
+		glass.setOpaque(false);
 
-		// Crée un nouveau JLabel pour l'image
+		// Image du leave
 		ImageIcon leaveGameIcon = new ImageIcon("src/ressources/Background/leaveGame.png");
 		JLabel leaveGameLabel = new JLabel(leaveGameIcon);
 		leaveGameLabel.setBounds(0, 0, 946, 503);
-
 		glass.add(leaveGameLabel);
 
-		// Création des boutons "Oui" et "Non"
-		JButton btnYes = new JButton("Oui");
-		JButton btnNo = new JButton("Non");
-
+		// Boutons "Oui" et "Non"
 		// Configuration du bouton "Oui"
-		btnYes.setBounds(300, 295, 150, 40); // Placer à une position calculée pour le centrage
+		JButton btnYes = new JButton("Oui");
+		btnYes.setBounds(300, 295, 150, 40);
 		btnYes.setBackground(new Color(64, 198, 23)); // Vert
 		btnYes.setForeground(Color.WHITE);
 		btnYes.setFont(new Font("Gotham Black", Font.BOLD, 24));
@@ -1393,53 +1370,51 @@ public class Gui extends JFrame {
 		});
 
 		// Configuration du bouton "Non"
+		JButton btnNo = new JButton("Non");
 		btnNo.setBounds(500, 295, 150, 40); // Placer à côté du bouton "Oui"
 		btnNo.setBackground(new Color(198, 23, 23)); // Rouge
 		btnNo.setForeground(Color.WHITE);
 		btnNo.setFont(new Font("Gotham Black", Font.BOLD, 24));
 		btnNo.setFocusPainted(false);
 		btnNo.addActionListener(e -> {
-			glass.setVisible(false); // Cache le glassPane sans changer de panel
+			glass.setVisible(false); // Cache le glassPane et revient sur l'écran d'avant
 		});
 
 		// Ajout des boutons au glassPane
 		glass.add(btnYes);
 		glass.add(btnNo);
 
-		glass.setComponentZOrder(leaveGameLabel, 1); // L'image est derrière les boutons
-		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
-		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
-		// Ajoute un MouseAdapter pour bloquer les clics
+		glass.setComponentZOrder(leaveGameLabel, 1);
+		glass.setComponentZOrder(btnYes, 0);
+		glass.setComponentZOrder(btnNo, 0);
+
+		// Bloquage des clics
 		glass.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Empêche les clics de passer à travers le glassPane
 			}
 		});
-
-		setGlassPane(glass); // Définit le nouveau glassPane
-		glass.setVisible(true); // Affiche le glassPane
+		setGlassPane(glass);
+		glass.setVisible(true);
 	}
 
+	// Overlay de victoire
 	public void overlayWin() {
-		// Crée un JPanel qui agira comme un glassPane
-
+		// JPanel en glass pour afficher par dessus
 		JPanel glass = new JPanel();
-		glass.setLayout(null); // Aucun layout pour placer les éléments librement
-		glass.setOpaque(false); // Rend le fond transparent
+		glass.setLayout(null);
+		glass.setOpaque(false);
 
-		// Crée un nouveau JLabel pour l'image
+		// JLabel pour l'image
 		ImageIcon winGameIcon = new ImageIcon("src/ressources/Background/winGame.png");
 		JLabel winGameLabel = new JLabel(winGameIcon);
 		winGameLabel.setBounds(0, 0, 946, 503);
-
 		glass.add(winGameLabel);
 
 		// Création des boutons "Oui" et "Non"
-		JButton btnYes = new JButton("Oui");
-		JButton btnNo = new JButton("Non");
-
 		// Configuration du bouton "Oui"
+		JButton btnYes = new JButton("Oui");
 		btnYes.setBounds(330, 385, 150, 30); // Placer à une position calculée pour le centrage
 		btnYes.setBackground(new Color(64, 198, 23)); // Vert
 		btnYes.setForeground(Color.WHITE);
@@ -1447,11 +1422,11 @@ public class Gui extends JFrame {
 		btnYes.setFocusPainted(false);
 		btnYes.addActionListener(e -> {
 			nouvellePartie();
-
 			glass.setVisible(false); // Cache le glassPane
 		});
 
 		// Configuration du bouton "Non"
+		JButton btnNo = new JButton("Non");
 		btnNo.setBounds(510, 385, 150, 30); // Placer à côté du bouton "Oui"
 		btnNo.setBackground(new Color(198, 23, 23)); // Rouge
 		btnNo.setForeground(Color.WHITE);
@@ -1469,26 +1444,26 @@ public class Gui extends JFrame {
 		glass.setComponentZOrder(winGameLabel, 1); // L'image est derrière les boutons
 		glass.setComponentZOrder(btnYes, 0); // Le bouton "Oui" est au premier plan
 		glass.setComponentZOrder(btnNo, 0); // Le bouton "Non" est au premier plan
-		// Ajoute un MouseAdapter pour bloquer les clics
+
+		// Bloquer les clics
 		glass.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Empêche les clics de passer à travers le glassPane
 			}
 		});
-
-		setGlassPane(glass); // Définit le nouveau glassPane
-		glass.setVisible(true); // Affiche le glassPane
+		setGlassPane(glass);
+		glass.setVisible(true);
 	}
 
 	// Redéfinition des tailles d'image adaptées au jeu
-
 	private ImageIcon resizeCardImage(String imagePath, int width, int height) {
 		ImageIcon originalIcon = new ImageIcon(imagePath);
 		Image image = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return new ImageIcon(image);
 	}
 
+	// Icône de mute/demute
 	private JLabel musicIcon() {
 		ImageIcon musicControlIcon = new ImageIcon(
 				isMusicMuted ? "src/ressources/Images/unmute.png" : "src/ressources/Images/mute.png");
@@ -1511,6 +1486,7 @@ public class Gui extends JFrame {
 		return musicControlLabel;
 	}
 
+	// Bouton retour générique du jeu
 	private JPanel backButton() {
 		JPanel panelBoutons = new JPanel();
 		panelBoutons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
