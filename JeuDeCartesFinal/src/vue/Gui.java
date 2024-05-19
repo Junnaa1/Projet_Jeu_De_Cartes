@@ -42,7 +42,7 @@ public class Gui extends JFrame {
 	private static final int GAME_COLUMNS_Y_SPACING = 20;
 
 	// Variables de jeu
-	private List<List<Carte>> colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
+	private List<List<Carte>> colonnesDeDepart = SolitaireController.createStartColumns();
 	private List<Carte> deck = SolitaireController.getDeck();
 	private Carte carteSelectionnee = null;
 	private Carte derniereCartePiochee = null;
@@ -402,7 +402,7 @@ public class Gui extends JFrame {
 								} else {
 									// Logique de déplacement de carte
 									if (finalCol != colonneSourceSelectionnee) {
-										boolean reussi = SolitaireController.deplacerCarteTest(colonnesDeDepart,
+										boolean reussi = SolitaireController.moveCard(colonnesDeDepart,
 												colonneSourceSelectionnee, finalCol);
 										if (reussi) {
 
@@ -541,7 +541,7 @@ public class Gui extends JFrame {
 							} else {
 								// Si une carte est déjà sélectionnée et qu'on clique sur une autre colonne
 								if (finalCol != colonneSourceSelectionnee) {
-									boolean reussi = SolitaireController.deplacerCarteTest(colonnesDeDepart,
+									boolean reussi = SolitaireController.moveCard(colonnesDeDepart,
 											colonneSourceSelectionnee, finalCol);
 									if (reussi) {
 
@@ -782,8 +782,7 @@ public class Gui extends JFrame {
 					// Vérification s'il y a une carte sélectionnée dans une colonne source
 					if (carteSelectionnee != null) {
 						// Vérification si la carte peut être déplacée vers cette pile finale
-						if (SolitaireController.deplacementVersPileFinale(carteSelectionnee, finalI + 7,
-								colonnesDeDepart)) {
+						if (SolitaireController.moveToFinalStack(carteSelectionnee, finalI + 7, colonnesDeDepart)) {
 							// Ajouter la carte à la pile finale
 							List<Carte> pileFinale = colonnesDeDepart.get(finalI + 7);
 							pileFinale.add(carteSelectionnee);
@@ -1330,7 +1329,7 @@ public class Gui extends JFrame {
 	// Réintialisation des variables
 	public void nouvellePartie() {
 		// Réinitialiser le deck et les colonnes
-		colonnesDeDepart = SolitaireController.creerColonnesDeDepart();
+		colonnesDeDepart = SolitaireController.createStartColumns();
 		deck = SolitaireController.getDeck();
 
 		// Réinitialiser l'état du GUI
