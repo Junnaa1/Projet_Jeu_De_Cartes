@@ -123,7 +123,7 @@ public class SolitaireController {
 	}
 
 	public static List<Carte> getDeck() {
-		return deck; // Assurez-vous que ce deck est le deck unique utilisé partout
+		return deck;
 	}
 
 	public static boolean moveCard(List<List<Carte>> columns, int sourceColumn, int columnDestination) {
@@ -145,10 +145,6 @@ public class SolitaireController {
 			List<Carte> destination = columns.get(columnDestination);
 
 			Carte drawCard = drawColumn.get(drawColumn.size() - 1);
-			System.out.println(deck);
-			System.out.println(drawCard);
-			System.out.println(drawColumn);
-			System.out.println(destination);
 
 			System.out.println(isMoveFromDrawValid(drawColumn, destination));
 			// Vérifie si le déplacement est valide
